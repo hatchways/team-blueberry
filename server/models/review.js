@@ -16,7 +16,8 @@ const reviewSchema = new mongoose.Schema({
         type: String,
       },
       codeData: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Code",
       },
       postedBy: {
         type: mongoose.Schema.Types.ObjectId,
