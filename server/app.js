@@ -3,9 +3,26 @@ const express = require("express");
 const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const mongoose = require("mongoose");
 
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
+
+// db config
+mongoose.set("useUnifiedTopology", true);
+// DB_URl = online db url
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/blueberry";
+mongoose
+  .connect(dbUrl, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+  })
+  .then(() => {
+    console.log(`Connected to ${dbUrl}`);
+  })
+  .catch((err) => {
+    console.log("ERROR", err.message);
+  });
 
 const { json, urlencoded } = express;
 
@@ -21,12 +38,12 @@ app.use("/", indexRouter);
 app.use("/ping", pingRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
