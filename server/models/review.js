@@ -6,6 +6,8 @@ const reviewSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  // References user owner
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -15,10 +17,8 @@ const reviewSchema = new mongoose.Schema({
       messageText: {
         type: String,
       },
-      codeData: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Code",
-      },
+
+      // References message user owner
       postedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
