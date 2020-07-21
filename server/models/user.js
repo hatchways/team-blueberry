@@ -11,6 +11,19 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // credits for reviews
+  balance: {
+    type: Number,
+    default: 3,
+    min: 0,
+    required: true,
+  },
+  payments: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Payment",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", userSchema);
