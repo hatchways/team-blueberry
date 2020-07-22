@@ -95,6 +95,7 @@ export default function SignIn() {
 
   const passwordHandler = (event) => {
     let errorFound = null;
+
     if (event.target.value.length < 6) {
       errorFound = 'Password must be at least 6 characters long';
     } else if (!event.target.value.match(/(?=.*[a-z])/)) {
@@ -106,7 +107,13 @@ export default function SignIn() {
     } else if (!event.target.value.match(/(?=.*[!@#$%^&*])/)) {
       errorFound = 'Password must contain at least one special char';
     } else if (repeatedPassword.value && event.target.value !== repeatedPassword.value) {
-      errorFound = 'Passwords do not match';
+      setRepeatedPassword((prev) => {
+        return {
+          value: prev.value,
+          error: 'Passwords do not match',
+          touched: true
+        };
+      });
     }
 
     setPassword({
@@ -139,7 +146,7 @@ export default function SignIn() {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    //Check if all fields valid
+    //Check if all fields are valid
     if (
       !username.touched ||
       !email.touched ||
