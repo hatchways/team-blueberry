@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const auth = require("../middleware/auth");
 const User = require("../models/user");
 
 // testing root route
@@ -48,18 +49,22 @@ router.post("/register", async (req, res) => {
     await newUser.save();
     // send token
     // proess.env.JWT_KEY to store secret key
-    const token = await jwt.sign(
+    const secretKey = process.env.JWT_KEY || "secret";
+    const token = jwt.sign(
       {
         id: newUser._id,
         email: newUser.email,
       },
-      "secret",
+      secretKey,
       {
         expiresIn: "1hr",
       }
     );
     // save token in cookie
-    return res.cookie("token", token, { httpOnly: true }).status(201).send({
+    // process.env.COOKIE_NAME to store cookie name
+    const cookieName = process.env.COOKIE_NAME || "token";
+    // can add maxAge for cookie expiration time
+    return res.cookie(cookieName, token, { httpOnly: true }).status(201).send({
       message: "User created",
       token,
     });
@@ -83,24 +88,33 @@ router.post("/login", async (req, res) => {
     }
     // send token
     // // proess.env.JWT_KEY to store secret key
-    const token = await jwt.sign(
+    const secretKey = process.env.JWT_KEY || "secret";
+    const token = jwt.sign(
       {
         id: foundUser._id,
         email: foundUser.email,
       },
-      "secret",
+      secretKey,
       {
         expiresIn: "1hr",
       }
     );
     // save token in cookie
-    return res.cookie("token", token, { httpOnly: true }).status(200).send({
+    // process.env.COOKIE_NAME to store cookie name
+    const cookieName = process.env.COOKIE_NAME || "token";
+    // can add maxAge for cookie expiration time
+    return res.cookie(cookieName, token, { httpOnly: true }).status(200).send({
       message: "User logged in",
       token,
     });
   } catch {
     return res.status(500).send("Internal Server Error");
   }
+});
+
+// test for middleware
+router.get("/profile", auth, (req, res) => {
+  res.send(req.user);
 });
 
 module.exports = router;
