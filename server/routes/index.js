@@ -5,18 +5,13 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const User = require("../models/user");
 
-// testing root route
-router.get("/", function (req, res, next) {
-  res.status(200).send({ welcomeMessage: "Step 1 (completed)" });
-});
-
 // register route
 router.post("/register", async (req, res) => {
-  const { email, confirmEmail, password, confirmPassword } = req.body;
+  const { email, name, password, confirmPassword } = req.body;
 
   try {
     // validate if all fields are filled
-    if (!email || !confirmEmail || !password || !confirmPassword) {
+    if (!email || !name || !password || !confirmPassword) {
       return res.status(400).send("All fields need to be filled!");
     }
     // validate if email aleady exist
@@ -31,20 +26,14 @@ router.post("/register", async (req, res) => {
         .send("Password needs to be at least 6 characters long");
     }
     // validate confirm email and confirm password
-    if (email !== confirmEmail || password !== confirmPassword) {
-      return res
-        .status(401)
-        .send(
-          "Email and confirm Email or Password and confirm Password do not match"
-        );
+    if (password !== confirmPassword) {
+      return res.status(401).send("Password and confirm Password do not match");
     }
-    // hash password - bcrypt
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
     // create new user
     const newUser = new User({
       email,
-      password: hashedPassword,
+      password,
+      name,
     });
     await newUser.save();
     // send token
