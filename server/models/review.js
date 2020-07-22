@@ -7,27 +7,39 @@ const reviewSchema = new mongoose.Schema({
     required: true,
   },
 
+  language: {
+    type: String,
+  },
+
   // References user owner
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+
   messages: [
     {
       messageText: {
         type: String,
       },
 
+      codeSnippet: {
+        type: String,
+      },
+
       // References message user owner
-      postedBy: {
+      messagePostedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
-      postedDate: {
+      messagePostDate: {
         type: Date,
       },
     },
   ],
+  reviewCreatedDate: {
+    type: Date,
+  },
 });
 
 module.exports = mongoose.model("Review", reviewSchema);

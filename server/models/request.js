@@ -13,13 +13,26 @@ const requestSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+
   // Needed for timeout eventually
   requestDate: {
     type: Date,
   },
-  statuses: {
-    type: Array,
-  },
+  reviewersDeclined: [
+    {
+      type: String,
+    },
+  ],
+  statuses: [
+    {
+      statusDate: {
+        type: Date,
+      },
+      status: {
+        type: String,
+      },
+    },
+  ],
 });
 
 module.export = mongoose.model("Request", requestSchema);

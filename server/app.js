@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
 
+// imports for mongoose models could go here
+
 // db config
 mongoose.set("useUnifiedTopology", true);
 // DB_URl = online db url
