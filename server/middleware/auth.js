@@ -5,7 +5,6 @@ const auth = (req, res, next) => {
   const cookieName = process.env.COOKIE_NAME || "token";
   const token =
     req.headers.cookie && req.headers.cookie.split(`${cookieName}=`)[1];
-  console.log(token);
   if (!token) return res.status(401).send("Not Authorized");
   const secret = process.env.JWT_KEY || "secret";
   try {
