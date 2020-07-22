@@ -70,10 +70,10 @@ export default function SignIn() {
                 <TextField
                   variant="outlined"
                   fullWidth
-                  id="username"
-                  label="Username"
-                  name="username"
-                  autoComplete="username"
+                  id="email"
+                  label="E-mail Address"
+                  name="email"
+                  autoComplete="email"
                   error={submitClicked && !loginUsername ? true : false}
                   helperText={submitClicked && !loginUsername ? 'Field can not be blank' : null}
                   onChange={(e) => setLoginUsername(e.target.value)}
