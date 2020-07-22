@@ -1,15 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const User = require("../models/user");
-const { cookieName, cookieExpiry } = require("../constants.js");
+const { genToken } = require("../helper/helper");
 
 // register route
 router.post("/register", async (req, res) => {
   const { email, name, password, confirmPassword } = req.body;
-
   try {
     // validate if all fields are filled
     if (!email || !name || !password || !confirmPassword) {
@@ -38,31 +36,11 @@ router.post("/register", async (req, res) => {
     });
     await newUser.save();
     // send token
-    // proess.env.JWT_KEY to store secret key
-    const secretKey = process.env.JWT_KEY || "secret";
-    const token = jwt.sign(
-      {
-        id: newUser._id,
-        email: newUser.email,
-      },
-      secretKey,
-      {
-        expiresIn: "24hr",
-      }
-    );
-    // save token in cookie
-    return res
-      .cookie(cookieName, token, {
-        httpOnly: true,
-        // check env if production
-        secure: req.app.get("env") === "development" ? false : true,
-        maxAge: cookieExpiry,
-      })
-      .status(201)
-      .send({
-        message: "User created",
-        token,
-      });
+    const token = genToken(req, res, newUser);
+    return res.status(201).send({
+      message: "User created!",
+      token,
+    });
   } catch {
     return res.status(500).send("Internal Server Error");
   }
@@ -79,31 +57,11 @@ router.post("/login", async (req, res) => {
       return res.status(401).send("Incorrect email and password");
     }
     // send token
-    // // proess.env.JWT_KEY to store secret key
-    const secretKey = process.env.JWT_KEY || "secret";
-    const token = jwt.sign(
-      {
-        id: foundUser._id,
-        email: foundUser.email,
-      },
-      secretKey,
-      {
-        expiresIn: "1hr",
-      }
-    );
-    // save token in cookie
-    return res
-      .cookie(cookieName, token, {
-        httpOnly: true,
-        // check env if production
-        secure: req.app.get("env") === "development" ? false : true,
-        maxAge: cookieExpiry,
-      })
-      .status(200)
-      .send({
-        message: "User logged in",
-        token,
-      });
+    const token = genToken(req, res, foundUser);
+    return res.status(200).send({
+      message: "User created!",
+      token,
+    });
   } catch {
     return res.status(500).send("Internal Server Error");
   }
