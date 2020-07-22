@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const User = require("../models/user");
+const { cookieName, cookieExpiry } = require("../constants.js");
 
 // register route
 router.post("/register", async (req, res) => {
@@ -46,17 +47,22 @@ router.post("/register", async (req, res) => {
       },
       secretKey,
       {
-        expiresIn: "1hr",
+        expiresIn: "24hr",
       }
     );
     // save token in cookie
-    // process.env.COOKIE_NAME to store cookie name
-    const cookieName = process.env.COOKIE_NAME || "token";
-    // can add maxAge for cookie expiration time
-    return res.cookie(cookieName, token, { httpOnly: true }).status(201).send({
-      message: "User created",
-      token,
-    });
+    return res
+      .cookie(cookieName, token, {
+        httpOnly: true,
+        // check env if production
+        secure: req.app.get("env") === "development" ? false : true,
+        maxAge: cookieExpiry,
+      })
+      .status(201)
+      .send({
+        message: "User created",
+        token,
+      });
   } catch {
     return res.status(500).send("Internal Server Error");
   }
@@ -67,13 +73,10 @@ router.post("/login", async (req, res) => {
   try {
     // find user using email
     const foundUser = await User.findOne({ email }).exec();
-    if (!foundUser) {
-      return res.status(401).send("Email not found");
-    }
     // compare inputted password with user's password
     const isValidPassword = await bcrypt.compare(password, foundUser.password);
-    if (!isValidPassword) {
-      return res.status(401).send("Incorrect Password");
+    if (!foundUser || !isValidPassword) {
+      return res.status(401).send("Incorrect email and password");
     }
     // send token
     // // proess.env.JWT_KEY to store secret key
@@ -89,13 +92,18 @@ router.post("/login", async (req, res) => {
       }
     );
     // save token in cookie
-    // process.env.COOKIE_NAME to store cookie name
-    const cookieName = process.env.COOKIE_NAME || "token";
-    // can add maxAge for cookie expiration time
-    return res.cookie(cookieName, token, { httpOnly: true }).status(200).send({
-      message: "User logged in",
-      token,
-    });
+    return res
+      .cookie(cookieName, token, {
+        httpOnly: true,
+        // check env if production
+        secure: req.app.get("env") === "development" ? false : true,
+        maxAge: cookieExpiry,
+      })
+      .status(200)
+      .send({
+        message: "User logged in",
+        token,
+      });
   } catch {
     return res.status(500).send("Internal Server Error");
   }
