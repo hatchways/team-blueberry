@@ -54,8 +54,8 @@ export default function SignIn() {
   const usernameHandler = (event) => {
     const usernameRegex = /^[a-zA-Z0-9-]+$/;
     let errorFound = '';
-    if (event.target.value.length < 4 || event.target.value.length > 16) {
-      errorFound = 'Username length should be 4-16 chars long';
+    if (event.target.value.length < 4 || event.target.value.length > 20) {
+      errorFound = 'Username length should be 4-20 chars long';
     } else if (!event.target.value.match(usernameRegex)) {
       errorFound = 'Only letters, numbers and  "-" are  acceptable';
     }
@@ -96,24 +96,45 @@ export default function SignIn() {
   const passwordHandler = (event) => {
     let errorFound = null;
 
-    if (event.target.value.length < 6) {
-      errorFound = 'Password must be at least 6 characters long';
-    } else if (!event.target.value.match(/(?=.*[a-z])/)) {
-      errorFound = 'Password must contain at least one lower case letter';
-    } else if (!event.target.value.match(/(?=.*\d)/)) {
-      errorFound = 'Password must contain at least one digit';
-    } else if (!event.target.value.match(/(?=.*[A-Z])/)) {
-      errorFound = 'Password must contain at least one upper case letter';
-    } else if (!event.target.value.match(/(?=.*[!@#$%^&*])/)) {
-      errorFound = 'Password must contain at least one special char';
-    } else if (repeatedPassword.value && event.target.value !== repeatedPassword.value) {
-      setRepeatedPassword((prev) => {
-        return {
-          value: prev.value,
-          error: 'Passwords do not match',
-          touched: true
-        };
-      });
+    switch (true) {
+      case event.target.value.length < 6:
+        errorFound = 'Password must be at least 6 characters long';
+        break;
+      case !event.target.value.match(/(?=.*[a-z])/):
+        errorFound = 'Password must contain at least one lower case letter';
+        break;
+      case !event.target.value.match(/(?=.*\d)/):
+        errorFound = 'Password must contain at least one digit';
+        break;
+      case !event.target.value.match(/(?=.*[A-Z])/):
+        errorFound = 'Password must contain at least one upper case letter';
+        break;
+      case !event.target.value.match(/(?=.*[!@#$%^&*])/):
+        errorFound = 'Password must contain at least one special char';
+        break;
+      //Check is password and repeatedPassword are equal after user changes one or another
+      case repeatedPassword.value && event.target.value !== repeatedPassword.value:
+        setRepeatedPassword((prev) => {
+          return {
+            value: prev.value,
+            error: 'Passwords do not match',
+            touched: true
+          };
+        });
+        break;
+      case repeatedPassword.value &&
+        repeatedPassword.error === 'Passwords do not match' &&
+        event.target.value === repeatedPassword.value:
+        setRepeatedPassword((prev) => {
+          return {
+            value: prev.value,
+            error: null,
+            touched: true
+          };
+        });
+        break;
+      default:
+        break;
     }
 
     setPassword({
