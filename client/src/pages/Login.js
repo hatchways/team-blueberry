@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const classes = useStyles();
 
-  // DO WE LOG IN BY USERNAME OR EMAIL???
   const [ loginUsername, setLoginUsername ] = useState('');
   const [ loginPassword, setLoginPassword ] = useState('');
   const [ submitClicked, setSubmitClicked ] = useState(false);
@@ -55,22 +54,6 @@ export default function SignIn() {
     } else {
       console.log(`Send login request to API ${loginUsername} ${loginPassword}`);
     }
-    // Here goes login logic after we get server routes
-    // Axios({
-    //   method: 'POST',
-    //   data: {
-    //     username: loginUsername,
-    //     password: loginPassword
-    //   },
-    //   withCredentials: true,
-    //   url: 'http://localhost:3001/login'
-    // }).then((res) => {
-    //   if (res.data === 'Successfully Authenticated') {
-    //     window.location.href = '/'; //There must be a way to redirect with React, history.push() doesn't work correctly
-    //   } else {
-    //     console.log(res.data); //
-    //   }
-    // });
   };
 
   return (
@@ -87,10 +70,10 @@ export default function SignIn() {
                 <TextField
                   variant="outlined"
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
                   error={submitClicked && !loginUsername ? true : false}
                   helperText={submitClicked && !loginUsername ? 'Field can not be blank' : null}
                   onChange={(e) => setLoginUsername(e.target.value)}

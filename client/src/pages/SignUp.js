@@ -44,13 +44,28 @@ export default function SignIn() {
 
   // ========== FORM VALIDATION LOGIC BEGIN ==========
 
-  // Validate username
   const [ username, setUsername ] = useState({
     value: '',
     error: 'Field can not be blank',
     touched: false
   });
+  const [ email, setEmail ] = useState({
+    value: '',
+    error: 'Field can not be blank',
+    touched: false
+  });
+  const [ password, setPassword ] = useState({
+    value: '',
+    error: 'Field can not be blank',
+    touched: false
+  });
+  const [ repeatedPassword, setRepeatedPassword ] = useState({
+    value: '',
+    error: 'Field can not be blank',
+    touched: false
+  });
 
+  // Validate username
   const usernameHandler = (event) => {
     const usernameRegex = /^[a-zA-Z0-9-]+$/;
     let errorFound = '';
@@ -67,12 +82,6 @@ export default function SignIn() {
   };
 
   // Validate email
-  const [ email, setEmail ] = useState({
-    value: '',
-    error: 'Field can not be blank',
-    touched: false
-  });
-
   const emailHandler = (event) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let errorFound = '';
@@ -87,30 +96,12 @@ export default function SignIn() {
   };
 
   //Validate password
-  const [ password, setPassword ] = useState({
-    value: '',
-    error: 'Field can not be blank',
-    touched: false
-  });
-
   const passwordHandler = (event) => {
     let errorFound = null;
 
     switch (true) {
       case event.target.value.length < 6:
         errorFound = 'Password must be at least 6 characters long';
-        break;
-      case !event.target.value.match(/(?=.*[a-z])/):
-        errorFound = 'Password must contain at least one lower case letter';
-        break;
-      case !event.target.value.match(/(?=.*\d)/):
-        errorFound = 'Password must contain at least one digit';
-        break;
-      case !event.target.value.match(/(?=.*[A-Z])/):
-        errorFound = 'Password must contain at least one upper case letter';
-        break;
-      case !event.target.value.match(/(?=.*[!@#$%^&*])/):
-        errorFound = 'Password must contain at least one special char';
         break;
       //Check is password and repeatedPassword are equal after user changes one or another
       case repeatedPassword.value && event.target.value !== repeatedPassword.value:
@@ -145,12 +136,6 @@ export default function SignIn() {
   };
 
   // Validate repeated password
-  const [ repeatedPassword, setRepeatedPassword ] = useState({
-    value: '',
-    error: 'Field can not be blank',
-    touched: false
-  });
-
   const repeatedPasswordHandler = (event) => {
     setRepeatedPassword({
       value: event.target.value,

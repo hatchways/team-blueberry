@@ -15,11 +15,14 @@ export const theme = createMuiTheme({
       white: '#fff'
     },
     secondary: {
-      main: '#fff'
+      main: '#6E3ADB'
+    },
+    button: {
+      default: '#43DDC1',
+      remove: '#fa8072'
     },
     background: {
       gradient: 'linear-gradient(to bottom, #778ae0, #6e3adb)',
-      //gradient: 'linear-gradient(to bottom, #6E3ADB, #501CBD)',
       solid: '#D3D3D3'
     },
     navbar: '#501CBD',
