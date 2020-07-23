@@ -35,7 +35,7 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
 
-app.use("/", indexRouter);
+app.use("/api", indexRouter);
 app.use("/ping", pingRouter);
 app.use("/api/user", userRouter);
 
