@@ -12,7 +12,7 @@ const reviewSchema = new mongoose.Schema({
   },
 
   // References user owner
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
@@ -42,4 +42,4 @@ const reviewSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Review", reviewSchema);
+module.exports = mongoose.model("Review", reviewSchema, "reviewCollection");

@@ -15,7 +15,7 @@ const requestSchema = new mongoose.Schema({
   },
 
   // Needed for timeout eventually
-  requestDate: {
+  requestCreateDate: {
     type: Date,
   },
   reviewersDeclined: [
@@ -35,4 +35,4 @@ const requestSchema = new mongoose.Schema({
   ],
 });
 
-module.export = mongoose.model("Request", requestSchema);
+module.exports = mongoose.model("Request", requestSchema, "requestCollection");
