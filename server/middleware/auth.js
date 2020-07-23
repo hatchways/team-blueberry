@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const { cookieName } = require("../constants.js");
 
 const auth = (req, res, next) => {
-  // validate if token is present & get token
-  const cookieName = process.env.COOKIE_NAME || "token";
-  const token =
-    req.headers.cookie && req.headers.cookie.split(`${cookieName}=`)[1];
+  // get token from cookie
+  const token = req.cookies[cookieName];
   if (!token) return res.status(401).send("Not Authorized");
   const secret = process.env.JWT_KEY || "secret";
   try {

@@ -59,7 +59,7 @@ router.post("/login", async (req, res) => {
     // send token
     const token = genToken(req, res, foundUser);
     return res.status(200).send({
-      message: "User created!",
+      message: "User logged in!",
       token,
     });
   } catch {
