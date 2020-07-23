@@ -7,12 +7,9 @@ const auth = (req, res, next) => {
   if (!token) return res.status(401).send("Not Authorized");
   const secret = process.env.JWT_KEY || "secret";
   try {
-    // verify token - user id and email
-    const { id, email } = jwt.verify(token, secret);
-    req.user = {
-      id,
-      email,
-    };
+    // verify token - user
+    const user = jwt.verify(token, secret);
+    req.user = user;
     next();
   } catch {
     return res.status(403).send("You do not have access");

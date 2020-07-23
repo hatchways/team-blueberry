@@ -11,7 +11,6 @@ helper.genToken = (req, res, user) => {
   const token = jwt.sign(
     {
       id: user._id,
-      email: user.email,
     },
     secretKey,
     {
