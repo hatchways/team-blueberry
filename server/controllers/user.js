@@ -1,4 +1,4 @@
-const showUser = (req, res, next) => {
+const showUser = async (req, res, next) => {
   // check for logged in user
   const userId = req.user ? req.user.id : null;
   if (!userId)
@@ -6,7 +6,7 @@ const showUser = (req, res, next) => {
       .status(401)
       .send("You are not authorized to access this resource");
   try {
-    const user = User.findById(userId).select("-password").exec();
+    const user = await User.findById(userId).exec().then(user => user.toObject());
     return res.status(200).send({ ...user });
   } catch (e) {
     // TODO maybe handle exception if user is logged in but db does not return
