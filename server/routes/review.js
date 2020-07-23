@@ -1,16 +1,18 @@
 const express = require("express");
 const router = express.Router();
 
-const reviewModel = require("../review-request-handlers/review");
+const reviewModel = require("../mongoose-handlers/review");
 
 // import model User for searching
 const User = require("../models/user");
 const Review = require("../models/review");
 
-router.post("/review", async (req, res) => {
+// Creates review based of data provided
+router.post("/review", Auth, async (req, res) => {
   try {
-    const email = req.body.email;
-    const user = await User.findOne({ email: email });
+    const userId = req.user;
+
+    const user = await Review.find({ userId });
 
     const data = {
       language: req.body.language,
@@ -19,19 +21,25 @@ router.post("/review", async (req, res) => {
       messageText: req.body.messageText,
     };
 
-    await reviewModel.createReview(user, data, () => {});
+    await reviewModel.createReview(user, data, () => {
+      res.status(201).send({ message: "Success" });
+    });
   } catch {
+    res.status(500).send({ message: "There was an internal server error." });
     console.log("There was an error in creating review");
   }
 });
 
 // gets all relevant reviews
-router.post("/reviews", async (req, res) => {
+router.post("/reviews", Auth, async (req, res) => {
   try {
-    // Need to implement user auth middleware here and search off the returned id
+    const userId = req.user;
 
-    const reviews = await Review.find({ userId: user._id });
+    const reviews = await Review.find({ userId });
+
+    res.status(201).json({ reviews });
   } catch {
+    res.status(500).send({ message: "There was an internal server error." });
     console.log("There was an error getting reviews");
   }
 });
