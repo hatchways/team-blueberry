@@ -9,6 +9,7 @@ describe("/POST ping", () => {
   it("it should return 400", (done) => {
     chai
       .request(app)
+      .post(`/ping/`)
       .send({ teamName: "Shums" })
       .end((err, res) => {
         res.should.have.status(400);
