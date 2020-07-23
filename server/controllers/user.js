@@ -1,4 +1,4 @@
-export const showUser = (req, res, next) => {
+const showUser = (req, res, next) => {
   // check for logged in user
   const userId = req?.user?.id;
   if (!userId)
@@ -16,4 +16,8 @@ export const showUser = (req, res, next) => {
       .status(401)
       .send("You are not authorized to access this resource");
   }
+};
+
+module.exports = {
+  showUser,
 };
