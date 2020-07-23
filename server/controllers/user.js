@@ -1,6 +1,6 @@
 const showUser = (req, res, next) => {
   // check for logged in user
-  const userId = req?.user?.id;
+  const userId = req.user ? req.user.id : null;
   if (!userId)
     return res
       .status(401)
