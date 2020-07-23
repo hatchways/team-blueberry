@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const reviewModel = require("../review_request_handers/review/review");
+const reviewModel = require("../review_request_handlers/review/review");
 
 // import model User for searching
 const User = require("../models/user");
