@@ -1,26 +1,31 @@
-import React from "react";
+import React, { useReducer } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import reducer from "./reducers";
+import initState from "./initState";
 
+import { userContext } from "./userContext";
 import { theme } from "./themes/theme";
-import LandingPage from "./pages/Landing";
-import BalancePage from "./pages/Balance";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 
 import "./App.css";
 
 function App() {
+  const [state, dispatch] = useReducer(reducer, {}, initState);
+
   return (
-    <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Switch>
-          {/* authz */}
-          <Route path="/balance">
-            <BalancePage />
-          </Route>
-          <Route path="/" component={LandingPage} />
-        </Switch>
-      </BrowserRouter>
-    </MuiThemeProvider>
+    <userContext.Provider value={state.user}>
+      <MuiThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/signup" component={SignUp} />
+            <Route path="/login" component={Login} />
+            <Route path="/" exact component={SignUp} />
+          </Switch>
+        </BrowserRouter>
+      </MuiThemeProvider>
+    </userContext.Provider>
   );
 }
 
