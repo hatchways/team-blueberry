@@ -48,13 +48,6 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'none',
     fontSize: 16
   },
-  // formControl: {
-  //   margin: theme.spacing(1),
-  //   minWidth: 120
-  // },
-  // selectEmpty: {
-  //   marginTop: theme.spacing(2)
-  // },
   removeIcon: {
     color: theme.palette.button.remove
   }
