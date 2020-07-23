@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
 // Condition should be function that evaluates true when children should be rendered
-export const ProtectedRoute = ({ children, condition, ...props }) => {
+export const ProtectedRoute = ({ children, condition, redirect, ...props }) => {
   return (
     <Route
       {...props}
@@ -12,7 +12,7 @@ export const ProtectedRoute = ({ children, condition, ...props }) => {
         ) : (
           <Redirect
             to={{
-              pathname: "/login",
+              pathname: `${redirect || "/login"}`,
               state: { from: location },
             }}
           />
