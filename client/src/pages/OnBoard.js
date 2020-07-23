@@ -18,6 +18,7 @@ import TextField from '@material-ui/core/TextField';
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(12),
+    marginBottom: theme.spacing(6),
     padding: theme.spacing(5),
     display: 'flex',
     flexDirection: 'column',
@@ -103,10 +104,9 @@ export default function OnBoard() {
   const InputLine = (props) => {
     return (
       <Grid container alignItems="center" justify="flex-end">
-        <Grid item xs>
+        <Grid item xs={12} sm={1} md={1}>
           <IconButton
             className={classes.removeIcon}
-            aria-label="upload picture"
             component="span"
             disabled={props.index === 0 && skillList.length === 1 ? true : false}
             onClick={() => handleRemoveClick(props.index)}
@@ -114,12 +114,12 @@ export default function OnBoard() {
             <RemoveCircleIcon fontSize="large" />
           </IconButton>
         </Grid>
-        <Grid item xs>
+        <Grid item xs={5} sm md>
           <Typography component="h1" variant="h6">
             Language:
           </Typography>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={7} sm={4} md={4}>
           <TextField
             color="secondary"
             fullWidth
@@ -146,12 +146,12 @@ export default function OnBoard() {
             })}
           </TextField>
         </Grid>
-        <Grid item xs>
+        <Grid item xs={5} sm md>
           <Typography component="h1" variant="h6">
             Level:
           </Typography>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={7} sm={3} md={4}>
           <TextField
             fullWidth
             select
@@ -181,9 +181,10 @@ export default function OnBoard() {
       <Container component="main" maxWidth="md">
         <CssBaseline />
         <Paper elevation={3} className={classes.paper}>
-          <Box mt={2} fontSize="h4.fontSize" fontWeight="fontWeightBold">
+          <Box mt={2} fontSize="h4.fontSize" fontWeight="fontWeightBold" textAlign="center">
             Add your exprerience here:
           </Box>
+
           <form className={classes.form}>
             {skillList.map((item, index) => {
               return <InputLine key={item + index} item={item} index={index} />;
@@ -201,7 +202,10 @@ export default function OnBoard() {
                   onClick={handleAddClick}
                 >
                   <AddCircleIcon fontSize="large" />
-                  <span style={{ marginLeft: '.5rem' }}>Add language</span>
+                  <span display="none" style={{ marginLeft: '.5rem' }}>
+                    <Box display={{ xs: 'none', sm: 'block' }}>Add language</Box>
+                    <Box display={{ xs: 'block', sm: 'none' }}>Add</Box>
+                  </span>
                 </Button>
               </Grid>
               <Grid item>
@@ -212,7 +216,6 @@ export default function OnBoard() {
                   color="primary"
                   className={classes.submit}
                   onClick={handleSubmit}
-                  startIcon={<AddCircleIcon />}
                 >
                   Submit
                 </Button>
