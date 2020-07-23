@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 // import models
-const Review = require("../../models/review");
+const Review = require("../models/review");
 
 // import request handler
-const requestHandler = require("../request/request");
+const requestHandler = require("./request");
 
 module.exports = {
   createReview: async (user, data, cb) => {

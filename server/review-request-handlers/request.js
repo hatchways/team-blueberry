@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 // import models
-const Request = require("../../models/request");
+const Request = require("../models/request");
 
 module.exports = {
   createRequest: (data, cb) => {
