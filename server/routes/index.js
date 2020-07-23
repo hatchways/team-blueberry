@@ -14,7 +14,7 @@ router.post("/register", async (req, res) => {
       return res.status(400).send("All fields need to be filled!");
     }
     // validate if email aleady exist
-    const userExist = await User.findOne({ email }).exec();
+    const userExist = await User.findOne({ email });
     if (userExist) {
       return res.status(409).send("Email already exist!");
     }
@@ -50,10 +50,13 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     // find user using email
-    const foundUser = await User.findOne({ email }).exec();
+    const foundUser = await User.findOne({ email });
+    if (!foundUser) {
+      return res.status(401).send("Incorrect email and password");
+    }
     // compare inputted password with user's password
     const isValidPassword = await bcrypt.compare(password, foundUser.password);
-    if (!foundUser || !isValidPassword) {
+    if (!isValidPassword) {
       return res.status(401).send("Incorrect email and password");
     }
     // send token
@@ -65,11 +68,6 @@ router.post("/login", async (req, res) => {
   } catch {
     return res.status(500).send("Internal Server Error");
   }
-});
-
-// test for middleware
-router.get("/profile", auth, (req, res) => {
-  res.send(req.user);
 });
 
 module.exports = router;
