@@ -7,7 +7,7 @@ const reviewModel = require("../review-request-handlers/review");
 const User = require("../models/user");
 const Review = require("../models/review");
 
-router.post("/createReview", async (req, res) => {
+router.post("/review", async (req, res) => {
   try {
     const email = req.body.email;
     const user = await User.findOne({ email: email });
@@ -26,7 +26,7 @@ router.post("/createReview", async (req, res) => {
 });
 
 // gets all relevant reviews
-router.post("/getReviews", async (req, res) => {
+router.post("/reviews", async (req, res) => {
   try {
     // Need to implement user auth middleware here and search off the returned id
 
