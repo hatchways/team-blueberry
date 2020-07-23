@@ -6,7 +6,6 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 
 const indexRouter = require("./routes/index");
-const pingRouter = require("./routes/ping");
 
 // db config
 mongoose.set("useUnifiedTopology", true);
