@@ -9,6 +9,10 @@ const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
 const userRouter = require("./routes/user");
 
+const reviewRouter = require("./routes/review");
+
+// imports for mongoose models could go here
+
 // db config
 mongoose.set("useUnifiedTopology", true);
 // DB_URl = online db url
@@ -38,6 +42,8 @@ app.use(express.static(join(__dirname, "public")));
 app.use("/api", indexRouter);
 app.use("/ping", pingRouter);
 app.use("/api/user", userRouter);
+
+app.use("/", reviewRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
