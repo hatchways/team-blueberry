@@ -39,6 +39,7 @@ const reviewSchema = new mongoose.Schema({
   ],
   reviewCreatedDate: {
     type: Date,
+    default: Date.now,
   },
 });
 
@@ -50,6 +51,10 @@ const requestSchema = new mongoose.Schema({
     ref: "User",
   },
 
+  userLanguageLevel: {
+    type: Number,
+  },
+
   selectedReviewer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -58,6 +63,7 @@ const requestSchema = new mongoose.Schema({
   // Needed for timeout eventually
   requestCreateDate: {
     type: Date,
+    default: Date.now,
   },
   reviewersDeclined: [
     {

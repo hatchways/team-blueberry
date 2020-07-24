@@ -7,7 +7,9 @@ module.exports = {
   createRequest: (data, cb) => {
     const newRequest = new Request({
       userOwner: data.userId,
-      requsetCreateDate: data.requestCreateDate,
+      // Added userLanguageLevel to assist with matching to reviewers
+      userLanguageLevel: data.userLanguageLevel,
+      // Removed date value due to mongoose timestamps schema type
       status: data.status,
     });
 

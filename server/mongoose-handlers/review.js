@@ -23,19 +23,18 @@ module.exports = {
       messages: [
         { messageText, codeSnippet, messagePostedBy, messagePostDate },
       ],
-      reviewCreatedDate: new Date(),
     });
 
-    newReview.save(function (err, user) {
+    newReview.save(function (err) {
       if (err) return console.log(err);
 
-      const requestCreateDate = new Date(),
-        status = "Pending";
+      const status = "Pending",
+        userLanguageLevel = data.languageLevel;
 
       requestHandler.createRequest(
         {
           userId,
-          requestCreateDate,
+          userLanguageLevel,
           status,
           embeddedReview: newReview,
         },
