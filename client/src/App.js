@@ -9,6 +9,8 @@ import { theme } from "./themes/theme";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
+import Balance from "./pages/Balance";
+import Reviews from "./pages/Reviews";
 
 import "./App.css";
 
@@ -24,6 +26,8 @@ function App() {
             <Route path="/login" component={Login} />
             <Route path="/" exact component={SignUp} />
             <Route path="/profile" component={Profile} />
+            <Route path="/reviews" component={Reviews} />
+            <Route path="/balance" component={Balance} />
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>

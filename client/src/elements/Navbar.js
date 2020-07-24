@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -51,34 +51,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = () => {
+const Navbar = (props) => {
   const classes = useStyles();
+  const { history } = props;
 
   // navbar logic
-  const [anchorNotificaton, setAnchorNotificaton] = React.useState(null);
-  const [anchorMenu, setAnchorMenu] = React.useState(null);
+  const [anchorNotificaton, setAnchorNotificaton] = useState(null);
+  const [anchorMenu, setAnchorMenu] = useState(null);
 
+  // navbar links
+  const handleClickButton = (url) => {
+    history.push(url);
+  };
+
+  // notification
   const handleNotificaton = (event) => {
     setAnchorNotificaton(event.currentTarget);
   };
 
+  // open menu
   const handleClickMenu = (event) => {
     setAnchorMenu(event.currentTarget);
   };
 
-  const handleCloseMenu = () => {
+  // close menu and route to link
+  const handleCloseMenu = (url) => {
+    history.push(url);
     setAnchorMenu(null);
   };
 
   // add responsiveness
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" color="secondary">
+      <AppBar position="static" color="secondary">
         <Toolbar>
           <div className={classes.title}>
+            {/* brand icon placeholder */}
             <CodeIcon fontSize="large" />
           </div>
           {isMobile ? (
@@ -88,8 +99,18 @@ const Navbar = () => {
             </IconButton>
           ) : (
             <>
-              <Button className={classes.button}>Reviews</Button>
-              <Button className={classes.button}>Balance</Button>
+              <Button
+                className={classes.button}
+                onClick={() => handleClickButton("/reviews")}
+              >
+                Reviews
+              </Button>
+              <Button
+                className={classes.button}
+                onClick={() => handleClickButton("/balance")}
+              >
+                Balance
+              </Button>
               <Badge color="primary" variant="dot" overlap="circle">
                 <IconButton
                   aria-controls="menu-appbar"
@@ -99,10 +120,10 @@ const Navbar = () => {
                   className={classes.notification}
                 >
                   <NotificationsNoneIcon />
+                  {/* add notification menu */}
                 </IconButton>
               </Badge>
               <Button
-                className={classes.button}
                 color="primary"
                 variant="outlined"
                 className={classes.upload}
@@ -123,20 +144,22 @@ const Navbar = () => {
               >
                 Profile
                 <ArrowDropDownIcon />
-                {/* // menu goes here */}
               </Button>
               <Menu
                 id="nav-menu"
                 anchorEl={anchorMenu}
                 getContentAnchorEl={null}
                 open={Boolean(anchorMenu)}
-                onClose={handleCloseMenu}
+                onClose={() => setAnchorMenu(null)}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
               >
-                <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
-                <MenuItem onClick={handleCloseMenu}>My account</MenuItem>
-                <MenuItem onClick={handleCloseMenu}>Logout</MenuItem>
+                <MenuItem onClick={() => handleCloseMenu("/profile")}>
+                  Profile
+                </MenuItem>
+                <MenuItem onClick={() => handleCloseMenu("/login")}>
+                  Logout
+                </MenuItem>
               </Menu>
             </>
           )}

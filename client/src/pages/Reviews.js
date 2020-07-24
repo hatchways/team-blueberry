@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import Background from "../elements/Background";
 import Navbar from "../elements/Navbar";
 
-const Profile = () => {
+const Reviews = () => {
   return (
     <Background solid>
       <Grid container direction="column">
@@ -15,7 +15,7 @@ const Profile = () => {
         </Grid>
         <Grid Item container>
           <Typography component="h1" variant="h6">
-            Profile
+            Reviews
           </Typography>
         </Grid>
       </Grid>
@@ -23,4 +23,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Reviews;
