@@ -184,7 +184,7 @@ export default function OnBoard() {
     <Background gradient>
       <Container component="main" maxWidth="md">
         <CssBaseline />
-        <StyledPaper>
+        <StyledPaper mt={12}>
           <PageHeader>Add your exprerience here:</PageHeader>
           <form className={classes.form}>
             {skillList.map((item, index) => {
