@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
   gradient: {
     height: '100vh',
+    overflowY: 'auto',
     background: theme.palette.background.gradient,
     display: 'flex'
   },
