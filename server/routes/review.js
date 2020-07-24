@@ -4,15 +4,12 @@ const router = express.Router();
 const reviewModel = require("../mongoose-handlers/review");
 
 // import model User for searching
-const User = require("../models/user");
 const Review = require("../models/review");
 
 // Creates review based of data provided
 router.post("/review", Auth, async (req, res) => {
   try {
     const userId = req.user;
-
-    const user = await Review.find({ userId });
 
     const data = {
       language: req.body.language,
@@ -21,7 +18,7 @@ router.post("/review", Auth, async (req, res) => {
       messageText: req.body.messageText,
     };
 
-    await reviewModel.createReview(user, data, () => {
+    await reviewModel.createReview(userId, data, () => {
       res.status(201).send({ message: "Success" });
     });
   } catch {

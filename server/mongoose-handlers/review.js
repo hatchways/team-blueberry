@@ -7,11 +7,7 @@ const Review = require("../models/review");
 const requestHandler = require("./request");
 
 module.exports = {
-  createReview: async (user, data, cb) => {
-    // create const variables from user
-    const name = user.email,
-      userId = user._id;
-
+  createReview: async (userId, data, cb) => {
     // create const variables from data
     const language = data.language,
       title = data.title,
@@ -33,17 +29,15 @@ module.exports = {
     newReview.save(function (err, user) {
       if (err) return console.log(err);
 
-      const reviewId = newReview._id,
-        // userId declared in createReview above
-        requestCreateDate = new Date(),
+      const requestCreateDate = new Date(),
         status = "Pending";
 
       requestHandler.createRequest(
         {
-          reviewId,
           userId,
           requestCreateDate,
           status,
+          embeddedReview: newReview,
         },
         cb
       );

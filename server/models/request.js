@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
+const ReviewSchema = require("./review");
 
 // basic request model
 const requestSchema = new mongoose.Schema({
-  // References review owner
-  reviewOwner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Review",
-  },
-
   // References user owner
   userOwner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+
+  selectedReviewer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
@@ -23,16 +23,11 @@ const requestSchema = new mongoose.Schema({
       type: String,
     },
   ],
-  statuses: [
-    {
-      statusDate: {
-        type: Date,
-      },
-      status: {
-        type: String,
-      },
-    },
-  ],
+  status: {
+    type: String,
+  },
+  // References review owner
+  embeddedReview: [ReviewSchema],
 });
 
 module.exports = mongoose.model("Request", requestSchema, "requestCollection");
