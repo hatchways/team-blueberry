@@ -72,6 +72,8 @@ const requestSchema = new mongoose.Schema({
   ],
   status: {
     type: String,
+    enum: ["pending", "declined", "accepted", "closed"],
+    default: "pending",
   },
   // References review owner
   embeddedReview: { reviewSchema },
