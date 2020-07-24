@@ -4,7 +4,10 @@ const router = express.Router();
 const reviewModel = require("../mongoose-handlers/review");
 
 // import model User for searching
-const Review = require("../models/review");
+const Review = require("../models/review-request");
+
+// import Auth middleware
+const Auth = require("../middleware/auth");
 
 // Creates review based of data provided
 router.post("/review", Auth, async (req, res) => {
@@ -23,7 +26,7 @@ router.post("/review", Auth, async (req, res) => {
     });
   } catch {
     res.status(500).send({ message: "There was an internal server error." });
-    console.log("There was an error in creating review");
+    console.log("There was an error in creating review.");
   }
 });
 
@@ -37,7 +40,7 @@ router.post("/reviews", Auth, async (req, res) => {
     res.status(201).json({ reviews });
   } catch {
     res.status(500).send({ message: "There was an internal server error." });
-    console.log("There was an error getting reviews");
+    console.log("There was an error getting reviews.");
   }
 });
 

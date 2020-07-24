@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-// basic review model
+// review model
 const reviewSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -11,7 +11,7 @@ const reviewSchema = new mongoose.Schema({
     type: String,
   },
 
-  // References user owner
+  // References user that created the initial review request
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -42,4 +42,34 @@ const reviewSchema = new mongoose.Schema({
   },
 });
 
+// request model
+const requestSchema = new mongoose.Schema({
+  // References user owner
+  userOwner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+
+  selectedReviewer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+
+  // Needed for timeout eventually
+  requestCreateDate: {
+    type: Date,
+  },
+  reviewersDeclined: [
+    {
+      type: String,
+    },
+  ],
+  status: {
+    type: String,
+  },
+  // References review owner
+  embeddedReview: { reviewSchema },
+});
+
+module.exports = mongoose.model("Request", requestSchema, "requestCollection");
 module.exports = mongoose.model("Review", reviewSchema, "reviewCollection");
