@@ -24,6 +24,8 @@ const BalancePage = ({ state, dispatch }) => {
     if (id === "decr" && topUp > 0) return setTopUp(topUp - 1);
   };
 
+  const handleCheckout = (e) => {};
+
   return (
     <Background solid>
       <Container component="main" maxWidth="xs">
@@ -60,6 +62,7 @@ const BalancePage = ({ state, dispatch }) => {
                   id="decr"
                   variant="contained"
                   size="small"
+                  disabled={state.loading}
                 >
                   -
                 </Button>
@@ -70,13 +73,22 @@ const BalancePage = ({ state, dispatch }) => {
                 </Typography>
               </Grid>
               <Grid item>
-                <Button onClick={handleClick} id="incr">
+                <Button
+                  onClick={handleClick}
+                  id="incr"
+                  disabled={state.loading}
+                >
                   +
                 </Button>
               </Grid>
             </Grid>
           </Card>
-          <Button variant="contained" color="primary">
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={state.loading}
+            onClick={handleCheckout}
+          >
             Checkout
           </Button>
         </StyledPaper>
