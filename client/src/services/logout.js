@@ -2,15 +2,15 @@
 const request = require("../utils/requestHandlers");
 
 const config = {
-  method: "get",
-  url: "/api/logout",
+  method: "post",
+  url: "http://localhost:3001/api/logout",
 };
 
 const logout = async () => {
   try {
-    return await request.getFromAPI(config);
+    await request.getFromAPI(config);
   } catch (err) {
-    return console.log(err);
+    console.log(err);
   }
 };
 

@@ -71,7 +71,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   res.clearCookie(cookieName);
   res.status(200).send("Cleared Cookie");
 });

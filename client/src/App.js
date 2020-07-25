@@ -29,21 +29,11 @@ function App() {
             <Route path="/onboard" component={OnBoard} />
             <Route path="/" exact component={SignUp} />
             {/* Need the login api */}
-            <ProtectedRoute
-              condition={() => state.user.id}
-              path="/profile"
-              component={Profile}
-            />
-            <ProtectedRoute
-              condition={() => state.user.id}
-              path="/balance"
-              component={Balance}
-            />
-            <ProtectedRoute
-              condition={() => state.user.id}
-              path="/reviews"
-              component={Reviews}
-            />
+            <ProtectedRoute condition={() => state.user.id}>
+              <Route path="/profile" component={Profile} />
+              <Route path="/reviews" component={Reviews} />
+              <Route path="/balance" component={Balance} />
+            </ProtectedRoute>
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
