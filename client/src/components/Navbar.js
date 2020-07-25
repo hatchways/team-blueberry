@@ -13,7 +13,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import CodeIcon from "@material-ui/icons/Code";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,12 +22,16 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flex: 1,
   },
-  button: {
-    textTransform: "none",
+  navLink: {
+    textDecoration: "none",
     color: theme.palette.primary.white,
     marginRight: theme.spacing(3),
     fontFamily: theme.typography.fontFamily,
     fontSize: theme.typography.fontSize,
+  },
+  menuLink: {
+    textDecoration: "none",
+    color: theme.palette.secondary,
   },
   avatar: {
     display: "flex",
@@ -51,23 +55,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = (props) => {
+const Navbar = () => {
   const classes = useStyles();
-  const { history } = props;
 
   // navbar logic
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);
   const [anchorMenu, setAnchorMenu] = useState(null);
 
-  // navbar links
-  const handleClickButton = (url) => {
-    history.push(url);
-  };
-
   // notification
   const handleNotificaton = (event) => {
     setAnchorNotificaton(event.currentTarget);
   };
+
+  // close notification
+  const handleCloseNotificaton = () => {
+    setAnchorNotificaton(null);
+  };
+
+  // add review logic
 
   // open menu
   const handleClickMenu = (event) => {
@@ -75,10 +80,11 @@ const Navbar = (props) => {
   };
 
   // close menu and route to link
-  const handleCloseMenu = (url) => {
-    history.push(url);
+  const handleCloseMenu = () => {
     setAnchorMenu(null);
   };
+
+  // add logout functionality
 
   // add responsiveness
   const theme = useTheme();
@@ -99,18 +105,12 @@ const Navbar = (props) => {
             </IconButton>
           ) : (
             <>
-              <Button
-                className={classes.button}
-                onClick={() => handleClickButton("/reviews")}
-              >
+              <Link to="/reviews" className={classes.navLink}>
                 Reviews
-              </Button>
-              <Button
-                className={classes.button}
-                onClick={() => handleClickButton("/balance")}
-              >
+              </Link>
+              <Link to="/balance" className={classes.navLink}>
                 Balance
-              </Button>
+              </Link>
               <Badge color="primary" variant="dot" overlap="circle">
                 <IconButton
                   aria-controls="menu-appbar"
@@ -120,9 +120,22 @@ const Navbar = (props) => {
                   className={classes.notification}
                 >
                   <NotificationsNoneIcon />
-                  {/* add notification menu */}
+                  {/* need to get list of notifications */}
                 </IconButton>
               </Badge>
+              <Menu
+                id="notification-menu"
+                anchorEl={anchorNotificaton}
+                getContentAnchorEl={null}
+                open={Boolean(anchorNotificaton)}
+                onClose={() => setAnchorNotificaton(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                transformOrigin={{ vertical: "top", horizontal: "center" }}
+              >
+                <MenuItem onClick={() => handleCloseNotificaton()}>
+                  Review
+                </MenuItem>
+              </Menu>
               <Button
                 color="primary"
                 variant="outlined"
@@ -154,11 +167,15 @@ const Navbar = (props) => {
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
               >
-                <MenuItem onClick={() => handleCloseMenu("/profile")}>
-                  Profile
+                <MenuItem onClick={() => handleCloseMenu()}>
+                  <Link to="/profile" className={classes.menuLink}>
+                    Profile
+                  </Link>
                 </MenuItem>
-                <MenuItem onClick={() => handleCloseMenu("/login")}>
-                  Logout
+                <MenuItem onClick={() => handleCloseMenu()}>
+                  <Link to="/login" className={classes.menuLink}>
+                    Logout
+                  </Link>
                 </MenuItem>
               </Menu>
             </>
@@ -169,4 +186,4 @@ const Navbar = (props) => {
   );
 };
 
-export default withRouter(Navbar);
+export default Navbar;

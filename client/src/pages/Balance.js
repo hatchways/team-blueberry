@@ -4,16 +4,16 @@ import Grid from "@material-ui/core/Grid";
 //Material-ui imports
 
 import Background from "../elements/Background";
-import Navbar from "../elements/Navbar";
+import Navbar from "../components/Navbar";
 
 const Balance = () => {
   return (
     <Background solid>
       <Grid container direction="column">
-        <Grid Item>
+        <Grid item>
           <Navbar />
         </Grid>
-        <Grid Item container>
+        <Grid item container>
           <Typography component="h1" variant="h6">
             Balance
           </Typography>
