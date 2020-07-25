@@ -9,8 +9,14 @@ module.exports = {
       url: "/api/languages",
     };
 
-    const data = await request.getFromApi().data;
+    const data = await request.getFromAPI();
     // return { languages: ["Javascript"] };
+
+    if (!data) {
+      return "Request Failed";
+    }
+
+    return data.data;
   },
   async updateLanguages(languages) {
     //Make put call to api for updating languages on current user
@@ -24,8 +30,18 @@ module.exports = {
       },
     };
 
-    const data = await request.putToAPI(config).data;
-    return data;
+    const response = await request.putToAPI(config);
+
+    if (typeof response.status != "undefined") {
+      console.log(response.status);
+    }
+
+    if (!response) {
+      return "Request Failed";
+    }
+
+    //Returned response.status should be 201 success
+    return response;
     // return { message: "success" };
   },
 };

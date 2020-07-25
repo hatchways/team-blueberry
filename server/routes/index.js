@@ -5,6 +5,8 @@ const auth = require("../middleware/auth");
 const User = require("../models/user");
 const { genToken } = require("../helper/helper");
 
+const languages = require("../mongoose-handlers/languages");
+
 // register route
 router.post("/register", async (req, res) => {
   const { email, name, password, confirmPassword } = req.body;
@@ -69,5 +71,13 @@ router.post("/login", async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 });
+
+router.get(
+  "/languages",
+  /*Auth,*/ async (req, res) => {
+    const languageList = await languages.getLanguages();
+    res.status(200).send(languageList);
+  }
+);
 
 module.exports = router;

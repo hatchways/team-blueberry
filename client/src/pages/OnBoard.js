@@ -90,8 +90,27 @@ export default function OnBoard() {
     if (!allValid) {
       setSubmitClicked(true);
     } else {
-      //Send req to API to save skills
-      onBoardingLogic.update;
+      const requestPromise = new Promise(async (resolve, reject) => {
+        //Send req to API to save skills
+        const response = await onBoardingLogic.updateLanguages(skillList);
+        resolve(response);
+      });
+
+      requestPromise.then((response) => {
+        //If response is successful need update view, else possibly create dialog stating error
+        if (!response == "Request Failed") {
+          //Update View
+          //Logs success or fail
+          console.log(response.data.message);
+        } else {
+          //Dialog
+        }
+      });
+
+      requestPromise.catch((error) => {
+        console.error(error);
+      });
+
       console.log(skillList);
       console.log("Submit");
     }

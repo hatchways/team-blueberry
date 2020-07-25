@@ -5,10 +5,12 @@ const languages = require("../services/languages");
 module.exports = {
   async getLanguages() {
     //Returns languages list
-    return await languages.getLanguages();
+    const data = await languages.getLanguages();
+    return data;
   },
-  async updateLanguages(languages) {
+  async updateLanguages(skillList) {
     //Returns success or fail
-    return await languages.updateLanguages(languages);
+    const data = await languages.updateLanguages(skillList);
+    return data;
   },
 };

@@ -9,10 +9,6 @@ const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
 const userRouter = require("./routes/user");
 
-const reviewRouter = require("./routes/review");
-
-// imports for mongoose models could go here
-
 // db config
 mongoose.set("useUnifiedTopology", true);
 // DB_URl = online db url
@@ -43,8 +39,6 @@ app.use("/api", indexRouter);
 app.use("/ping", pingRouter);
 app.use("/api/user", userRouter);
 
-app.use("/", reviewRouter);
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
@@ -60,5 +54,9 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.json({ error: err });
 });
+
+// TEMPORARILY CREATES THE LANGUAGES COLLECTION
+const lang = require("./mongoose-handlers/languages");
+lang.createLanguages();
 
 module.exports = app;
