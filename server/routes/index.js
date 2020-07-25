@@ -72,12 +72,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get(
-  "/languages",
-  /*Auth,*/ async (req, res) => {
-    const languageList = await languages.getLanguages();
-    res.status(200).send(languageList);
-  }
-);
+router.get("/languages", Auth, async (req, res) => {
+  const languageList = await languages.getLanguages();
+  res.status(200).send(languageList);
+});
 
 module.exports = router;

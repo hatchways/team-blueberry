@@ -12,7 +12,7 @@ const Auth = require("../middleware/auth");
 router.get("/me", /* Auth,*/ userController.showUser);
 
 // TestRoute
-router.put("/languages", /* Auth,*/ userController.updateUserLanguages);
+router.put("/languages", Auth, userController.updateUserLanguages);
 
 router.post("/review", Auth, userController.createReview);
 
