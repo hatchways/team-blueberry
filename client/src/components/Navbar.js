@@ -15,6 +15,9 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Link } from "react-router-dom";
 
+// import logout api
+import logout from "../services/logout";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -85,6 +88,10 @@ const Navbar = () => {
   };
 
   // add logout functionality
+  const handleLogout = () => {
+    logout();
+    setAnchorMenu(null);
+  };
 
   // add responsiveness
   const theme = useTheme();
@@ -172,7 +179,7 @@ const Navbar = () => {
                     Profile
                   </Link>
                 </MenuItem>
-                <MenuItem onClick={() => handleCloseMenu()}>
+                <MenuItem onClick={() => handleLogout()}>
                   <Link to="/login" className={classes.menuLink}>
                     Logout
                   </Link>
