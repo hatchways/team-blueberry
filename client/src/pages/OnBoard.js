@@ -17,6 +17,9 @@ import SubmitButton from "../elements/SubmitButton";
 import StyledPaper from "../elements/StyledPaper";
 import PageHeader from "../elements/PageHeader";
 
+//Onboarding logic imports
+const onBoarding = require("../controllers/onBoarding");
+
 const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%",
@@ -88,6 +91,7 @@ export default function OnBoard() {
       setSubmitClicked(true);
     } else {
       //Send req to API to save skills
+      Request.update;
       console.log(skillList);
       console.log("Submit");
     }
