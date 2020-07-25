@@ -18,7 +18,7 @@ import StyledPaper from "../elements/StyledPaper";
 import PageHeader from "../elements/PageHeader";
 
 //Onboarding logic imports
-const onBoarding = require("../controllers/onBoarding");
+const onBoardingLogic = require("../controllers/onBoarding");
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -91,7 +91,7 @@ export default function OnBoard() {
       setSubmitClicked(true);
     } else {
       //Send req to API to save skills
-      Request.update;
+      onBoardingLogic.update;
       console.log(skillList);
       console.log("Submit");
     }
