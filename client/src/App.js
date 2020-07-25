@@ -6,11 +6,10 @@ import initState from "./initState";
 
 import { userContext } from "./userContext";
 import { theme } from "./themes/theme";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import Profile from "./pages/Profile";
-import Balance from "./pages/Balance";
-import Reviews from "./pages/Reviews";
+import OnBoard from './pages/OnBoard';
 
 import "./App.css";
 
@@ -24,10 +23,11 @@ function App() {
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
+            <Route path="/onboard" component={OnBoard} />
             <Route path="/" exact component={SignUp} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/reviews" component={Reviews} />
-            <Route path="/balance" component={Balance} />
+            <ProtectedRoute condition={() => state.user.id} path="/protected">
+              <>Protected</>
+            </ProtectedRoute>
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
