@@ -9,7 +9,10 @@ import { theme } from "./themes/theme";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import OnBoard from './pages/OnBoard';
+import OnBoard from "./pages/OnBoard";
+import Profile from "./pages/Profile";
+import Reviews from "./pages/Reviews";
+import Balance from "./pages/Balance";
 
 import "./App.css";
 
@@ -25,9 +28,22 @@ function App() {
             <Route path="/login" component={Login} />
             <Route path="/onboard" component={OnBoard} />
             <Route path="/" exact component={SignUp} />
-            <ProtectedRoute condition={() => state.user.id} path="/protected">
-              <>Protected</>
-            </ProtectedRoute>
+            {/* Need the login api */}
+            <ProtectedRoute
+              condition={() => state.user.id}
+              path="/profile"
+              component={Profile}
+            />
+            <ProtectedRoute
+              condition={() => state.user.id}
+              path="/balance"
+              component={Balance}
+            />
+            <ProtectedRoute
+              condition={() => state.user.id}
+              path="/reviews"
+              component={Reviews}
+            />
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
