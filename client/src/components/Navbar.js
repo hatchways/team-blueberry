@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -17,6 +17,8 @@ import { Link } from "react-router-dom";
 
 // import logout api
 import logout from "../services/logout";
+// import global state
+import { userContext } from "../userContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +63,8 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = () => {
   const classes = useStyles();
 
+  const { state, dispatch } = useContext(userContext);
+
   // navbar logic
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);
   const [anchorMenu, setAnchorMenu] = useState(null);
@@ -75,7 +79,7 @@ const Navbar = () => {
     setAnchorNotificaton(null);
   };
 
-  // add review logic
+  // add review logic --> populating notifications
 
   // open menu
   const handleClickMenu = (event) => {
@@ -89,7 +93,7 @@ const Navbar = () => {
 
   // add logout functionality
   const handleLogout = () => {
-    logout();
+    logout(dispatch);
     setAnchorMenu(null);
   };
 
@@ -118,6 +122,7 @@ const Navbar = () => {
               <Link to="/balance" className={classes.navLink}>
                 Balance
               </Link>
+              {/* Populating notifications with badge --> show number of notifications? */}
               <Badge color="primary" variant="dot" overlap="circle">
                 <IconButton
                   aria-controls="menu-appbar"
@@ -127,7 +132,6 @@ const Navbar = () => {
                   className={classes.notification}
                 >
                   <NotificationsNoneIcon />
-                  {/* need to get list of notifications */}
                 </IconButton>
               </Badge>
               <Menu
@@ -179,11 +183,7 @@ const Navbar = () => {
                     Profile
                   </Link>
                 </MenuItem>
-                <MenuItem onClick={() => handleLogout()}>
-                  <Link to="/login" className={classes.menuLink}>
-                    Logout
-                  </Link>
-                </MenuItem>
+                <MenuItem onClick={() => handleLogout()}>Logout</MenuItem>
               </Menu>
             </>
           )}
