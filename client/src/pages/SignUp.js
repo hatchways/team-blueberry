@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { userSignUp } from "../services/signupService";
 //Material-ui imports
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -151,22 +151,16 @@ export default function SignIn(props) {
       console.log("NOT PASS");
       setSubmitClicked(true);
     } else {
-      axios({
-        method: "POST",
-        data: {
-          email: email.value,
-          name: username.value,
-          password: password.value,
-          confirmPassword: repeatedPassword.value,
-        },
-        withCredentials: true,
-        url: "http://localhost:3001/api/register",
-      })
+      userSignUp(
+        email.value,
+        username.value,
+        password.value,
+        repeatedPassword.value
+      )
         .then((res) => {
           props.history.push("/onboard");
         })
         .catch((error) => {
-          //If getting 409 - raise email error
           if (error.response.data === "Email already exist!") {
             setEmail((prev) => {
               return {

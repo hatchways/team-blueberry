@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { userLogin } from "../services/loginService";
 //Material-ui imports
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn(props) {
+export default function Login(props) {
   const classes = useStyles();
 
   const [loginEmail, setLoginEmail] = useState("");
@@ -37,17 +37,9 @@ export default function SignIn(props) {
     if (!loginEmail || !loginPassword) {
       setSubmitClicked(true);
     } else {
-      axios({
-        method: "POST",
-        data: {
-          email: loginEmail,
-          password: loginPassword,
-        },
-        withCredentials: true,
-        url: "http://localhost:3001/api/login",
-      })
+      userLogin(loginEmail, loginPassword)
         .then((res) => {
-          props.history.push("/");
+          window.location.href = "/";
         })
         .catch((error) => {
           //If getting 409 - raise email error

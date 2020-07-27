@@ -3,41 +3,25 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import reducer from "./reducers";
 import initState from "./initState";
-import axios from "axios";
 import { userContext } from "./userContext";
 import { theme } from "./themes/theme";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import OnBoard from "./pages/OnBoard";
+import { userGet } from "./services/userService";
 
 import "./App.css";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, {}, initState);
-
-  //Getting user:
   useEffect(() => {
-    const getUser = async () => {
-      //dispatch({ type: "FETCH_USER" }); // Why do this if we can init with loading: true?
-      await axios({
-        method: "GET",
-        withCredentials: true,
-        url: "http://localhost:3001/api/user/me",
-      })
-        .then((res) => {
-          dispatch({ type: "FETCH_USER_SUCCESS", user: res.data });
-        })
-        .catch((error) => {
-          dispatch({ type: "FETCH_USER_ERROR", error: { ...error } });
-        });
-    };
-    getUser();
-  }, []);
+    userGet()(dispatch);
+  }, [dispatch]);
   console.log(state);
 
   return (
-    <userContext.Provider value={state.user}>
+    <userContext.Provider value={(state, dispatch)}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Switch>

@@ -4,9 +4,6 @@ const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-
-const cors = require("cors"); // Util to have client and server on diffrent IPs
-
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
 const userRouter = require("./routes/user");
@@ -31,13 +28,6 @@ mongoose
 const { json, urlencoded } = express;
 
 var app = express();
-
-app.use(
-  cors({
-    origin: "http://localhost:3000", // React App connects from adress
-    credentials: true,
-  })
-);
 
 app.use(logger("dev"));
 app.use(json());
