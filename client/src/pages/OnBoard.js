@@ -17,8 +17,8 @@ import SubmitButton from "../elements/SubmitButton";
 import StyledPaper from "../elements/StyledPaper";
 import PageHeader from "../elements/PageHeader";
 
-//Onboarding logic imports
-const onBoardingLogic = require("../controllers/onBoarding");
+//Languages services import
+import { updateLanguages, getLanguages } from "../services/languages";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -92,8 +92,8 @@ export default function OnBoard() {
     } else {
       const requestPromise = new Promise(async (resolve, reject) => {
         //Send req to API to save skills
-        const response = await onBoardingLogic.updateLanguages(skillList);
-        resolve(response);
+        const data = await updateLanguages(skillList);
+        resolve(data);
       });
 
       requestPromise.then((response) => {
