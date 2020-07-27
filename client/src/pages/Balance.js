@@ -12,13 +12,14 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
 
 const BalancePage = ({ state, dispatch }) => {
   const user = useContext(userContext);
   const [topUp, setTopUp] = useState(2);
 
   const handleClick = ({ target, ...e }) => {
-    // e.prototype.preventDefault();
     const { id } = target.closest("button");
     if (id === "incr") return setTopUp(topUp + 1);
     if (id === "decr" && topUp > 0) return setTopUp(topUp - 1);
@@ -62,13 +63,18 @@ const BalancePage = ({ state, dispatch }) => {
                   id="decr"
                   variant="contained"
                   size="small"
-                  disabled={state.loading}
+                  disabled={state.loading || !topUp}
+                  aria-label="Subtract Credit"
                 >
-                  -
+                  <RemoveIcon />
                 </Button>
               </Grid>
               <Grid item>
-                <Typography component="h2" variant="h6">
+                <Typography
+                  aria-label="Credits to Purchase"
+                  component="h2"
+                  variant="h6"
+                >
                   {topUp}
                 </Typography>
               </Grid>
@@ -76,9 +82,12 @@ const BalancePage = ({ state, dispatch }) => {
                 <Button
                   onClick={handleClick}
                   id="incr"
+                  variant="contained"
+                  size="small"
                   disabled={state.loading}
+                  aria-label="Add Credit"
                 >
-                  +
+                  <AddIcon />
                 </Button>
               </Grid>
             </Grid>
