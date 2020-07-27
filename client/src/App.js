@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import OnBoard from "./pages/OnBoard";
 import Balance from "./pages/Balance";
+import Checkout from "./pages/Checkout";
 
 import "./App.css";
 
@@ -28,6 +29,14 @@ function App() {
             <Route path="/" exact component={SignUp} />
             <ProtectedRoute condition={() => state.user.id} path="/balance">
               <Balance state={state} dispatch={dispatch} />
+            </ProtectedRoute>
+            <ProtectedRoute
+              condition={() => state.user.id && state.cart.length}
+              path="/checkout"
+              // creates a failover: first to balance then to login
+              redirect="/balance"
+            >
+              <Checkout state={state} dispatch={dispatch} />
             </ProtectedRoute>
           </Switch>
         </BrowserRouter>

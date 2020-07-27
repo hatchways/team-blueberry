@@ -9,6 +9,12 @@ export default (state, action) => {
     case "FETCH_USER_SUCCESS": {
       return { ...state, user: action.user, loading: false };
     }
+    case "ADD_ITEM_TO_CART": {
+      return { ...state, loading: true, cart: [...state.cart, action.item] };
+    }
+    case "FINISH_LOAD": {
+      return { ...state, loading: false };
+    }
     default: {
       return state;
     }

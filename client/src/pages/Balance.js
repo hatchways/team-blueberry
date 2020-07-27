@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import userContext from "../userContext";
 import Background from "../elements/Background";
 import StyledPaper from "../elements/StyledPaper";
@@ -18,6 +19,7 @@ import RemoveIcon from "@material-ui/icons/Remove";
 const BalancePage = ({ state, dispatch }) => {
   const user = useContext(userContext);
   const [topUp, setTopUp] = useState(2);
+  const history = useHistory();
 
   const handleClick = ({ target, ...e }) => {
     const { id } = target.closest("button");
@@ -25,7 +27,13 @@ const BalancePage = ({ state, dispatch }) => {
     if (id === "decr" && topUp > 0) return setTopUp(topUp - 1);
   };
 
-  const handleCheckout = (e) => {};
+  const handleCheckout = (e) => {
+    dispatch({
+      type: "ADD_ITEM_TO_CART",
+      item: { name: "Review Credits", quantity: topUp, unitCost: 10 },
+    });
+    history.push("/checkout");
+  };
 
   return (
     <Background solid>
