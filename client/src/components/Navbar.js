@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -17,8 +17,6 @@ import { Link } from "react-router-dom";
 
 // import logout api
 import logout from "../services/logout";
-// import global state
-import { userContext } from "../userContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,10 +58,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = () => {
+const Navbar = ({ state, dispatch }) => {
   const classes = useStyles();
-
-  const { state, dispatch } = useContext(userContext);
 
   // navbar logic
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);

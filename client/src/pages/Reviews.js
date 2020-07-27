@@ -6,12 +6,12 @@ import Grid from "@material-ui/core/Grid";
 import Background from "../elements/Background";
 import Navbar from "../components/Navbar";
 
-const Reviews = () => {
+const Reviews = ({ state, dispatch }) => {
   return (
     <Background solid>
       <Grid container direction="column">
         <Grid item>
-          <Navbar />
+          <Navbar state={state} dispatch={dispatch} />
         </Grid>
         <Grid item container>
           <Typography component="h1" variant="h6">

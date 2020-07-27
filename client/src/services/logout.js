@@ -9,7 +9,7 @@ const logout = async (dispatch) => {
   dispatch({ type: "REMOVE_USER" });
   try {
     await request.postFromAPI(config);
-    dispatch({ type: "REMOVE_USER_SUCCESS", user: {} });
+    dispatch({ type: "REMOVE_USER_SUCCESS", user: { id: null } });
   } catch (err) {
     dispatch({ type: "REMOVE_USER_ERROR", error: { ...err } });
   }
