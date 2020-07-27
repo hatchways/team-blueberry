@@ -9,15 +9,6 @@ export default (state, action) => {
     case "FETCH_USER_SUCCESS": {
       return { ...state, user: action.user, loading: false };
     }
-    case "LOGIN_USER": {
-      return { ...state, loading: true };
-    }
-    case "LOGIN_USER_ERROR": {
-      return { ...state, error: action.error, loading: false };
-    }
-    case "LOGIN_USER_SUCCESS": {
-      return { ...state, user: action.user, loading: false };
-    }
     default: {
       return state;
     }
