@@ -1,4 +1,3 @@
-// need utils/requestHandlers for GET request
 const request = require("../utils/requestHandlers");
 
 const config = {
@@ -6,11 +5,13 @@ const config = {
   url: "http://localhost:3001/api/logout",
 };
 
-const logout = async () => {
+const logout = async (dispatch) => {
+  dispatch({ type: "REMOVE_USER" });
   try {
-    await request.getFromAPI(config);
+    await request.postFromAPI(config);
+    dispatch({ type: "REMOVE_USER_SUCCESS", user: {} });
   } catch (err) {
-    console.log(err);
+    dispatch({ type: "REMOVE_USER_ERROR", error: { ...err } });
   }
 };
 
