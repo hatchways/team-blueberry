@@ -17,7 +17,6 @@ import "./App.css";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, {}, initState);
-
   return (
     <userContext.Provider value={state.user}>
       <MuiThemeProvider theme={theme}>

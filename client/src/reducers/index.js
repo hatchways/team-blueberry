@@ -1,6 +1,6 @@
 export default (state, action) => {
   switch (action.type) {
-    case "FETCH_USER": {
+    case "FETCH": {
       return { ...state, loading: true };
     }
     case "FETCH_USER_ERROR": {
@@ -10,7 +10,14 @@ export default (state, action) => {
       return { ...state, user: action.user, loading: false };
     }
     case "ADD_ITEM_TO_CART": {
-      return { ...state, loading: true, cart: [...state.cart, action.item] };
+      // TODO handle duplicates?
+      return { ...state, loading: true, cart: [action.item] };
+    }
+    case "CREATE_PAYMENT_INTENT": {
+      return { ...state, loading: false };
+    }
+    case "CREATE_PAYMENT_INTENT_ERROR": {
+      return { ...state, loading: false };
     }
     case "FINISH_LOAD": {
       return { ...state, loading: false };

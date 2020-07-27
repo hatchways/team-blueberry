@@ -17,13 +17,15 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 
 const BalancePage = ({ state, dispatch }) => {
+  const priorTopUp = state.cart.find((item) => item.name === "Review Credits")
+    ?.quantity;
   const user = useContext(userContext);
-  const [topUp, setTopUp] = useState(2);
+  const [topUp, setTopUp] = useState(() => priorTopUp || 2);
   const history = useHistory();
 
   const handleClick = ({ target, ...e }) => {
     const { id } = target.closest("button");
-    if (id === "incr") return setTopUp(topUp + 1);
+    if (id === "incr") return setTopUp(() => topUp + 1);
     if (id === "decr" && topUp > 0) return setTopUp(topUp - 1);
   };
 
