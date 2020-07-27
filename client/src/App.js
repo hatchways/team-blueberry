@@ -20,16 +20,15 @@ function App() {
   const [state, dispatch] = useReducer(reducer, {}, initState);
 
   return (
-    <userContext.Provider value={state.user}>
+    <userContext.Provider value={{ state, dispatch }}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
-            <Route path="/onboard" component={OnBoard} />
             <Route path="/" exact component={SignUp} />
-            {/* Need the login api */}
             <ProtectedRoute condition={() => state.user.id}>
+              <Route path="/onboard" component={OnBoard} />
               <Route path="/profile" component={Profile} />
               <Route path="/reviews" component={Reviews} />
               <Route path="/balance" component={Balance} />
