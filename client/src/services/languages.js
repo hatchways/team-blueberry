@@ -23,7 +23,7 @@ const getLanguages = async (dispatch) => {
 
 const updateLanguages = async (dispatch, languages) => {
   console.log("dispatch", dispatch);
-  dispatch({ type: "UPDATE_USER_LANGUAGES" });
+  //   dispatch({ type: "UPDATE_USER_LANGUAGES" });
 
   //Make put call to api for updating languages on current user
   const config = {
@@ -43,11 +43,11 @@ const updateLanguages = async (dispatch, languages) => {
   }
 
   if (!response) {
-    dispatch({ type: "UPDATE_USER_LANGUAGES_ERROR" });
+    // dispatch({ type: "UPDATE_USER_LANGUAGES_ERROR" });
     return "Request Failed";
   }
 
-  dispatch({ type: "UPDATE_USER_LANGUAGES_SUCCESS" });
+  //   dispatch({ type: "UPDATE_USER_LANGUAGES_SUCCESS" });
 };
 
 export { getLanguages, updateLanguages };

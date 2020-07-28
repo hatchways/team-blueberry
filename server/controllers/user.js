@@ -4,29 +4,6 @@ const userModel = require("../mongoose-handlers/user");
 // import model User for searching
 const Review = require("../models/review-request");
 
-// const showUser = async (req, res, next) => {
-//   //We may not need the check for logged in user any longer due to Auth middleware, as Auth is checked prior to each API call
-//   // check for logged in user
-//   const userId = req.user ? req.user.id : null;
-//   if (!userId)
-//     return res
-//       .status(401)
-//       .send("You are not authorized to access this resource");
-//   try {
-//     const user = await User.findById(userId)
-//       .exec()
-//       .then((user) => user.toObject());
-//     return res.status(200).send({ ...user });
-//   } catch (e) {
-//     // TODO maybe handle exception if user is logged in but db does not return
-//     // consider security implications
-//     console.log(e);
-//     return res
-//       .status(401)
-//       .send("You are not authorized to access this resource");
-//   }
-// };
-
 module.exports = {
   async showUser(req, res, next) {
     //We may not need the check for logged in user any longer due to Auth middleware, as Auth is checked prior to each API call

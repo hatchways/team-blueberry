@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OnBoard = (dispatch) => {
+const OnBoard = ({ state, dispatch }) => {
   const classes = useStyles();
 
   const languages = [
