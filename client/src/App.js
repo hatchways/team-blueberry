@@ -9,7 +9,7 @@ import { theme } from "./themes/theme";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import OnBoard from './pages/OnBoard';
+import OnBoard from "./pages/OnBoard";
 
 import "./App.css";
 
