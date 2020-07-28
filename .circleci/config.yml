@@ -23,8 +23,11 @@ jobs: # a collection of steps
           paths:
             - server/node_modules
       - run:
-          name: audit
-          command: npm audit --audit-level=moderate
+          name: audit server
+          command: cd server && npm audit --audit-level=moderate
+      - run:
+          name: audit client
+          command: cd client && npm audit --audit-level=moderate
       - run: # run tests
           name: test
           command: cd server && npm test
