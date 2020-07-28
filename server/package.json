@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "bull": "^3.16.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^8.0.0",
@@ -17,7 +18,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.25",
     "morgan": "~1.9.1",
-    "nodemon": "^1.19.4"
+    "nodemon": "^1.19.4",
+    "redis": "^3.0.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
