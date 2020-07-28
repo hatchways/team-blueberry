@@ -9,7 +9,7 @@ const getLanguages = async (dispatch) => {
     url: "/api/languages",
   };
 
-  const data = await request.getFromAPI();
+  const data = await request.getFromAPI(config);
   // return { languages: ["Javascript"] };
 
   if (!data) {
@@ -21,9 +21,10 @@ const getLanguages = async (dispatch) => {
   return data.data;
 };
 
-const updateLanguages = async (dispatch, languages) => {
+const updateLanguages = async ({ ...dispatch }) => {
+  const languages = { language: "Javascript", level: "Advanced" };
   console.log("dispatch", dispatch);
-  //   dispatch({ type: "UPDATE_USER_LANGUAGES" });
+  dispatch({ type: "UPDATE_USER_LANGUAGES" });
 
   //Make put call to api for updating languages on current user
   const config = {

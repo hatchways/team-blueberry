@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OnBoard = ({ state, dispatch }) => {
+const OnBoard = (dispatch) => {
   const classes = useStyles();
 
   const languages = [
@@ -91,7 +91,7 @@ const OnBoard = ({ state, dispatch }) => {
       setSubmitClicked(true);
     } else {
       console.log("dispatch", dispatch);
-      updateLanguages(dispatch, skillList);
+      updateLanguages(dispatch);
 
       console.log(skillList);
       console.log("Submit");
