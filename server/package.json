@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon ./bin/www",
     "debug": "nodemon  --inspect ./bin/www",
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
+    "seed": "node seeder.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
@@ -16,6 +17,7 @@
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.25",
+    "mongoose-seed": "^0.6.0",
     "morgan": "~1.9.1",
     "nodemon": "^1.19.4"
   },
