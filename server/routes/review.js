@@ -32,6 +32,7 @@ router.post("/review", Auth, async (req, res) => {
 });
 
 // gets all relevant reviews
+// TODO change to proper CRUD .get("/review")
 router.post("/reviews", Auth, async (req, res) => {
   try {
     const userId = req.user;

@@ -36,22 +36,19 @@ const showCart = (cart) => {
 const stripePromise = loadStripe("key");
 const Checkout = ({ state, dispatch }) => {
   usePageLoaded(dispatch);
-  useEffect(() => {
-    createPaymentIntent({ cart: state.cart })(dispatch);
-  }, [dispatch]);
   return (
     <>
       <h1>Checkout</h1>
       <h2>Cart:</h2>
       {showCart(state.cart)}
       <Elements stripe={stripePromise}>
-        <StripeForm />
+        <StripeForm cart={state.cart} dispatch={dispatch} />
       </Elements>
     </>
   );
 };
 
-const StripeForm = () => {
+const StripeForm = ({ cart, dispatch }) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -66,7 +63,7 @@ const StripeForm = () => {
     }
 
     const cardElement = elements.getElement(CardElement);
-
+    createPaymentIntent({ cart })(dispatch);
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: cardElement,
