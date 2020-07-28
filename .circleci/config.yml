@@ -22,6 +22,9 @@ jobs: # a collection of steps
           key: dependency-cache-{{ checksum "server/package.json" }}
           paths:
             - server/node_modules
+      - run:
+          name: audit
+          command: npm audit --audit-level=moderate
       - run: # run tests
           name: test
           command: cd server && npm test
