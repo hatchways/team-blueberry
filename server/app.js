@@ -4,6 +4,7 @@ const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const redis = require("redis");
 
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
@@ -29,6 +30,18 @@ mongoose
     console.log("ERROR", err.message);
   });
 
+// redis config
+// production will be put in env file
+const client = redis.createClient();
+
+client.on("connect", function () {
+  console.log("Redis client connected");
+});
+
+client.on("error", function (err) {
+  console.log("Something went wrong " + err);
+});
+
 const { json, urlencoded } = express;
 
 var app = express();
@@ -43,7 +56,7 @@ app.use("/api", indexRouter);
 app.use("/ping", pingRouter);
 app.use("/api/user", userRouter);
 
-app.use("/", reviewRouter);
+app.use("/api/review", reviewRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
