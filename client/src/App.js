@@ -4,12 +4,13 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import reducer from "./reducers";
 import initState from "./initState";
 
-import { userContext } from "./userContext";
+import userContext from "./userContext";
 import { theme } from "./themes/theme";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import OnBoard from "./pages/OnBoard";
+import Balance from "./pages/Balance";
 
 import "./App.css";
 
@@ -25,8 +26,8 @@ function App() {
             <Route path="/login" component={Login} />
             <Route path="/onboard" component={OnBoard} />
             <Route path="/" exact component={SignUp} />
-            <ProtectedRoute condition={() => state.user.id} path="/protected">
-              <>Protected</>
+            <ProtectedRoute condition={() => state.user.id} path="/balance">
+              <Balance state={state} dispatch={dispatch} />
             </ProtectedRoute>
           </Switch>
         </BrowserRouter>
