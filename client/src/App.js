@@ -16,7 +16,6 @@ import "./App.css";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, {}, initState);
-
   return (
     <userContext.Provider value={state.user}>
       <MuiThemeProvider theme={theme}>
@@ -24,7 +23,10 @@ function App() {
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
-            <Route path="/onboard" component={OnBoard} />
+            <Route path="/onboard" dispatch={dispatch} component={OnBoard} />
+            {/* <ProtectedRoute condition={() => state.user.id} path="/onboard">
+              <OnBoard />
+            </ProtectedRoute> */}
             <Route path="/" exact component={SignUp} />
             <ProtectedRoute condition={() => state.user.id} path="/balance">
               <Balance state={state} dispatch={dispatch} />

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function OnBoard() {
+const OnBoard = (dispatch) => {
   const classes = useStyles();
 
   const languages = [
@@ -90,26 +90,8 @@ export default function OnBoard() {
     if (!allValid) {
       setSubmitClicked(true);
     } else {
-      const requestPromise = new Promise(async (resolve, reject) => {
-        //Send req to API to save skills
-        const data = await updateLanguages(skillList);
-        resolve(data);
-      });
-
-      requestPromise.then((response) => {
-        //If response is successful need update view, else possibly create dialog stating error
-        if (!response == "Request Failed") {
-          //Update View
-          //Logs success or fail
-          console.log(response.data.message);
-        } else {
-          //Dialog
-        }
-      });
-
-      requestPromise.catch((error) => {
-        console.error(error);
-      });
+      console.log("dispatch", dispatch);
+      updateLanguages(dispatch, skillList);
 
       console.log(skillList);
       console.log("Submit");
@@ -243,4 +225,6 @@ export default function OnBoard() {
       </Container>
     </Background>
   );
-}
+};
+
+export default OnBoard;
