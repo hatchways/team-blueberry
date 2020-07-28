@@ -3,6 +3,8 @@ const router = express.Router();
 
 const reviewModel = require("../mongoose-handlers/review");
 
+const requestQueue = require("../queues/request");
+
 // import model User for searching
 const Review = require("../models/review-request");
 
@@ -25,6 +27,21 @@ router.post("/review", Auth, async (req, res) => {
     await reviewModel.createReview(userId, data, () => {
       res.status(201).send({ message: "Success" });
     });
+
+    // add the status and languageLevel for processing job
+    // repeat job every 24 hours
+    await requestQueue.add(
+      {
+        languageLevel: data.languageLevel,
+        status: "pending",
+      },
+      {
+        repeat: {
+          every: 24 * 60 * 60 * 1000,
+        },
+      }
+    );
+    res.status(200).send({ message: "Success" });
   } catch {
     res.status(500).send({ message: "There was an internal server error." });
     console.log("There was an error in creating review.");
