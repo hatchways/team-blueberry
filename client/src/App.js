@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import reducer from "./reducers";
 import initState from "./initState";
 
-import { userContext } from "./userContext";
+import userContext from "./userContext";
 import { theme } from "./themes/theme";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
