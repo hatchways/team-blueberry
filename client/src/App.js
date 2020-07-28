@@ -9,7 +9,6 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import OnBoard from "./pages/OnBoard";
-import reviewDialog from "./components/UploadCode";
 import { userGet } from "./services/userService";
 
 import "./App.css";
@@ -22,14 +21,13 @@ function App() {
   console.log(state);
 
   return (
-    <userContext.Provider value={state}>
+    <userContext.Provider value={state.user}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
             <Route path="/onboard" component={OnBoard} />
-            <Route path="/review" component={reviewDialog} />
             <Route path="/" exact component={SignUp} />
             <ProtectedRoute
               condition={() => {

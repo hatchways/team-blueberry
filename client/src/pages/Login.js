@@ -14,7 +14,7 @@ import Background from "../elements/Background";
 import PageHeader from "../elements/PageHeader";
 import SubmitButton from "../elements/SubmitButton";
 import StyledPaper from "../elements/StyledPaper";
-import Alert from "../elements/Alert";
+import Alert from "../elements/SnackBar";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -100,7 +100,7 @@ export default function Login(props) {
               </Grid>
               <Grid item>
                 <Alert
-                  display={loginError ? "block" : "none"}
+                  open={loginError ? true : false}
                   onClick={() => setLoginError(false)}
                 >
                   {loginError}
