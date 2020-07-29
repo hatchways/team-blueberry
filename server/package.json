@@ -30,7 +30,6 @@
   "config": {
     "mongodbMemoryServer": {
       "version": "latest",
-      "debug": "on"
     }
   }
 }
