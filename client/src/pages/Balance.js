@@ -106,4 +106,5 @@ const BalancePage = ({ state, dispatch }) => {
   );
 };
 
+
 export default BalancePage;

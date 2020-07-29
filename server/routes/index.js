@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const Auth = require("../middleware/auth");
 const User = require("../models/user");
 const { genToken } = require("../helper/helper");
+const { cookieName } = require("../constants");
 
 const languages = require("../mongoose-handlers/languages");
 
@@ -72,9 +73,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
+
 router.get("/languages", Auth, async (req, res) => {
   const languageList = await languages.getLanguages();
   res.status(200).send(languageList);
 });
+
+router.post("/logout", (req, res) => {
+  res.clearCookie(cookieName);
+  res.status(200).send("Cleared Cookie");
+});
+
 
 module.exports = router;
