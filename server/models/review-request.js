@@ -43,6 +43,8 @@ const reviewSchema = new mongoose.Schema({
   },
 });
 
+const Review = mongoose.model("Review", reviewSchema, "reviewCollection");
+
 // request model
 const requestSchema = new mongoose.Schema({
   // References user owner
@@ -79,5 +81,6 @@ const requestSchema = new mongoose.Schema({
   embeddedReview: { reviewSchema },
 });
 
-module.exports = mongoose.model("Request", requestSchema, "requestCollection");
-module.exports = mongoose.model("Review", reviewSchema, "reviewCollection");
+const Request = mongoose.model("Request", requestSchema, "requestCollection");
+
+module.exports = { Review, Request };
