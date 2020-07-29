@@ -17,7 +17,7 @@ module.exports = {
       if (err) return console.log(err);
 
       const requestId = newRequest._id;
-      cb();
+      cb(requestId);
     });
   },
 };
