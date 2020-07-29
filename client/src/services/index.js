@@ -1,17 +1,14 @@
-const parseFetch = async (uri, options) =>
-  await fetch(uri, options)
-    .then((res) => res.text())
-    .then((res) => JSON.parse(res));
+const axios = require("axios");
 
 export const userService = (body) => async (dispatch) => {
   // set loading state
   dispatch({ type: "FETCH" });
 
   try {
-    const result = await parseFetch(
-      "/api/user/me"
-      // if options are needed
-    );
+    const result = await axios({
+      method: "GET",
+      url: "/api/user/me",
+    });
     // throw if server returns an error message
     if (result.error) throw result.error;
 
@@ -27,7 +24,8 @@ export const createPaymentIntent = ({ cart }) => async (dispatch) => {
 
   try {
     // fetch to post payment internet
-    const result = await parseFetch("/api/payment", {
+    const result = await axios({
+      url: "/api/payment",
       method: "POST",
       body: JSON.stringify({ cart }),
       headers: {

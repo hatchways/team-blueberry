@@ -18,8 +18,9 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import { reviewCredits } from "../utils/itemLookup";
 
 const BalancePage = ({ state, dispatch }) => {
-  const priorTopUp = state.cart.find((item) => item.name === reviewCredits.name)
-    ?.quantity;
+  const priorTopUp = state?.cart?.find(
+    (item) => item.name === reviewCredits.name
+  )?.quantity;
   const user = useContext(userContext);
   const [topUp, setTopUp] = useState(
     () => priorTopUp || reviewCredits.quantity
