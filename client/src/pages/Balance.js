@@ -15,12 +15,15 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import { reviewCredits } from "../utils/itemLookup";
 
 const BalancePage = ({ state, dispatch }) => {
-  const priorTopUp = state.cart.find((item) => item.name === "Review Credits")
+  const priorTopUp = state.cart.find((item) => item.name === reviewCredits.name)
     ?.quantity;
   const user = useContext(userContext);
-  const [topUp, setTopUp] = useState(() => priorTopUp || 2);
+  const [topUp, setTopUp] = useState(
+    () => priorTopUp || reviewCredits.quantity
+  );
   const history = useHistory();
 
   const handleClick = ({ target, ...e }) => {
@@ -32,7 +35,7 @@ const BalancePage = ({ state, dispatch }) => {
   const handleCheckout = (e) => {
     dispatch({
       type: "ADD_ITEM_TO_CART",
-      item: { name: "Review Credits", quantity: topUp, unitCost: 10 },
+      item: { ...reviewCredits, quantity: topUp },
     });
     history.push("/checkout");
   };

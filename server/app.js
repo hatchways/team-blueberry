@@ -8,7 +8,6 @@ const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
 const paymentRouter = require("./routes/payment");
-const reviewRouter = require("./routes/review");
 
 // imports for mongoose models could go here
 
@@ -41,8 +40,6 @@ app.use(express.static(join(__dirname, "public")));
 app.use("/api", indexRouter);
 app.use("/api/user", userRouter);
 app.use("/api/payment", paymentRouter);
-// TODO when review is proper CRUD, change to "/review"
-app.use("/", reviewRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
