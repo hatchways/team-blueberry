@@ -1,4 +1,1 @@
-export default () => ({
-  user: { id: null },
-  cart: [{}],
-});
+export default () => ({ user: {} });

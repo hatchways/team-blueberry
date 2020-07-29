@@ -17,6 +17,9 @@ import SubmitButton from "../elements/SubmitButton";
 import StyledPaper from "../elements/StyledPaper";
 import PageHeader from "../elements/PageHeader";
 
+//Languages services import
+import { updateLanguages, getLanguages } from "../services/languages";
+
 const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%",
@@ -36,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function OnBoard() {
+const OnBoard = ({ state, dispatch }) => {
   const classes = useStyles();
 
   const languages = [
@@ -49,6 +52,7 @@ export default function OnBoard() {
     "C++",
     "Ruby",
   ];
+
   const levels = ["Beginner", "Advanced", "Expert"];
 
   const [skillList, setSkillList] = useState([{ language: "", level: "" }]);
@@ -87,7 +91,8 @@ export default function OnBoard() {
     if (!allValid) {
       setSubmitClicked(true);
     } else {
-      //Send req to API to save skills
+      updateLanguages(skillList, dispatch);
+
       console.log(skillList);
       console.log("Submit");
     }
@@ -220,4 +225,6 @@ export default function OnBoard() {
       </Container>
     </Background>
   );
-}
+};
+
+export default OnBoard;

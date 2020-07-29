@@ -26,10 +26,10 @@ function App() {
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
-            <Route path="/" exact component={SignUp} />
             <ProtectedRoute condition={() => state.user.id} path="/onboard">
-              <OnBoard />
+              <OnBoard state={state} dispatch={dispatch} />
             </ProtectedRoute>
+            <Route path="/" exact component={SignUp} />
             <ProtectedRoute condition={() => state.user.id} path="/profile">
               <Profile state={state} dispatch={dispatch} />
             </ProtectedRoute>
