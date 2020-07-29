@@ -11,16 +11,18 @@ const data =
     : // test/development seeds
       devSeeds;
 
-seeder.connect(dbString, () => {
-  seeder.loadModels([
-    "./models/user.js",
-    "./models/payment.js",
-    "./models/review-request.js",
-    // ? can this be done programmatically?
-  ]);
-  seeder.clearModels(["User", "Payment", "Request", "Review"], () => {
-    seeder.populateModels(data, () => {
-      seeder.disconnect();
+module.exports = (mongoUri) =>
+  seeder.connect(mongoUri || dbString, () => {
+    console.log(`seeding to ${mongoUri || dbString}`);
+    seeder.loadModels([
+      "./models/user.js",
+      "./models/payment.js",
+      "./models/review-request.js",
+      // ? can this be done programmatically?
+    ]);
+    seeder.clearModels(["User", "Payment", "Request", "Review"], () => {
+      seeder.populateModels(data, () => {
+        seeder.disconnect();
+      });
     });
   });
-});

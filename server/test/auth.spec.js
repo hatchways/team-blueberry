@@ -7,8 +7,6 @@ chai.use(chaiHttp);
 
 describe("index controller", () => {
   describe("register endpoint errors", () => {
-    // runs seeds
-    require("../seeder");
     const response = [
       ["All fields need to be filled!", 400],
       ["Email already exist!", 409],
