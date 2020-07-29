@@ -6,7 +6,7 @@
     "dev": "nodemon ./bin/www",
     "debug": "nodemon  --inspect ./bin/www",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
-    "seed": "node seeder.js"
+    "seed": "node -e require('seeder')()"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
@@ -24,6 +24,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "mocha": "^6.2.3"
+    "mocha": "^6.2.3",
+    "mongodb-memory-server": "^6.6.3"
   }
 }
