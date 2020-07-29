@@ -1,8 +1,7 @@
-// Imports for models for searching
 const reviewModel = require("../mongoose-handlers/review");
 const userModel = require("../mongoose-handlers/user");
-// import model User for searching
 const Review = require("../models/review-request");
+const requestHandler = require("../mongoose-handlers/request");
 
 module.exports = {
   async showUser(req, res, next) {
@@ -28,15 +27,14 @@ module.exports = {
     }
   },
 
-  // Need to clean up error catching
   async updateUserLanguages(req, res) {
     try {
       // Make calls to to update user languages on user model
       const userId = req.user,
         skillList = { ...req.body.languages };
 
-      await userModel.updateLanguages(userId, skillList, (boolError, error) => {
-        if (boolError) {
+      await userModel.updateLanguages(userId, skillList, (error) => {
+        if (error) {
           console.error(error.message);
           return res.status(500).send({
             message: "There was an internal server error.",
@@ -52,35 +50,42 @@ module.exports = {
         message: "There was an internal server error.",
       });
     }
-
-    // console.log(req.body.languages);
-    //return res.status(201).send(skillList);
   },
+  createReview: async (userId, data, cb) => {
+    // create const variables from data
+    const language = data.language,
+      title = data.title,
+      codeSnippet = data.codeSnippet,
+      messageText = data.messageText;
+    const messagePostedBy = userId;
+    const messagePostDate = new Date();
 
-  // Creates review based of data provided
-  async createReview(req, res) {
-    try {
-      const userId = req.user;
+    const newReview = new Review({
+      title,
+      language,
+      userId,
+      messages: [
+        { messageText, codeSnippet, messagePostedBy, messagePostDate },
+      ],
+    });
 
-      const data = {
-        language: req.body.language,
-        languageLevel: req.body.languageLevel,
-        title: req.body.title,
-        codeSnippet: req.body.codeSnippet,
-        messageText: req.body.messageText,
-      };
+    newReview.save(function (err) {
+      if (err) return console.log(err);
 
-      await reviewModel.createReview(userId, data, () => {
-        res.status(201).send({ message: "Success" });
-      });
-    } catch {
-      console.log("There was an error in creating review.");
-      return res
-        .status(500)
-        .send({ message: "There was an internal server error." });
-    }
+      const status = "Pending",
+        userLanguageLevel = data.languageLevel;
+
+      requestHandler.createRequest(
+        {
+          userId,
+          userLanguageLevel,
+          status,
+          embeddedReview: newReview,
+        },
+        cb
+      );
+    });
   },
-
   // gets all relevant reviews
   async getReviews(req, res) {
     try {

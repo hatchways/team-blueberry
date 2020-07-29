@@ -10,27 +10,22 @@ const getLanguages = async (dispatch) => {
   };
 
   const data = await request.getFromAPI(config);
-  // return { languages: ["Javascript"] };
-
   if (!data) {
     dispatch({ type: "GET_LANGUAGES_ERROR" });
     return "Request Failed";
   }
 
   dispatch({ type: "GET_LANGUAGES_SUCCESS" }, { languages: data.data });
-  return data.data;
+  const result = data.data;
+  return result;
 };
 
-const updateLanguages = async ({ ...dispatch }) => {
-  const languages = { language: "Javascript", level: "Advanced" };
-  console.log("dispatch", dispatch);
+const updateLanguages = async (languages, dispatch) => {
   dispatch({ type: "UPDATE_USER_LANGUAGES" });
 
   //Make put call to api for updating languages on current user
   const config = {
     method: "put",
-
-    //This may need to be changed to a relevant route, but since it is updating user I believe it should be here
     url: "/api/user/languages",
     data: {
       languages,
@@ -44,11 +39,11 @@ const updateLanguages = async ({ ...dispatch }) => {
   }
 
   if (!response) {
-    // dispatch({ type: "UPDATE_USER_LANGUAGES_ERROR" });
+    dispatch({ type: "UPDATE_USER_LANGUAGES_ERROR" });
     return "Request Failed";
   }
 
-  //   dispatch({ type: "UPDATE_USER_LANGUAGES_SUCCESS" });
+  dispatch({ type: "UPDATE_USER_LANGUAGES_SUCCESS" });
 };
 
 export { getLanguages, updateLanguages };

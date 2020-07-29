@@ -8,7 +8,6 @@ module.exports = {
         cb(true, error);
       }
 
-      //   console.log(Object.values(skillList));
       const formattedSkillList = Object.values(skillList);
       try {
         doc.languages = [...formattedSkillList];

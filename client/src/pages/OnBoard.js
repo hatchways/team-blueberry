@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OnBoard = (dispatch) => {
+const OnBoard = ({ state, dispatch }) => {
   const classes = useStyles();
 
   const languages = [
@@ -52,6 +52,7 @@ const OnBoard = (dispatch) => {
     "C++",
     "Ruby",
   ];
+
   const levels = ["Beginner", "Advanced", "Expert"];
 
   const [skillList, setSkillList] = useState([{ language: "", level: "" }]);
@@ -90,8 +91,7 @@ const OnBoard = (dispatch) => {
     if (!allValid) {
       setSubmitClicked(true);
     } else {
-      console.log("dispatch", dispatch);
-      updateLanguages(dispatch);
+      updateLanguages(skillList, dispatch);
 
       console.log(skillList);
       console.log("Submit");

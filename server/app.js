@@ -55,8 +55,4 @@ app.use(function (err, req, res, next) {
   res.json({ error: err });
 });
 
-// TEMPORARILY CREATES THE LANGUAGES COLLECTION
-const lang = require("./mongoose-handlers/languages");
-lang.createLanguages();
-
 module.exports = app;

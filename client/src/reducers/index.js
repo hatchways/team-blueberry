@@ -18,6 +18,15 @@ export default (state, action) => {
     case "GET_LANGUAGES_SUCCESS": {
       return { ...state, user: action.user, loading: false };
     }
+    case "UPDATE_USER_LANGUAGES": {
+      return { ...state, loading: true };
+    }
+    case "UPDATE_USER_LANGUAGES_ERROR": {
+      return { ...state, error: action.error, loading: false };
+    }
+    case "UPDATE_USER_LANGUAGES_SUCCESS": {
+      return { ...state, user: action.user, loading: false };
+    }
     default: {
       return state;
     }
