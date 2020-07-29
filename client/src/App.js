@@ -13,12 +13,12 @@ import OnBoard from "./pages/OnBoard";
 import Profile from "./pages/Profile";
 import Reviews from "./pages/Reviews";
 import Balance from "./pages/Balance";
+import Checkout from "./pages/Checkout";
 
 import "./App.css";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, {}, initState);
-
   return (
     <userContext.Provider value={state.user}>
       <MuiThemeProvider theme={theme}>
@@ -26,10 +26,10 @@ function App() {
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
-            <Route path="/" exact component={SignUp} />
             <ProtectedRoute condition={() => state.user.id} path="/onboard">
-              <OnBoard />
+              <OnBoard state={state} dispatch={dispatch} />
             </ProtectedRoute>
+            <Route path="/" exact component={SignUp} />
             <ProtectedRoute condition={() => state.user.id} path="/profile">
               <Profile state={state} dispatch={dispatch} />
             </ProtectedRoute>
@@ -38,6 +38,14 @@ function App() {
             </ProtectedRoute>
             <ProtectedRoute condition={() => state.user.id} path="/balance">
               <Balance state={state} dispatch={dispatch} />
+            </ProtectedRoute>
+            <ProtectedRoute
+              condition={() => state.user.id && state.cart.length}
+              path="/checkout"
+              // creates a failover: first to balance then to login
+              redirect="/balance"
+            >
+              <Checkout state={state} dispatch={dispatch} />
             </ProtectedRoute>
           </Switch>
         </BrowserRouter>
