@@ -18,10 +18,12 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import { reviewCredits } from "../utils/itemLookup";
 
 const BalancePage = ({ state, dispatch }) => {
-  const priorTopUp = state.cart.find((item) => item.name === "Review Credits")
+  const priorTopUp = state.cart.find((item) => item.name === reviewCredits.name)
     ?.quantity;
   const user = useContext(userContext);
-  const [topUp, setTopUp] = useState(() => priorTopUp || 2);
+  const [topUp, setTopUp] = useState(
+    () => priorTopUp || reviewCredits.quantity
+  );
   const history = useHistory();
 
   const handleClick = ({ target, ...e }) => {
@@ -116,6 +118,5 @@ const BalancePage = ({ state, dispatch }) => {
     </Background>
   );
 };
-
 
 export default BalancePage;
