@@ -12,10 +12,33 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // credits for reviews
+  balance: {
+    type: Number,
+    default: 3,
+    min: 0,
+    required: true,
+  },
+  payments: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Payment",
+    },
+  ],
   name: {
     type: String,
     required: true,
   },
+  languages: [
+    {
+      level: {
+        type: String,
+      },
+      language: {
+        type: String,
+      },
+    },
+  ],
 });
 
 // hash and store password before user is saved

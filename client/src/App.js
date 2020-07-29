@@ -10,11 +10,17 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import OnBoard from "./pages/OnBoard";
 import { userGet } from "./services/userService";
+import Profile from "./pages/Profile";
+import Reviews from "./pages/Reviews";
+import Balance from "./pages/Balance";
+import Checkout from "./pages/Checkout";
+
 
 import "./App.css";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, {}, initState);
+
   useEffect(() => {
     userGet()(dispatch);
   }, [dispatch]);
@@ -27,15 +33,26 @@ function App() {
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
-            <Route path="/onboard" component={OnBoard} />
+            <ProtectedRoute condition={() => state.user.id} path="/onboard">
+              <OnBoard state={state} dispatch={dispatch} />
+            </ProtectedRoute>
             <Route path="/" exact component={SignUp} />
+            <ProtectedRoute condition={() => state.user.id} path="/profile">
+              <Profile state={state} dispatch={dispatch} />
+            </ProtectedRoute>
+            <ProtectedRoute condition={() => state.user.id} path="/reviews">
+              <Reviews state={state} dispatch={dispatch} />
+            </ProtectedRoute>
+            <ProtectedRoute condition={() => state.user.id} path="/balance">
+              <Balance state={state} dispatch={dispatch} />
+            </ProtectedRoute>
             <ProtectedRoute
-              condition={() => {
-                return state.user._id && !state.loading;
-              }}
-              path="/protected"
+              condition={() => state.user.id && state.cart.length}
+              path="/checkout"
+              // creates a failover: first to balance then to login
+              redirect="/balance"
             >
-              <>Protected</>
+              <Checkout state={state} dispatch={dispatch} />
             </ProtectedRoute>
           </Switch>
         </BrowserRouter>

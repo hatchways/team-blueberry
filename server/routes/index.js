@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const auth = require("../middleware/auth");
+const Auth = require("../middleware/auth");
 const User = require("../models/user");
 const { genToken } = require("../helper/helper");
+const { cookieName } = require("../constants");
+
+const languages = require("../mongoose-handlers/languages");
 
 // register route
 router.post("/register", async (req, res) => {
@@ -69,5 +72,17 @@ router.post("/login", async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 });
+
+
+router.get("/languages", Auth, async (req, res) => {
+  const languageList = await languages.getLanguages();
+  res.status(200).send(languageList);
+});
+
+router.post("/logout", (req, res) => {
+  res.clearCookie(cookieName);
+  res.status(200).send("Cleared Cookie");
+});
+
 
 module.exports = router;
