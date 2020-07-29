@@ -1,3 +1,4 @@
+const User = require("../models/user");
 const reviewModel = require("../mongoose-handlers/review");
 const userModel = require("../mongoose-handlers/user");
 const Review = require("../models/review-request");

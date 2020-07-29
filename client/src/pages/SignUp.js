@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { userSignUp } from "../services/signupService";
 //Material-ui imports
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
   const classes = useStyles();
 
   // ========== FORM VALIDATION LOGIC BEGIN ==========
@@ -150,8 +151,26 @@ export default function SignIn() {
       console.log("NOT PASS");
       setSubmitClicked(true);
     } else {
-      //here goes submit logic after i get API routes
-      console.log("SEND SUBMIT");
+      userSignUp(
+        email.value,
+        username.value,
+        password.value,
+        repeatedPassword.value
+      )
+        .then((res) => {
+          props.history.push("/onboard");
+        })
+        .catch((error) => {
+          if (error.response.data === "Email already exist!") {
+            setEmail((prev) => {
+              return {
+                value: prev.value,
+                error: error.response.data,
+                touched: true,
+              };
+            });
+          }
+        });
     }
   };
   return (
