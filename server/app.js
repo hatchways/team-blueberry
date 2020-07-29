@@ -29,6 +29,8 @@ mongoose
   .catch((err) => {
     console.log("ERROR", err.message);
   });
+// take out deprecation warning when updating
+mongoose.set("useFindAndModify", false);
 
 // redis config
 // production will be put in env file
