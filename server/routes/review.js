@@ -15,7 +15,6 @@ const Auth = require("../middleware/auth");
 router.post("/review", Auth, async (req, res) => {
   try {
     const userId = req.user;
-
     const data = {
       language: req.body.language,
       languageLevel: req.body.languageLevel,
@@ -24,24 +23,15 @@ router.post("/review", Auth, async (req, res) => {
       messageText: req.body.messageText,
     };
 
-    await reviewModel.createReview(userId, data, () => {
-      res.status(201).send({ message: "Success" });
-    });
-
-    // add the status and languageLevel for processing job
-    // repeat job every 24 hours
-    await requestQueue.add(
-      {
+    await reviewModel.createReview(userId, data, (requestId) => {
+      // since this is a brand new request, we know status is pending
+      requestQueue.add({
         languageLevel: data.languageLevel,
         status: "pending",
-      },
-      {
-        repeat: {
-          every: 24 * 60 * 60 * 1000,
-        },
-      }
-    );
-    res.status(200).send({ message: "Success" });
+        requestId,
+      });
+      res.status(201).send({ message: "Success" });
+    });
   } catch {
     res.status(500).send({ message: "There was an internal server error." });
     console.log("There was an error in creating review.");
