@@ -13,6 +13,7 @@ import OnBoard from "./pages/OnBoard";
 import Profile from "./pages/Profile";
 import Reviews from "./pages/Reviews";
 import Balance from "./pages/Balance";
+import Checkout from "./pages/Checkout";
 
 import "./App.css";
 
@@ -37,6 +38,14 @@ function App() {
             </ProtectedRoute>
             <ProtectedRoute condition={() => state.user.id} path="/balance">
               <Balance state={state} dispatch={dispatch} />
+            </ProtectedRoute>
+            <ProtectedRoute
+              condition={() => state.user.id && state.cart.length}
+              path="/checkout"
+              // creates a failover: first to balance then to login
+              redirect="/balance"
+            >
+              <Checkout state={state} dispatch={dispatch} />
             </ProtectedRoute>
           </Switch>
         </BrowserRouter>
