@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import { reviewCredits } from "../utils/itemLookup";
 
 const BalancePage = ({ state, dispatch }) => {
   const priorTopUp = state.cart.find((item) => item.name === "Review Credits")
@@ -32,7 +33,7 @@ const BalancePage = ({ state, dispatch }) => {
   const handleCheckout = (e) => {
     dispatch({
       type: "ADD_ITEM_TO_CART",
-      item: { name: "Review Credits", quantity: topUp, unitCost: 10 },
+      item: { ...reviewCredits, quantity: topUp },
     });
     history.push("/checkout");
   };
