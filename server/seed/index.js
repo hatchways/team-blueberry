@@ -1,5 +1,5 @@
-const devSeeds = [require("./devUser.json")];
-const prodSeeds = [];
+const devSeeds = [require("./devUser.json"), require("./Language.json")];
+const prodSeeds = [require("./Language.json")];
 
 module.exports = {
   devSeeds,
