@@ -3,7 +3,7 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import reducer from "./reducers";
 import initState from "./initState";
-import { userContext } from "./userContext";
+import userContext from "./userContext";
 import { theme } from "./themes/theme";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
@@ -14,7 +14,6 @@ import Profile from "./pages/Profile";
 import Reviews from "./pages/Reviews";
 import Balance from "./pages/Balance";
 import Checkout from "./pages/Checkout";
-
 
 import "./App.css";
 
