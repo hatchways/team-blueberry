@@ -22,6 +22,15 @@ export default (state, action) => {
     case "FINISH_LOAD": {
       return { ...state, loading: false };
     }
+    case "REMOVE_USER": {
+      return { ...state, loading: true };
+    }
+    case "REMOVE_USER_SUCCESS": {
+      return { ...state, user: action.user, loading: false };
+    }
+    case "REMOVE_USER_ERROR": {
+      return { ...state, error: action.user, loading: false };
+    }
     default: {
       return state;
     }

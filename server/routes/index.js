@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const auth = require("../middleware/auth");
 const User = require("../models/user");
 const { genToken } = require("../helper/helper");
+const { cookieName } = require("../constants");
 
 // register route
 router.post("/register", async (req, res) => {
@@ -68,6 +69,11 @@ router.post("/login", async (req, res) => {
   } catch {
     return res.status(500).send("Internal Server Error");
   }
+});
+
+router.post("/logout", (req, res) => {
+  res.clearCookie(cookieName);
+  res.status(200).send("Cleared Cookie");
 });
 
 module.exports = router;
