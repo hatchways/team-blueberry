@@ -1,5 +1,4 @@
 const Queue = require("bull");
-const mongoose = require("mongoose");
 
 // initiate request queue
 // connect to redis default server for dev
@@ -9,37 +8,45 @@ const requestQueue = new Queue("requestReview");
 const { Request } = require("../models/review-request");
 
 requestQueue.process(async (job) => {
-  const { languageLevel, status, requestId } = job.data;
+  const { languageLevel, status, requestId, reviewerId } = job.data;
 
   try {
     switch (status) {
       case "pending": {
-        // foundReviewer = logic findReviewer() & send notification
-        // after 24 hours with no response
+        // foundReviewer = logic findReviewer() & send notifications
         if (job.opts.delay) {
-          const currentRequest = await Request.findById(requestId);
+          // update request
           await Request.findByIdAndUpdate(requestId, {
-            // push selected reviewer into reviewers declined
-            // update selected reviewer into foundReviewer
+            $push: { reviewersDeclined: reviewerId },
           });
-          requestQueue.add({
-            languageLevel,
-            status: currentRequest.status,
-            requestId,
-          });
-          return Promise.resolve();
-        } else {
-          // on first 24 hours after creating review
-          await Request.findByIdAndUpdate(requestId, {
-            // update selected reviewer with foundreviewer
-          });
+          // new task after 24 hours
           requestQueue.add(
             {
               languageLevel,
               status,
               requestId,
+              reviewerId: foundReviewerId,
             },
             {
+              // unique job id
+              // able to access both requestId and reviewerId when reviewer accept to remove job
+              jobId: (requestId + foundReviewerId).toString(),
+              delay: 24 * 60 * 60 * 1000,
+            }
+          );
+          return Promise.resolve();
+        } else {
+          requestQueue.add(
+            {
+              languageLevel,
+              status,
+              requestId,
+              reviewerId: foundReviewerId,
+            },
+            {
+              // unique job id
+              // able to access both requestId and reviewerId when reviewer accept to remove job
+              jobId: (requestId + foundReviewerId).toString(),
               delay: 24 * 60 * 60 * 1000,
             }
           );
@@ -47,17 +54,19 @@ requestQueue.process(async (job) => {
         }
       }
       case "declined": {
-        // foundReviewer = logic findReviewer() & send notification
-        const currentRequest = await Request.findById(requestId);
         await Request.findByIdAndUpdate(requestId, {
-          // push selected reviewer into reviewers declined
-          // update selected reviewer into foundReviewer
+          $push: { reviewersDeclined: reviewerId },
           status: "pending",
+        });
+        requestQueue.add({
+          languageLevel,
+          status: "pending",
+          requestId,
         });
         return Promise.resolve();
       }
     }
-  } catch {
+  } catch (err) {
     return Promise.reject(err);
   }
 });
