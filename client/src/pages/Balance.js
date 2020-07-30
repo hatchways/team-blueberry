@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import userContext from "../userContext";
 import Background from "../elements/Background";
 import StyledPaper from "../elements/StyledPaper";
@@ -14,18 +15,30 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import { reviewCredits } from "../utils/itemLookup";
 
 const BalancePage = ({ state, dispatch }) => {
+  const priorTopUp = state.cart.find((item) => item.name === reviewCredits.name)
+    ?.quantity;
   const user = useContext(userContext);
-  const [topUp, setTopUp] = useState(2);
+  const [topUp, setTopUp] = useState(
+    () => priorTopUp || reviewCredits.quantity
+  );
+  const history = useHistory();
 
   const handleClick = ({ target, ...e }) => {
     const { id } = target.closest("button");
-    if (id === "incr") return setTopUp(topUp + 1);
+    if (id === "incr") return setTopUp(() => topUp + 1);
     if (id === "decr" && topUp > 0) return setTopUp(topUp - 1);
   };
 
-  const handleCheckout = (e) => {};
+  const handleCheckout = (e) => {
+    dispatch({
+      type: "ADD_ITEM_TO_CART",
+      item: { ...reviewCredits, quantity: topUp },
+    });
+    history.push("/checkout");
+  };
 
   return (
     <Background solid>
@@ -105,6 +118,5 @@ const BalancePage = ({ state, dispatch }) => {
     </Background>
   );
 };
-
 
 export default BalancePage;

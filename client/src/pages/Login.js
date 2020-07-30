@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { userLogin } from "../services/loginService";
 //Material-ui imports
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -13,6 +14,7 @@ import Background from "../elements/Background";
 import PageHeader from "../elements/PageHeader";
 import SubmitButton from "../elements/SubmitButton";
 import StyledPaper from "../elements/StyledPaper";
+import Alert from "../elements/SnackBar";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -22,21 +24,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function Login(props) {
   const classes = useStyles();
 
-  const [loginUsername, setLoginUsername] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [submitClicked, setSubmitClicked] = useState(false);
+  const [loginError, setLoginError] = useState(false);
 
   const loginHandler = (event) => {
     event.preventDefault();
-    if (!loginUsername || !loginPassword) {
+    if (!loginEmail || !loginPassword) {
       setSubmitClicked(true);
     } else {
-      console.log(
-        `Send login request to API ${loginUsername} ${loginPassword}`
-      );
+      userLogin(loginEmail, loginPassword)
+        .then((res) => {
+          props.history.push("/profile");
+        })
+        .catch((error) => {
+          //If getting 409 - raise email error
+          if (error.response.data === "Incorrect email and password") {
+            setLoginError(error.response.data);
+          }
+        });
     }
   };
 
@@ -56,13 +66,13 @@ export default function SignIn() {
                   label="E-mail Address"
                   name="email"
                   autoComplete="email"
-                  error={submitClicked && !loginUsername ? true : false}
+                  error={submitClicked && !loginEmail ? true : false}
                   helperText={
-                    submitClicked && !loginUsername
+                    submitClicked && !loginEmail
                       ? "Field can not be blank"
                       : null
                   }
-                  onChange={(e) => setLoginUsername(e.target.value)}
+                  onChange={(e) => setLoginEmail(e.target.value)}
                 />
               </Grid>
               <Grid item>
@@ -87,6 +97,14 @@ export default function SignIn() {
                   }
                   onChange={(e) => setLoginPassword(e.target.value)}
                 />
+              </Grid>
+              <Grid item>
+                <Alert
+                  open={loginError ? true : false}
+                  onClick={() => setLoginError(false)}
+                >
+                  {loginError}
+                </Alert>
               </Grid>
             </Grid>
             <SubmitButton onClick={loginHandler}>Login</SubmitButton>
