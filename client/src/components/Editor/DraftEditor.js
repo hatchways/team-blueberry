@@ -1,29 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // Draftjs editor imports
-import Draft, { Editor, EditorState, RichUtils } from "draft-js";
+import Draft, { Editor, EditorState, RichUtils, convertToRaw } from "draft-js";
 import CodeUtils from "draft-js-code";
 import PrismDecorator from "draft-js-prism";
 import Prism from "prismjs";
-import Immutable from "immutable";
 import "prismjs/themes/prism-okaidia.css";
 import "./css/draft.css";
-//Material-UI imports
+// Material-UI imports
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
-// import loadLanguages from "prismjs/components/index";
-// loadLanguages(["java"]);
-
-const languagesSyntax = {
-  Python: "python",
-  JavaScript: "javascript",
-  Java: "java",
-  PHP: "php",
-  GoLang: "go",
-  "C#": "csharp",
-  "C++": "cpp",
-  Ruby: "ruby",
-};
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+// Prism language support:
+import {
+  go,
+  clike,
+  ruby,
+  php,
+  python,
+  c,
+  cpp,
+  csharp,
+  java,
+  languagesGrammar,
+} from "./languages";
 
 const useStyles = makeStyles((theme) => ({
   editor: {
@@ -35,17 +36,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyEditor = (props) => {
+const MyEditor = ({ language, makeSubmit, onSubmit, hasContent }) => {
   const classes = useStyles();
 
   let mappedLanguage;
-  if (props.language === "") {
+  if (language === "") {
     mappedLanguage = null;
   } else {
-    mappedLanguage = languagesSyntax[props.language];
-    console.log(mappedLanguage);
+    mappedLanguage = languagesGrammar[language];
   }
-  console.log(Prism.languages);
 
   const decorator = new PrismDecorator({
     prism: Prism,
@@ -55,7 +54,7 @@ const MyEditor = (props) => {
   const [editorState, setEditorState] = useState(
     EditorState.createEmpty(decorator)
   );
-
+  //Amending code blocks for Prism
   const getBlockStyle = (block) => {
     switch (block.getType()) {
       case "code-block":
@@ -65,7 +64,7 @@ const MyEditor = (props) => {
     }
   };
 
-  // Rerender Draftjs everytime it changes applying prismjs
+  // Rerender Draftjs every time we change language
   useEffect(() => {
     const selection = editorState.getSelection();
     const block = editorState
@@ -83,21 +82,28 @@ const MyEditor = (props) => {
     setEditorState(
       EditorState.push(editorState, newContentState, "change-block-data")
     );
-  });
+  }, [editorState, mappedLanguage]);
 
-  const handleChange = (newEditorState) => {
-    const prevContentState = editorState.getCurrentContent();
-    const currentContentState = newEditorState.getCurrentContent();
+  // Focus editor (we will chat using the same editor, right?)
+  const editor = useRef(null);
+  const focusEditor = () => {
+    editor.current.focus();
+  };
+  useEffect(() => {
+    focusEditor();
+  }, []);
 
-    if (!prevContentState.hasText()) {
-      setEditorState(EditorState.set(newEditorState, { decorator }));
-      return;
+  //Change handler
+  const onChange = (newEditorState) => {
+    if (newEditorState.getCurrentContent().hasText()) {
+      hasContent(true);
     } else {
-      setEditorState(EditorState.set(newEditorState, { decorator }));
+      hasContent(false);
     }
+    setEditorState(EditorState.set(newEditorState, { decorator }));
   };
 
-  // DraftJs code utils:
+  // DraftJs code utils for easier code editing:
   const handleKeyCommand = (command) => {
     let newState;
 
@@ -139,6 +145,17 @@ const MyEditor = (props) => {
     return "handled";
   };
 
+  //Transfer text to make request
+  useEffect(() => {
+    if (makeSubmit) {
+      const rawText = convertToRaw(editorState.getCurrentContent());
+
+      onSubmit({ text: rawText });
+      setEditorState(EditorState.createEmpty(decorator));
+    }
+  }, [makeSubmit]);
+
+  // Rendering control buttons
   const ToolButton = ({ format, icon }) => {
     const currentStyle = editorState.getCurrentInlineStyle();
     return (
@@ -180,22 +197,37 @@ const MyEditor = (props) => {
   return (
     <div className={classes.editor}>
       <div className={classes.controls}>
-        <ToolButton format="BOLD" icon="format_bold" />
-        <ToolButton format="ITALIC" icon="format_italic" />
-        <ToolButton format="UNDERLINE" icon="format_underlined" />
-        <BlockButton format="code-block" icon="code" />
-        <BlockButton format="blockquote" icon="format_quote" />
-        <BlockButton format="ordered-list-item" icon="format_list_numbered" />
-        <BlockButton format="unordered-list-item" icon="format_list_bulleted" />
+        <Grid container justify="flex-start">
+          <Grid item xs={8} sm="auto" md="auto">
+            <ToolButton format="BOLD" icon="format_bold" />
+            <ToolButton format="ITALIC" icon="format_italic" />
+            <ToolButton format="UNDERLINE" icon="format_underlined" />
+            <BlockButton format="code-block" icon="code" />
+          </Grid>
+          <Grid item xs={0} sm={5} md>
+            <Box display={{ xs: "none", sm: "block" }}>
+              <BlockButton format="blockquote" icon="format_quote" />
+              <BlockButton
+                format="ordered-list-item"
+                icon="format_list_numbered"
+              />
+              <BlockButton
+                format="unordered-list-item"
+                icon="format_list_bulleted"
+              />
+            </Box>
+          </Grid>
+        </Grid>
       </div>
       <Editor
         editorState={editorState}
-        onChange={handleChange}
+        onChange={onChange}
         keyBindingFn={keyBindingFn}
         handleKeyCommand={handleKeyCommand}
         handleReturn={handleReturn}
         blockStyleFn={getBlockStyle}
         onTab={onTab}
+        ref={editor}
       />
     </div>
   );

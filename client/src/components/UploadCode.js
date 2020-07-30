@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import PrismEditor from "../components/Editor/DraftEditor";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Box } from "@material-ui/core";
+import Alert from "../elements/SnackBar";
 
 // const useStyles = makeStyles((theme) => ({}));
 
@@ -20,6 +21,9 @@ export default function AddCodeDialog() {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [language, setLanguage] = useState("");
+  const [makeSubmit, setMakeSubmit] = useState(false);
+  const [editorHasContent, setEditorHasContent] = useState(false);
+  const [error, setError] = useState(false);
   const languages = [
     "Python",
     "JavaScript",
@@ -31,10 +35,32 @@ export default function AddCodeDialog() {
     "Ruby",
   ];
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("SUBMIT");
+  const handleSubmit = (text) => {
+    //Wrap up editor data with user and language data and send to server.
+    const request = {
+      title: title,
+      language: languages,
+      content: text,
+    };
+    //SEND REQUEST AND close dialog
+    console.log(request);
+    setTitle("");
+    setLanguage("");
+    setOpen(false);
   };
+
+  const handleHasContent = (value) => {
+    setEditorHasContent(value);
+  };
+
+  const startSubmit = () => {
+    if (!language || !title || !editorHasContent) {
+      setError(true);
+    } else {
+      setMakeSubmit(true);
+    }
+  };
+
   return (
     <React.Fragment>
       <Button
@@ -91,11 +117,22 @@ export default function AddCodeDialog() {
                 </TextField>
               </Grid>
               <Grid item xs={12} sm={12} md={12}>
-                <PrismEditor language={language}></PrismEditor>
+                <PrismEditor
+                  language={language}
+                  makeSubmit={makeSubmit}
+                  onSubmit={handleSubmit}
+                  hasContent={handleHasContent}
+                ></PrismEditor>
               </Grid>
               <Grid item container justify="center">
-                <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
+                <SubmitButton onClick={startSubmit}>Submit</SubmitButton>
               </Grid>
+              <Alert
+                open={error ? true : false}
+                onClick={() => setError(false)}
+              >
+                Fill in all the fields
+              </Alert>
             </Grid>
           </Box>
         </DialogContent>
