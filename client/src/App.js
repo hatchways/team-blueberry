@@ -5,7 +5,7 @@ import reducer from "./reducers";
 import initState from "./initState";
 import userContext from "./userContext";
 import { theme } from "./themes/theme";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ProtectedRoute, ProtectedElement } from "./components/Protected";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -31,12 +31,13 @@ function App() {
     <userContext.Provider value={state.user}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-          {/* This is ugly, but not sure how we want to handle index */}
-          {state.user.id && window.location.pathname !== "/" ? (
+          <ProtectedElement
+            // ! must remain within Router
+            // ? still don't like the location condition, but unsure of how to handle index
+            condition={() => state.user.id && window.location.pathname !== "/"}
+          >
             <Navbar state={state} dispatch={dispatch} />
-          ) : (
-            <> </>
-          )}
+          </ProtectedElement>
           <Switch>
             <ProtectedRoute
               condition={() => !state.user.id}

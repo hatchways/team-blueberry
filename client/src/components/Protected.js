@@ -21,3 +21,6 @@ export const ProtectedRoute = ({ children, condition, redirect, ...props }) => {
     />
   );
 };
+
+export const ProtectedElement = ({ children, condition, ...props }) =>
+  condition() ? children : <></>;
