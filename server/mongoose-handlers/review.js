@@ -41,4 +41,19 @@ module.exports = {
       );
     });
   },
+  // gets all relevant reviews
+  async getReviews(req, res) {
+    try {
+      const userId = req.user;
+
+      const reviews = await Review.find({ userId });
+
+      res.status(201).json({ reviews });
+    } catch {
+      console.log("There was an error getting reviews.");
+      return res
+        .status(500)
+        .send({ message: "There was an internal server error." });
+    }
+  },
 };

@@ -1,0 +1,15 @@
+{
+  "model": "User",
+  "documents": [
+    {
+      "name": "User One",
+      "email": "user@example.com",
+      "password": "noHashPlz"
+    },
+    {
+      "name": "User Two",
+      "email": "bestrates@company.co",
+      "password": "qwerty"
+    }
+  ]
+}

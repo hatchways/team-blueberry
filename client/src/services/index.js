@@ -1,6 +1,6 @@
 export const userService = (body) => async (dispatch) => {
   // set loading state
-  dispatch({ type: "FETCH_USER" });
+  dispatch({ type: "FETCH" });
 
   try {
     const result = await fetch(
@@ -17,4 +17,16 @@ export const userService = (body) => async (dispatch) => {
     dispatch({ type: "FETCH_USER_ERROR", error: { ...e } });
   }
   // on exception
+};
+
+export const createPaymentIntent = ({ cart }) => async (dispatch) => {
+  dispatch({ type: "FETCH" });
+
+  try {
+    // fetch to post payment internet
+    console.log(cart);
+    dispatch({ type: "CREATE_PAYMENT_INTENT" });
+  } catch (e) {
+    dispatch({ type: "CREATE_PAYMENT_INTENT_ERROR", error: { ...e } });
+  }
 };
