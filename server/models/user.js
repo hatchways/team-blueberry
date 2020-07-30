@@ -53,7 +53,9 @@ userSchema.pre("save", async function (next) {
 // ! Calling toObject will always remove password
 userSchema.set("toObject", {
   transform: function (doc, ret, options) {
+    ret.id = ret._id;
     delete ret.password;
+    delete ret._id;
     return ret;
   },
 });

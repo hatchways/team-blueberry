@@ -23,19 +23,35 @@ function App() {
 
   useEffect(() => {
     userGet()(dispatch);
+    return () => dispatch("FINISH_LOAD");
   }, [dispatch]);
-  console.log(state);
+  console.log((() => !state?.user?.id)());
 
   return (
     <userContext.Provider value={state.user}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-          <ProtectedRoute condition={() => state.user.id} path="/">
+          {/* This is ugly, but not sure how we want to handle index */}
+          {state.user.id && window.location.pathname !== "/" ? (
             <Navbar state={state} dispatch={dispatch} />
-          </ProtectedRoute>
+          ) : (
+            <> </>
+          )}
           <Switch>
-            <Route path="/signup" component={SignUp} />
-            <Route path="/login" component={Login} />
+            <ProtectedRoute
+              condition={() => !state.user.id}
+              path="/signup"
+              redirect="/profile"
+            >
+              <SignUp />
+            </ProtectedRoute>
+            <ProtectedRoute
+              condition={() => !state.user.id}
+              path="/login"
+              redirect="/profile"
+            >
+              <Login />
+            </ProtectedRoute>
             <ProtectedRoute condition={() => state.user.id} path="/onboard">
               <OnBoard state={state} dispatch={dispatch} />
             </ProtectedRoute>
