@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const requestQueue = require("../queues/request");
 
-const User = require("../models/user");
 const userController = require("../controllers/user");
 
 // import Auth middleware
@@ -11,7 +11,31 @@ router.get("/me", Auth, userController.showUser);
 
 router.put("/languages", Auth, userController.updateUserLanguages);
 
-router.post("/review", Auth, userController.createReview);
+router.post("/review", Auth, (req,res) => {
+    try {
+        const userId = req.user;
+        const data = {
+          language: req.body.language,
+          languageLevel: req.body.languageLevel,
+          title: req.body.title,
+          codeSnippet: req.body.codeSnippet,
+          messageText: req.body.messageText,
+        };
+    
+        await userController.createReview(userId, data, async (requestId) => {
+          // since this is a brand new request, we know status is pending
+          await requestQueue.add({
+            languageLevel: data.languageLevel,
+            status: "pending",
+            requestId,
+          });
+          res.status(201).send({ message: "Success" });
+        });
+      } catch {
+        res.status(500).send({ message: "There was an internal server error." });
+        console.log("There was an error in creating review.");
+      }
+});
 
 router.post("/reviews", Auth, userController.getReviews);
 
