@@ -24,4 +24,4 @@ const paymentSchema = new Schema(
 
 // TODO will require instance methods to update as Stripe processes payment
 
-module.exports = Model("Payment", paymentSchema);
+module.exports = model("Payment", paymentSchema);

@@ -6,6 +6,7 @@ import initState from "./initState";
 import userContext from "./userContext";
 import { theme } from "./themes/theme";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import OnBoard from "./pages/OnBoard";
@@ -29,6 +30,9 @@ function App() {
     <userContext.Provider value={state.user}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
+          <ProtectedRoute condition={() => state.user.id} path="/">
+            <Navbar state={state} dispatch={dispatch} />
+          </ProtectedRoute>
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />

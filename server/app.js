@@ -40,7 +40,6 @@ app.use(express.static(join(__dirname, "public")));
 app.use("/api", indexRouter);
 app.use("/api/user", userRouter);
 app.use("/api/payment", paymentRouter);
-app.use("/ping", pingRouter);
 
 app.use("/api/user", auth, userRouter);
 
