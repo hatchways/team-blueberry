@@ -20,7 +20,7 @@ const languagesSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model(
-  "LanguageSchema",
+  "Language",
   languagesSchema,
   "languagesCollection"
 );
