@@ -1,6 +1,23 @@
-const stripe = require("stripe")(); // ! remove API_KEY before commit
+require("dotenv").config();
+const PUBLIC_STRIPE_API_KEY = process.env.PUBLIC_STRIPE_API_KEY;
+const SECRET_STRIPE_API_KEY = process.env.SECRET_STRIPE_API_KEY;
+const stripe = require("stripe")(SECRET_STRIPE_API_KEY); // ! remove API_KEY before commit
 const Payment = require("../models/payment");
 const itemLookup = require("../helper/itemLookup");
+const https = require("https");
+
+const handleError = (e, res) =>
+  e.status && e.message
+    ? res.status(e.status).send(e.message)
+    : res.status(400).send(e);
+
+const getKey = (req, res, next) => {
+  try {
+    return res.status(200).send({ STRIPE_API_KEY: PUBLIC_STRIPE_API_KEY });
+  } catch (e) {
+    return handleError(e, res);
+  }
+};
 
 const prepareCart = (cart) => {
   const verificationError = new Error({ status: 400, message: "Invalid cart" });
@@ -38,15 +55,26 @@ const createPayment = async (req, res, next) => {
       throw new Error({ status: 500, message: "Error processing payment." });
     return res.status(201).send({ clientSecret: paymentIntent.client_secret });
   } catch (e) {
-    if (e.status && e.message) return res.status(status).send(message);
     console.log(e);
-    return res.status(400).send(e);
+    return handleError(e, res);
   }
 };
 
-const checkPayment = async (req, res, next) => {};
+const updatePayment = async (req, res, next) => {
+  try {
+    // confirm Stripe
+    // const response = https.get()
+    // update payment + user
+    // return success message with updated user
+    console.log(req);
+    return res.status(200).send({});
+  } catch (e) {
+    return handleError(e, res);
+  }
+};
 
 module.exports = {
+  getKey,
   createPayment,
-  checkPayment,
+  updatePayment,
 };

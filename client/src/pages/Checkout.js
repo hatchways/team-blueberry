@@ -34,8 +34,8 @@ const showCart = (cart) => {
   );
 };
 
-const stripePromise = loadStripe(); // ! remove API_KEY before commit
 const Checkout = ({ state, dispatch }) => {
+  const stripePromise = loadStripe(state.secret.STRIPE_API_KEY);
   usePageLoaded(dispatch);
   return (
     <>
@@ -55,7 +55,7 @@ const Checkout = ({ state, dispatch }) => {
 
 const StripeForm = ({ cart, secret, dispatch }) => {
   const loading = useContext(loadingContext);
-  const stripe = useStripe();
+  const stripe = useStripe(secret.STRIPE_API_KEY);
   const elements = useElements();
 
   const handleSubmit = async (event) => {
@@ -74,7 +74,7 @@ const StripeForm = ({ cart, secret, dispatch }) => {
       type: "card",
       card: cardElement,
     });
-    const result = await stripe.confirmCardPayment(secret, {
+    const result = await stripe.confirmCardPayment(secret.clientSecret, {
       payment_method: {
         card: cardElement,
       },

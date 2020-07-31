@@ -1,7 +1,13 @@
 const { Router } = require("express");
 const router = Router();
-const { createPayment } = require("../controllers/payment");
+const {
+  getKey,
+  createPayment,
+  updatePayment,
+} = require("../controllers/payment");
 
+router.get("/key", getKey);
 router.post("/", createPayment);
+router.put("/:id", updatePayment);
 
 module.exports = router;

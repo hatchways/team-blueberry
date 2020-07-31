@@ -16,6 +16,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { reviewCredits } from "../utils/itemLookup";
+import { getKey } from "../services";
 
 const BalancePage = ({ state, dispatch }) => {
   const priorTopUp = state?.cart?.find(
@@ -33,7 +34,8 @@ const BalancePage = ({ state, dispatch }) => {
     if (id === "decr" && topUp > 0) return setTopUp(topUp - 1);
   };
 
-  const handleCheckout = (e) => {
+  const handleCheckout = async (e) => {
+    await getKey()(dispatch);
     dispatch({
       type: "ADD_ITEM_TO_CART",
       item: { ...reviewCredits, quantity: topUp },

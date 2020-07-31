@@ -19,6 +19,24 @@ export const userService = (body) => async (dispatch) => {
   // on exception
 };
 
+export const getKey = (_) => async (dispatch) => {
+  dispatch({ type: "FETCH" });
+  try {
+    const { data } = await axios({
+      url: "/api/payment/key",
+      method: "GET",
+    });
+    dispatch({
+      type: "FETCH_KEY_SUCCESS",
+      secret: {
+        STRIPE_API_KEY: data.STRIPE_API_KEY,
+      },
+    });
+  } catch (e) {
+    dispatch({ type: "FETCH_KEY_ERROR", error: { ...e } });
+  }
+};
+
 export const createPaymentIntent = ({ cart }) => async (dispatch) => {
   dispatch({ type: "FETCH" });
 
@@ -34,7 +52,9 @@ export const createPaymentIntent = ({ cart }) => async (dispatch) => {
     });
     dispatch({
       type: "CREATE_PAYMENT_INTENT_SUCCESS",
-      secret: data.clientSecret,
+      secret: {
+        clientSecret: data.clientSecret,
+      },
     });
   } catch (e) {
     dispatch({ type: "CREATE_PAYMENT_INTENT_ERROR", error: { ...e } });
