@@ -14,7 +14,6 @@ import Profile from "./pages/Profile";
 import Reviews from "./pages/Reviews";
 import Balance from "./pages/Balance";
 import Checkout from "./pages/Checkout";
-import review from "./components/UploadCode";
 
 import "./App.css";
 
@@ -33,7 +32,6 @@ function App() {
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
-            <Route path="/review" component={review} />
             <ProtectedRoute condition={() => state.user.id} path="/onboard">
               <OnBoard state={state} dispatch={dispatch} />
             </ProtectedRoute>

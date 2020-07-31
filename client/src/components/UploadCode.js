@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-// import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import Grid from "@material-ui/core/Grid";
-// import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import PageHeader from "../elements/PageHeader";
 import SubmitButton from "../elements/SubmitButton";
@@ -14,11 +11,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Box } from "@material-ui/core";
 import Alert from "../elements/SnackBar";
 
-// const useStyles = makeStyles((theme) => ({}));
-
-export default function AddCodeDialog() {
-  // const classes = useStyles();
-  const [open, setOpen] = useState(false);
+export default function AddCodeDialog(props) {
   const [title, setTitle] = useState("");
   const [language, setLanguage] = useState("");
   const [makeSubmit, setMakeSubmit] = useState(false);
@@ -34,19 +27,20 @@ export default function AddCodeDialog() {
     "C++",
     "Ruby",
   ];
-
   const handleSubmit = (text) => {
-    //Wrap up editor data with user and language data and send to server.
+    //Wrap up data and send to server.
     const request = {
       title: title,
       language: languages,
       content: text,
     };
+
     //SEND REQUEST AND close dialog
     console.log(request);
     setTitle("");
     setLanguage("");
-    setOpen(false);
+    setMakeSubmit(false);
+    props.handleClose();
   };
 
   const handleHasContent = (value) => {
@@ -63,22 +57,11 @@ export default function AddCodeDialog() {
 
   return (
     <React.Fragment>
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={() => {
-          setOpen(!open);
-        }}
-      >
-        Open max-width dialog
-      </Button>
       <Dialog
         fullWidth
         maxWidth="md"
-        open={open}
-        onClose={() => {
-          setOpen(!open);
-        }}
+        open={props.open}
+        onClose={props.handleClose}
       >
         <DialogContent>
           <PageHeader>Request a code review</PageHeader>
