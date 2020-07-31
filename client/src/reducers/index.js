@@ -13,16 +13,6 @@ export default (state, action) => {
       // TODO handle duplicates?
       return { ...state, loading: true, cart: [action.item] };
     }
-    case "FETCH_KEY_SUCCESS": {
-      return {
-        ...state,
-        loading: false,
-        secret: { ...state.secret, ...action.secret },
-      };
-    }
-    case "FETCH_KEY_ERROR": {
-      return { ...state, loading: false, error: action.error };
-    }
     case "CREATE_PAYMENT_INTENT_SUCCESS": {
       console.log(action);
       return {
@@ -36,9 +26,11 @@ export default (state, action) => {
     }
     case "CONFIRM_PAYMENT_INTENT_SUCCESS": {
       // handle data
+      console.log("CONFIRM_PAYMENT_INTENT_SUCCESS");
       return { ...state, loading: false, data: action.data };
     }
     case "CONFIRM_PAYMENT_INTENT_ERROR": {
+      console.log("CONFIRM_PAYMENT_INTENT_ERROR");
       return { ...state, loading: false, error: action.error };
     }
     case "FINISH_LOAD": {

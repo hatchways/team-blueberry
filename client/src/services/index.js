@@ -19,6 +19,7 @@ export const userService = (body) => async (dispatch) => {
   // on exception
 };
 
+// probably deprecated
 export const getKey = (_) => async (dispatch) => {
   dispatch({ type: "FETCH" });
   try {

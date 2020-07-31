@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { usePageLoaded } from "../hooks";
 import {
   CardElement,
@@ -10,6 +10,8 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 import { createPaymentIntent, confirmPaymentIntent } from "../services";
 import loadingContext from "../loadingContext";
+const STRIPE_API_KEY =
+  "pk_test_51H9aiQHBjJBD671jjlNd2YSaGTgUaRtAfrSOlF1271z4ftGZwKSP2UVI0XWHuQqzA5NAY7pv5FvuQj1LT47nokHG00DZWM1eoW";
 
 const showCart = (cart) => {
   // only show most recent
@@ -34,8 +36,8 @@ const showCart = (cart) => {
   );
 };
 
+const stripePromise = loadStripe(STRIPE_API_KEY);
 const Checkout = ({ state, dispatch }) => {
-  const stripePromise = loadStripe(state.secret.STRIPE_API_KEY);
   usePageLoaded(dispatch);
   return (
     <>
@@ -55,8 +57,29 @@ const Checkout = ({ state, dispatch }) => {
 
 const StripeForm = ({ cart, secret, dispatch }) => {
   const loading = useContext(loadingContext);
-  const stripe = useStripe(secret.STRIPE_API_KEY);
+  const stripe = useStripe(STRIPE_API_KEY);
   const elements = useElements();
+  const [paymentMethod, setPaymentMethod] = useState();
+
+  const handleConfirm = async (paymentMethod) => {
+    try {
+      const { paymentIntent } = await stripe.confirmCardPayment(
+        secret.clientSecret,
+        {
+          payment_method: {
+            card: elements.getElement(CardElement),
+          },
+        }
+      );
+      return confirmPaymentIntent(paymentIntent.id)(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    if (paymentMethod) handleConfirm(paymentMethod);
+  }, [paymentMethod]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -74,16 +97,12 @@ const StripeForm = ({ cart, secret, dispatch }) => {
       type: "card",
       card: cardElement,
     });
-    const result = await stripe.confirmCardPayment(secret.clientSecret, {
-      payment_method: {
-        card: cardElement,
-      },
-    });
     if (error) {
       return dispatch({ type: "CREATE_PAYMENT_INTENT_ERROR", error });
     }
-    return confirmPaymentIntent(result.id)(dispatch);
+    setPaymentMethod(paymentMethod);
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <CardElement />

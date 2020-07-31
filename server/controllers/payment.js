@@ -4,7 +4,6 @@ const SECRET_STRIPE_API_KEY = process.env.SECRET_STRIPE_API_KEY;
 const stripe = require("stripe")(SECRET_STRIPE_API_KEY); // ! remove API_KEY before commit
 const Payment = require("../models/payment");
 const itemLookup = require("../helper/itemLookup");
-const https = require("https");
 
 const handleError = (e, res) =>
   e.status && e.message
@@ -63,10 +62,10 @@ const createPayment = async (req, res, next) => {
 const updatePayment = async (req, res, next) => {
   try {
     // confirm Stripe
-    // const response = https.get()
     // update payment + user
     // return success message with updated user
     console.log(req);
+    console.log(stripe);
     return res.status(200).send({});
   } catch (e) {
     return handleError(e, res);

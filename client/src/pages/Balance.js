@@ -35,7 +35,6 @@ const BalancePage = ({ state, dispatch }) => {
   };
 
   const handleCheckout = async (e) => {
-    await getKey()(dispatch);
     dispatch({
       type: "ADD_ITEM_TO_CART",
       item: { ...reviewCredits, quantity: topUp },
