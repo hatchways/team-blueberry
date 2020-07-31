@@ -23,9 +23,9 @@ router.post("/review", Auth, async (req, res) => {
     };
 
     await userController.createReview(userId, data, async (requestId) => {
-      await requestQueue.add("firstRequest", {
+      await requestQueue.add("findReviewer", {
         requestId,
-        isDelayed: true,
+        isDelayed: false,
       });
       res.status(201).send({ message: "Success" });
     });

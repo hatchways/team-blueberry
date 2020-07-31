@@ -10,8 +10,8 @@ const { Request } = require("../models/review-request");
 // find reviewer logic
 const { findReviewer } = require("../helper/helper");
 
-// first request worker
-requestQueue.process("firstRequest", async (job) => {
+// find reviewer worker
+requestQueue.process("findReviewer", async (job) => {
   // isDelayed is true or false
   // how do we implement a delayed first request? Does user need to specify delay time?
   const { requestId, isDelayed } = job.data;
@@ -21,7 +21,7 @@ requestQueue.process("firstRequest", async (job) => {
     // find new reviewer if reviewer is null
     if (!foundReviewer) {
       requestQueue.add(
-        "firstRequest",
+        "findReviewer",
         {
           requestId,
         },
@@ -35,7 +35,7 @@ requestQueue.process("firstRequest", async (job) => {
       selectedReviewer: foundReviewer._id,
     });
     requestQueue.add(
-      "delayed",
+      "checkStatus",
       {
         requestId,
       },
@@ -50,8 +50,8 @@ requestQueue.process("firstRequest", async (job) => {
   }
 });
 
-// delayed worker
-requestQueue.process("delayed", async (job) => {
+// check status worker
+requestQueue.process("checkStatus", async (job) => {
   const { requestId } = job.data;
   const { status, selectedReviewer } = await Request.findById(requestId).select(
     "status selectedReviewer"
@@ -72,7 +72,7 @@ requestQueue.process("delayed", async (job) => {
           $push: { reviewersDeclined: selectedReviewer },
           status: "pending",
         });
-        requestQueue.add("firstRequest", {
+        requestQueue.add("findReviewer", {
           requestId,
         });
         return Promise.resolve();
