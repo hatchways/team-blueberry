@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { usePageLoaded } from "../hooks";
 import {
   CardElement,
@@ -8,7 +8,8 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { createPaymentIntent } from "../services";
+import { createPaymentIntent, confirmPaymentIntent } from "../services";
+import loadingContext from "../loadingContext";
 
 const showCart = (cart) => {
   // only show most recent
@@ -33,7 +34,7 @@ const showCart = (cart) => {
   );
 };
 
-const stripePromise = loadStripe("key");
+const stripePromise = loadStripe(); // ! remove API_KEY before commit
 const Checkout = ({ state, dispatch }) => {
   usePageLoaded(dispatch);
   return (
@@ -42,13 +43,18 @@ const Checkout = ({ state, dispatch }) => {
       <h2>Cart:</h2>
       {showCart(state.cart)}
       <Elements stripe={stripePromise}>
-        <StripeForm cart={state.cart} dispatch={dispatch} />
+        <StripeForm
+          cart={state.cart}
+          secret={state.secret}
+          dispatch={dispatch}
+        />
       </Elements>
     </>
   );
 };
 
-const StripeForm = ({ cart, dispatch }) => {
+const StripeForm = ({ cart, secret, dispatch }) => {
+  const loading = useContext(loadingContext);
   const stripe = useStripe();
   const elements = useElements();
 
@@ -62,23 +68,26 @@ const StripeForm = ({ cart, dispatch }) => {
       return;
     }
 
+    await createPaymentIntent({ cart })(dispatch);
     const cardElement = elements.getElement(CardElement);
-    createPaymentIntent({ cart })(dispatch);
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: cardElement,
     });
-
+    const result = await stripe.confirmCardPayment(secret, {
+      payment_method: {
+        card: cardElement,
+      },
+    });
     if (error) {
-      console.log("[error]", error);
-    } else {
-      console.log("[PaymentMethod]", paymentMethod);
+      return dispatch({ type: "CREATE_PAYMENT_INTENT_ERROR", error });
     }
+    return confirmPaymentIntent(result.id)(dispatch);
   };
   return (
     <form onSubmit={handleSubmit}>
       <CardElement />
-      <button type="submit" disabled={!stripe}>
+      <button type="submit" disabled={!stripe || loading}>
         Pay
       </button>
     </form>

@@ -39,7 +39,7 @@ app.use(express.static(join(__dirname, "public")));
 
 app.use("/api", indexRouter);
 app.use("/api/user", userRouter);
-app.use("/api/payment", paymentRouter);
+app.use("/api/payment", auth, paymentRouter);
 
 app.use("/api/user", auth, userRouter);
 

@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import reducer from "./reducers";
 import initState from "./initState";
 import userContext from "./userContext";
+import loadingContext from "./loadingContext";
 import { theme } from "./themes/theme";
 import { ProtectedRoute, ProtectedElement } from "./components/Protected";
 import Navbar from "./components/Navbar";
@@ -25,58 +26,61 @@ function App() {
     userGet()(dispatch);
     return () => dispatch("FINISH_LOAD");
   }, [dispatch]);
-  console.log((() => !state?.user?.id)());
 
   return (
     <userContext.Provider value={state.user}>
-      <MuiThemeProvider theme={theme}>
-        <BrowserRouter>
-          <ProtectedElement
-            // ! must remain within Router
-            // ? still don't like the location condition, but unsure of how to handle index
-            condition={() => state.user.id && window.location.pathname !== "/"}
-          >
-            <Navbar state={state} dispatch={dispatch} />
-          </ProtectedElement>
-          <Switch>
-            <ProtectedRoute
-              condition={() => !state.user.id}
-              path="/signup"
-              redirect="/profile"
+      <loadingContext.Provider value={state.loading}>
+        <MuiThemeProvider theme={theme}>
+          <BrowserRouter>
+            <ProtectedElement
+              // ! must remain within Router
+              // ? still don't like the location condition, but unsure of how to handle index
+              condition={() =>
+                state.user.id && window.location.pathname !== "/"
+              }
             >
-              <SignUp />
-            </ProtectedRoute>
-            <ProtectedRoute
-              condition={() => !state.user.id}
-              path="/login"
-              redirect="/profile"
-            >
-              <Login />
-            </ProtectedRoute>
-            <ProtectedRoute condition={() => state.user.id} path="/onboard">
-              <OnBoard state={state} dispatch={dispatch} />
-            </ProtectedRoute>
-            <Route path="/" exact component={SignUp} />
-            <ProtectedRoute condition={() => state.user.id} path="/profile">
-              <Profile state={state} dispatch={dispatch} />
-            </ProtectedRoute>
-            <ProtectedRoute condition={() => state.user.id} path="/reviews">
-              <Reviews state={state} dispatch={dispatch} />
-            </ProtectedRoute>
-            <ProtectedRoute condition={() => state.user.id} path="/balance">
-              <Balance state={state} dispatch={dispatch} />
-            </ProtectedRoute>
-            <ProtectedRoute
-              condition={() => state.user.id && state.cart.length}
-              path="/checkout"
-              // creates a failover: first to balance then to login
-              redirect="/balance"
-            >
-              <Checkout state={state} dispatch={dispatch} />
-            </ProtectedRoute>
-          </Switch>
-        </BrowserRouter>
-      </MuiThemeProvider>
+              <Navbar state={state} dispatch={dispatch} />
+            </ProtectedElement>
+            <Switch>
+              <ProtectedRoute
+                condition={() => !state.user.id}
+                path="/signup"
+                redirect="/profile"
+              >
+                <SignUp />
+              </ProtectedRoute>
+              <ProtectedRoute
+                condition={() => !state.user.id}
+                path="/login"
+                redirect="/profile"
+              >
+                <Login />
+              </ProtectedRoute>
+              <ProtectedRoute condition={() => state.user.id} path="/onboard">
+                <OnBoard state={state} dispatch={dispatch} />
+              </ProtectedRoute>
+              <Route path="/" exact component={SignUp} />
+              <ProtectedRoute condition={() => state.user.id} path="/profile">
+                <Profile state={state} dispatch={dispatch} />
+              </ProtectedRoute>
+              <ProtectedRoute condition={() => state.user.id} path="/reviews">
+                <Reviews state={state} dispatch={dispatch} />
+              </ProtectedRoute>
+              <ProtectedRoute condition={() => state.user.id} path="/balance">
+                <Balance state={state} dispatch={dispatch} />
+              </ProtectedRoute>
+              <ProtectedRoute
+                condition={() => state.user.id && state.cart?.length}
+                path="/checkout"
+                // creates a failover: first to balance then to login
+                redirect="/balance"
+              >
+                <Checkout state={state} dispatch={dispatch} />
+              </ProtectedRoute>
+            </Switch>
+          </BrowserRouter>
+        </MuiThemeProvider>
+      </loadingContext.Provider>
     </userContext.Provider>
   );
 }

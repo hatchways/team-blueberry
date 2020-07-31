@@ -24,17 +24,35 @@ export const createPaymentIntent = ({ cart }) => async (dispatch) => {
 
   try {
     // fetch to post payment internet
-    const result = await axios({
+    const { data } = await axios({
       url: "/api/payment",
       method: "POST",
-      body: JSON.stringify({ cart }),
+      data: JSON.stringify({ cart }),
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log(result);
-    dispatch({ type: "CREATE_PAYMENT_INTENT" });
+    dispatch({
+      type: "CREATE_PAYMENT_INTENT_SUCCESS",
+      secret: data.clientSecret,
+    });
   } catch (e) {
     dispatch({ type: "CREATE_PAYMENT_INTENT_ERROR", error: { ...e } });
+  }
+};
+
+export const confirmPaymentIntent = (id) => async (dispatch) => {
+  dispatch({ type: "FETCH" });
+  try {
+    // fetch to put payment intent intent in confirmed state
+    const { data } = await axios({
+      url: `/api/payment/${id}`,
+      method: "PUT",
+      data: JSON.stringify({ id }), // TODO include some sort of validation here
+      headers: { "Content-Type": "application/json" },
+    });
+    dispatch({ type: "CONFIRM_PAYMENT_INTENT_SUCCESS", data });
+  } catch (e) {
+    dispatch({ type: "CONFIRM_PAYMENT_INTENT_ERROR", error: { ...e } });
   }
 };

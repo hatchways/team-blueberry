@@ -14,7 +14,7 @@ export default (state, action) => {
       return { ...state, loading: true, cart: [action.item] };
     }
     case "CREATE_PAYMENT_INTENT": {
-      return { ...state, loading: false };
+      return { ...state, secret: action.secret, loading: true };
     }
     case "CREATE_PAYMENT_INTENT_ERROR": {
       return { ...state, loading: false };

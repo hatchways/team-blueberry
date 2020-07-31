@@ -12,15 +12,36 @@ const paymentSchema = new Schema(
       type: Number,
       required: true,
     },
+    cart: [
+      {
+        // ? subSchema ?
+        name: { type: String, required: true },
+        unitCost: { type: Number, required: true },
+        quantity: { type: Number, required: true },
+      },
+    ],
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    state: {
+      type: Schema.Types.String,
+      required: true,
+      enum: ["intent_created"],
     },
   },
   {
     timestamps: true,
   }
 );
+
+paymentSchema.statics.createIntent = function (intent) {
+  return this.create({ ...intent, state: "intent_created" }, (err, payment) => {
+    if (err) return { error: "could not create payment" };
+    // ? Why does this cb not return the created document ?
+    return payment;
+  });
+};
 
 // TODO will require instance methods to update as Stripe processes payment
 
