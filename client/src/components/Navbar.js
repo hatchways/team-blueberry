@@ -14,6 +14,7 @@ import CodeIcon from "@material-ui/icons/Code";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Link } from "react-router-dom";
+import AddCodeDialog from "./UploadCode";
 
 // import logout api
 import logout from "../services/logout";
@@ -61,9 +62,17 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = ({ state, dispatch }) => {
   const classes = useStyles();
 
+  // Open UploadCode dialog
+  const [open, setOpen] = useState(false);
+
   // navbar logic
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);
   const [anchorMenu, setAnchorMenu] = useState(null);
+
+  // handle UploadCode open/close
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // notification
   const handleNotificaton = (event) => {
@@ -99,6 +108,7 @@ const Navbar = ({ state, dispatch }) => {
 
   return (
     <div className={classes.root}>
+      <AddCodeDialog open={open} handleClose={handleClose} />
       <AppBar position="static" color="secondary">
         <Toolbar>
           <div className={classes.title}>
@@ -147,6 +157,9 @@ const Navbar = ({ state, dispatch }) => {
                 color="primary"
                 variant="outlined"
                 className={classes.upload}
+                onClick={() => {
+                  setOpen(true);
+                }}
               >
                 Upload Code
               </Button>
