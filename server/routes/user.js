@@ -23,11 +23,9 @@ router.post("/review", Auth, async (req, res) => {
     };
 
     await userController.createReview(userId, data, async (requestId) => {
-      // since this is a brand new request, we know status is pending
-      await requestQueue.add({
-        languageLevel: data.languageLevel,
-        status: "pending",
+      await requestQueue.add("firstRequest", {
         requestId,
+        isDelayed: true,
       });
       res.status(201).send({ message: "Success" });
     });
