@@ -78,7 +78,7 @@ const requestSchema = new mongoose.Schema({
     default: "pending",
   },
   // References review owner
-  embeddedReview: { reviewSchema },
+  embeddedReview: reviewSchema,
 });
 
 const Request = mongoose.model("Request", requestSchema, "requestCollection");

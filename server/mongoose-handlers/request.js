@@ -10,8 +10,8 @@ module.exports = {
       userOwner: data.userId,
       userLanguageLevel: data.userLanguageLevel,
       status: data.status,
+      embeddedReview: data.embeddedReview,
     });
-
     newRequest.save(function (err, user) {
       if (err) return console.log(err);
 
