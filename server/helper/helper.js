@@ -42,9 +42,7 @@ helper.findReviewer = async ({
       "languages.language": language,
       "languages.level": { $gte: userLanguageLevel },
     });
-    // if user not empty => return find user
     if (foundReviewer) return foundReviewer;
-    // this is finding the nearest value, should we make it more random?
     foundReviewer = await User.findOne({
       _id: { $nin: [notReviewers] },
       "languages.language": language,
