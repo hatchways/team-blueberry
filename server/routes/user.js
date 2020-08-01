@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const requestQueue = require("../queues/request");
+const findReviewerQueue = require("../queues/findReviewer");
 
 const userController = require("../controllers/user");
 
@@ -23,7 +23,7 @@ router.post("/review", Auth, async (req, res) => {
     };
 
     await userController.createReview(userId, data, async (requestId) => {
-      await requestQueue.add("findReviewer", {
+      await findReviewerQueue.add("findReviewer", {
         requestId,
         isDelayed: false,
       });
