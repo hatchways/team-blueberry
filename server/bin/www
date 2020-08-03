@@ -9,6 +9,7 @@ require("dotenv").config();
 
 var app = require("../app");
 var http = require("http");
+const Sockets = require("../sockets");
 
 /**
  * Get port from environment and store in Express.
@@ -22,6 +23,7 @@ app.set("port", port);
  */
 
 var server = http.createServer(app);
+Sockets.bindServer(server);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -30,6 +32,8 @@ var server = http.createServer(app);
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
+
+Sockets.start();
 
 /**
  * Normalize a port into a number, string, or false.
