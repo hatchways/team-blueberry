@@ -66,22 +66,21 @@ userSchema.set("toObject", {
   },
 });
 
-userSchema.statics.update = function ({
-  id,
-  update = { avatar, name, position, company },
-}) {
-  return this.findById(
-    id,
-    (err, user) => {
+userSchema.statics.update = function ({ id, update }) {
+  return (
+    this.findById(id, (err, user) => {
+      const { avatar, name, position, company } = update;
       user.avatar = avatar || user.avatar;
       user.name = name || user.name;
       user.position = position || user.position;
       user.company = company || user.company;
       // TODO add update to projects
       user.save();
-    }
-    // ! toObject MUST be called manually !
-  ).toObject();
+    })
+      .exec()
+      // ! toObject MUST be called manually !
+      .then((user) => user.toObject())
+  );
 };
 
 userSchema.statics.getUser = function (id) {
