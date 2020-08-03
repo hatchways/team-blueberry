@@ -1,8 +1,9 @@
 require("dotenv").config();
 const PUBLIC_STRIPE_API_KEY = process.env.PUBLIC_STRIPE_API_KEY;
 const SECRET_STRIPE_API_KEY = process.env.SECRET_STRIPE_API_KEY;
-const stripe = require("stripe")(SECRET_STRIPE_API_KEY); // ! remove API_KEY before commit
+const stripe = require("stripe")(SECRET_STRIPE_API_KEY);
 const Payment = require("../models/payment");
+const User = require("../models/user");
 const itemLookup = require("../helper/itemLookup");
 
 const handleError = (e, res) =>
@@ -61,13 +62,37 @@ const createPayment = async (req, res, next) => {
 
 const updatePayment = async (req, res, next) => {
   try {
-    // confirm Stripe
+    const { paymentIntentId } = req.params;
+    stripe.paymentIntents.retrieve(paymentIntentId, (err, paymentIntent) => {
+      // confirm Stripe
+      if (err) {
+        console.log(err);
+        throw new Error({
+          status: 424,
+          message: "Failure to retrieve payment intent",
+        });
+      }
+      if (paymentIntent.status !== "succeeded") {
+        console.log(paymentIntent);
+        throw new Error({
+          status: 409,
+          message: "Payment intent is invalid",
+        });
+      }
+    });
     // update payment + user
+    const { cart } = await Payment.confirmIntent(paymentIntentId, req.user.id);
+    // TODO handle successful confirmation where user is not updated
+    const user = await User.addCredits({
+      user: req.user.id,
+      credits: Number(
+        cart.find((item) => item.name === "Review Credits").quantity
+      ),
+    });
     // return success message with updated user
-    console.log(req);
-    console.log(stripe);
-    return res.status(200).send({});
+    return res.status(200).send(user);
   } catch (e) {
+    console.log(e);
     return handleError(e, res);
   }
 };

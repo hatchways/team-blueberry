@@ -19,6 +19,7 @@ mongoose
   .connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
+    useFindAndModify: false,
   })
   .then(() => {
     console.log(`Connected to ${dbUrl}`);

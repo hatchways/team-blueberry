@@ -27,7 +27,7 @@ const paymentSchema = new Schema(
     state: {
       type: Schema.Types.String,
       required: true,
-      enum: ["intent_created"],
+      enum: ["intent_created", "intent_paid"],
     },
   },
   {
@@ -41,6 +41,14 @@ paymentSchema.statics.createIntent = function (intent) {
     // ? Why does this cb not return the created document ?
     return payment;
   });
+};
+
+paymentSchema.statics.confirmIntent = function (stripeId, user) {
+  return this.findOneAndUpdate(
+    { stripeId, user, state: "intent_created" },
+    { state: "intent_paid" },
+    { returnOriginal: false, new: true }
+  );
 };
 
 // TODO will require instance methods to update as Stripe processes payment

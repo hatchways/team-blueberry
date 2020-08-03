@@ -19,12 +19,6 @@ const userSchema = new mongoose.Schema({
     min: 0,
     required: true,
   },
-  payments: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "Payment",
-    },
-  ],
   name: {
     type: String,
     required: true,
@@ -59,5 +53,13 @@ userSchema.set("toObject", {
     return ret;
   },
 });
+
+userSchema.statics.addCredits = function ({ user, credits }) {
+  return this.findByIdAndUpdate(
+    user,
+    { $inc: { balance: credits } },
+    { new: true, returnOriginal: false }
+  );
+};
 
 module.exports = mongoose.model("User", userSchema);

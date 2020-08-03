@@ -8,6 +8,6 @@ const {
 
 router.get("/key", getKey);
 router.post("/", createPayment);
-router.put("/:id", updatePayment);
+router.put("/:paymentIntentId", updatePayment);
 
 module.exports = router;
