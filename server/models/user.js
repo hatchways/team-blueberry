@@ -59,7 +59,8 @@ userSchema.statics.addCredits = function ({ user, credits }) {
     user,
     { $inc: { balance: credits } },
     { new: true, returnOriginal: false }
-  );
+    // ! toObject MUST be called manually !
+  ).toObject();
 };
 
 module.exports = mongoose.model("User", userSchema);

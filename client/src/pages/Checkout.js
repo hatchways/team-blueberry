@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { usePageLoaded } from "../hooks";
 import {
   CardElement,
@@ -56,6 +57,7 @@ const Checkout = ({ state, dispatch }) => {
 };
 
 const StripeForm = ({ cart, secret, dispatch }) => {
+  const history = useHistory();
   const loading = useContext(loadingContext);
   const stripe = useStripe(STRIPE_API_KEY);
   const elements = useElements();
@@ -71,7 +73,8 @@ const StripeForm = ({ cart, secret, dispatch }) => {
           },
         }
       );
-      return confirmPaymentIntent(paymentIntent.id)(dispatch);
+      await confirmPaymentIntent(paymentIntent.id)(dispatch);
+      history.push("/profile");
     } catch (e) {
       console.log(e);
     }
