@@ -9,7 +9,6 @@ const pingRouter = require("./routes/ping");
 const userRouter = require("./routes/user");
 const auth = require("./middleware/auth");
 
-
 // db config
 mongoose.set("useUnifiedTopology", true);
 // DB_URl = online db url

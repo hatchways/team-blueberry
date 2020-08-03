@@ -12,6 +12,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  avatar: {
+    type: String,
+    required: false,
+  },
+  position: {
+    type: String,
+    required: false,
+  },
+  company: {
+    type: String,
+    required: false,
+  },
   // credits for reviews
   balance: {
     type: Number,
@@ -19,12 +31,6 @@ const userSchema = new mongoose.Schema({
     min: 0,
     required: true,
   },
-  payments: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "Payment",
-    },
-  ],
   name: {
     type: String,
     required: true,
@@ -53,9 +59,34 @@ userSchema.pre("save", async function (next) {
 // ! Calling toObject will always remove password
 userSchema.set("toObject", {
   transform: function (doc, ret, options) {
+    ret.id = ret._id;
+    delete ret._id;
     delete ret.password;
     return ret;
   },
 });
+
+userSchema.statics.update = function ({
+  id,
+  update = { avatar, name, position, company },
+}) {
+  return this.findById(
+    id,
+    (err, user) => {
+      user.avatar = avatar || user.avatar;
+      user.name = name || user.name;
+      user.position = position || user.position;
+      user.company = company || user.company;
+      // TODO add update to projects
+      user.save();
+    }
+    // ! toObject MUST be called manually !
+  ).toObject();
+};
+
+userSchema.statics.getUser = function (id) {
+  // TODO extract <select> from this static into generic options
+  return this.findById(id, "avatar name position company languages").exec();
+};
 
 module.exports = mongoose.model("User", userSchema);

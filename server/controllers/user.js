@@ -5,16 +5,10 @@ const Review = require("../models/review-request");
 const requestHandler = require("../mongoose-handlers/request");
 
 module.exports = {
-  async showUser(req, res, next) {
-    //We may not need the check for logged in user any longer due to Auth middleware, as Auth is checked prior to each API call
-    // check for logged in user
-    const userId = req.user ? req.user.id : null;
-    if (!userId)
-      return res
-        .status(401)
-        .send("You are not authorized to access this resource");
+  // for logged in user
+  async getMe(req, res, next) {
     try {
-      const user = await User.findById(userId)
+      const user = await User.findById(req.user.id)
         .exec()
         .then((user) => user.toObject());
       return res.status(200).send({ ...user });
@@ -22,9 +16,25 @@ module.exports = {
       // TODO maybe handle exception if user is logged in but db does not return
       // consider security implications
       console.log(e);
-      return res
-        .status(401)
-        .send("You are not authorized to access this resource");
+      return res.status(500).send("Error fetching user profile");
+    }
+  },
+  // for other user
+  async getUser(req, res, next) {
+    try {
+      const user = await User.getUser(req.params.userId);
+      return res.status(200).send(user);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).send("Error fetching user profile");
+    }
+  },
+  async updateUser(req, res, next) {
+    try {
+      return res.status(200).send();
+    } catch (e) {
+      console.log(e);
+      return res.status(500).send("Error fetching user profile");
     }
   },
 

@@ -7,7 +7,10 @@ const userController = require("../controllers/user");
 // import Auth middleware
 const Auth = require("../middleware/auth");
 
-router.get("/me", Auth, userController.showUser);
+router.get("/me", Auth, userController.getMe);
+router.put("/me", Auth, userController.updateUser);
+
+router.get("/:userId", userController.getUser);
 
 router.put("/languages", Auth, userController.updateUserLanguages);
 
