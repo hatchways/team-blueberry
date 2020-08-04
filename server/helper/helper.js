@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { cookieName, cookieExpiry } = require("../constants.js");
+const User = require("../models/user");
+const { Request } = require("../models/review-request");
 
 // store all helper
 const helper = {};
@@ -24,6 +26,31 @@ helper.genToken = (req, res, user) => {
     maxAge: cookieExpiry,
   });
   return token;
+};
+
+helper.findReviewer = async ({
+  userOwner,
+  userLanguageLevel,
+  reviewersDeclined,
+  embeddedReview,
+}) => {
+  try {
+    const notReviewers = [...reviewersDeclined, userOwner];
+    const { language } = embeddedReview;
+    let foundReviewer = await User.findOne({
+      _id: { $nin: [notReviewers] },
+      "languages.language": language,
+      "languages.level": { $gte: userLanguageLevel },
+    });
+    if (foundReviewer) return foundReviewer;
+    foundReviewer = await User.findOne({
+      _id: { $nin: [notReviewers] },
+      "languages.language": language,
+    });
+    return foundReviewer;
+  } catch (err) {
+    console.error(err, err.message);
+  }
 };
 
 module.exports = helper;

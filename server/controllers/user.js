@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const reviewModel = require("../mongoose-handlers/review");
 const userModel = require("../mongoose-handlers/user");
-const Review = require("../models/review-request");
+const { Review } = require("../models/review-request");
 const requestHandler = require("../mongoose-handlers/request");
 
 module.exports = {
@@ -73,7 +73,7 @@ module.exports = {
     newReview.save(function (err) {
       if (err) return console.log(err);
 
-      const status = "Pending",
+      const status = "pending",
         userLanguageLevel = data.languageLevel;
 
       requestHandler.createRequest(
