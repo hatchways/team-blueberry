@@ -162,7 +162,7 @@ export default function SignIn(props) {
         })
         .catch((error) => {
           // ! BUG - check data type
-          if (error.response.data === "Email already exist!") {
+          if (error?.response?.data === "Email already exist!") {
             setEmail((prev) => {
               return {
                 value: prev.value,
