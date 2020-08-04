@@ -18,7 +18,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { reviewCredits } from "../utils/itemLookup";
-import { getKey } from "../services";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -58,7 +57,7 @@ const BalancePage = ({ state, dispatch }) => {
 
   return (
     <Background solid>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <StyledPaper mt={20}>
           {/* Page Heading */}
@@ -80,6 +79,9 @@ const BalancePage = ({ state, dispatch }) => {
               variant="h5"
             >
               Top Up:
+            </Typography>
+            <Typography component="h3" variant="h6">
+              ${reviewCredits.unitCost} per Credit
             </Typography>
             <Card className={classes.formChild} variant="outlined" style={{}}>
               <Grid
