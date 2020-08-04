@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const user = require("../mongoose-handlers/user");
 
 // basic user model
 const userSchema = new mongoose.Schema({
@@ -66,7 +67,11 @@ userSchema.set("toObject", {
   },
 });
 
-userSchema.statics.update = function ({ id, update }) {
+userSchema.statics.update = async function ({ id, update, callback }) {
+  if (update.avatar && callback) {
+    // uploads avatar to bucket
+    update.avatar = await callback(update.avatar);
+  }
   return (
     this.findById(id, (err, user) => {
       const { avatar, name, position, company } = update;

@@ -3,6 +3,7 @@ const reviewModel = require("../mongoose-handlers/review");
 const userModel = require("../mongoose-handlers/user");
 const Review = require("../models/review-request");
 const requestHandler = require("../mongoose-handlers/request");
+const updateAvatar = require("../helper/s3Handler");
 
 module.exports = {
   // for logged in user
@@ -34,6 +35,7 @@ module.exports = {
       const user = await User.update({
         id: req.user.id,
         update: { ...req.body },
+        callback: updateAvatar,
       });
       return res.status(200).send(user);
     } catch (e) {
