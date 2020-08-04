@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const reviewModel = require("../mongoose-handlers/review");
 const userModel = require("../mongoose-handlers/user");
-const { Review } = require("../models/review-request");
+const { Review, Request } = require("../models/review-request");
 const requestHandler = require("../mongoose-handlers/request");
 
 module.exports = {
@@ -100,6 +100,18 @@ module.exports = {
       return res
         .status(500)
         .send({ message: "There was an internal server error." });
+    }
+  },
+  async getRequest(req, res) {
+    const { reviewId } = req.params;
+    console.log(reviewId, "here");
+    try {
+      const request = await Request.findOne({
+        "embeddedReview._id": reviewId,
+      });
+      res.status(201).send(request.toObject());
+    } catch (err) {
+      return res.status(500).send("Internal Server Error");
     }
   },
 };

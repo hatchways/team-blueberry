@@ -36,5 +36,9 @@ router.post("/review", Auth, async (req, res) => {
 });
 
 router.post("/reviews", Auth, userController.getReviews);
+// need Auth there
+router.get("/request/:reviewId", userController.getRequest);
+
+// router.post("/request/addMessage", userController.addMessage);
 
 module.exports = router;
