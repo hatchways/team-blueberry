@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
-import AvatarImage from "./img/avatar.png";
+import AvatarImage from "./Profile/img/avatar.png";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import PageHeader from "../elements/PageHeader";
