@@ -2,6 +2,7 @@ const User = require("../models/user");
 const userModel = require("../mongoose-handlers/user");
 const { Review, Request } = require("../models/review-request");
 const findReviewerQueue = require("../queues/findReviewer");
+const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
 
 module.exports = {
@@ -108,7 +109,7 @@ module.exports = {
     // accept or reject contains requestId
     const { isAccepted, requestId } = req.body;
     try {
-      const job = await requestQueue.getJob(requestId.toString());
+      const job = await checkStatusQueue.getJob(requestId.toString());
       job.remove();
       if (isAccepted) {
         await Request.findByIdAndUpdate(requestId, {
