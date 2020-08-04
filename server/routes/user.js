@@ -37,4 +37,6 @@ router.post("/review", Auth, async (req, res) => {
 
 router.post("/reviews", Auth, userController.getReviews);
 
+router.post("/request", Auth, userController.reviewRequest);
+
 module.exports = router;
