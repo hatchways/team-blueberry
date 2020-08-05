@@ -10,16 +10,19 @@ aws.config.update({
 });
 
 const persistAvatar = async (req, res) => {
-  const { fileName, fileType } = req.body;
+  // set s3 params
+  // ? get file name from bin ?
+  const fileName = req.user.id;
   const s3 = new aws.S3();
   const s3Params = {
     Bucket: S3_BUCKET,
     Key: fileName,
     Expires: 500,
-    ContentType: fileType,
+    ContentType: req.contentType,
     ACL: "public-read",
   };
 
+  // obtain signedURL
   const [data, uri] = await s3.getSignedUrl(
     "putObject",
     s3Params,
@@ -30,7 +33,13 @@ const persistAvatar = async (req, res) => {
       return [data, S3_URI(fileName)];
     }
   );
-  console.log(data, uri);
+
+  // Persist file in S3 Bucket
+  await s3.putObject(s3Params, (err, data) => {
+    if (err) {
+      throw new Error({ status: 424, message: err });
+    }
+  });
   return uri;
 };
 
