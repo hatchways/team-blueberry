@@ -67,11 +67,7 @@ userSchema.set("toObject", {
   },
 });
 
-userSchema.statics.update = async function ({ id, update, callback }) {
-  if (update.avatar && callback) {
-    // uploads avatar to bucket
-    update.avatar = await callback(update.avatar);
-  }
+userSchema.statics.update = function ({ id, update }) {
   return (
     this.findById(id, (err, user) => {
       const { avatar, name, position, company } = update;

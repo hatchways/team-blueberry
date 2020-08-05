@@ -4,7 +4,7 @@ const { Review, Request } = require("../models/review-request");
 const findReviewerQueue = require("../queues/findReviewer");
 const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
-const updateAvatar = require("../helper/s3Handler");
+const persistAvatar = require("../middleware/s3Handler");
 
 module.exports = {
   // for logged in user
@@ -36,12 +36,24 @@ module.exports = {
       const user = await User.update({
         id: req.user.id,
         update: { ...req.body },
-        callback: updateAvatar,
       });
       return res.status(200).send(user);
     } catch (e) {
       console.log(e);
-      return res.status(500).send("Error fetching user profile");
+      return res.status(500).send("Error updating user profile");
+    }
+  },
+  async createUserAvatar(req, res) {
+    try {
+      const signedURL = await persistAvatar(req);
+      const user = await User.update({
+        id: req.user.id,
+        update: { avatar: signedURL },
+      });
+      return res.status(201).send(user);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).send("Error updating user profile");
     }
   },
 

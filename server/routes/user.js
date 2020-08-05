@@ -8,6 +8,7 @@ const userController = require("../controllers/user");
 const Auth = require("../middleware/auth");
 
 router.get("/me", Auth, userController.getMe);
+router.post("/me/avatar", Auth, userController.createUserAvatar);
 router.put("/me", Auth, userController.updateUser);
 
 router.get("/:userId", userController.getUser);
