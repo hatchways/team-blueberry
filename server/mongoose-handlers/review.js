@@ -45,11 +45,20 @@ module.exports = {
   // gets all relevant reviews
   async getReviews(req, res) {
     try {
-      const userId = req.user;
+      if (req.body.singleTarget) {
+        const _id = req.body.reviewId;
 
-      const reviews = await Review.find({ userId });
+        const review = await Review.findOne(_id);
+        console.log(review);
 
-      res.status(201).json({ reviews });
+        res.status(201).json({ review });
+      } else {
+        const userId = req.user;
+
+        const reviews = await Review.find(userId);
+
+        res.status(201).json({ reviews });
+      }
     } catch {
       console.log("There was an error getting reviews.");
       return res
