@@ -41,4 +41,6 @@ router.get("/request/:reviewId", userController.getRequest);
 
 // router.post("/request/addMessage", userController.addMessage);
 
+router.post("/request", Auth, userController.reviewRequest);
+
 module.exports = router;
