@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useReducer } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-// card imports
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
@@ -17,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(6),
     borderRadius: "0px",
     overflow: "scroll",
-    minHeight: "100vh",
   },
   code: {
     background: "#EAF0F8",
@@ -26,79 +24,175 @@ const useStyles = makeStyles((theme) => ({
     overflow: "scroll",
     maxHeight: "20em",
   },
+  messageBtn: {
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
 }));
 
-// expecting a review Id to be passed into the component
-const Request = ({ reviewId }) => {
+const initState = {
+  status: "",
+  review: null,
+  requestId: "",
+  statusChanged: false,
+};
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "FETCH_REQ":
+      return {
+        ...state,
+        status: action.status,
+        review: action.review,
+        requestId: action.requestId,
+      };
+    case "STATUS_ACCEPTED":
+      return {
+        ...state,
+        status: action.status,
+        statusChanged: action.statusChanged,
+      };
+    case "STATUS_DECLINED":
+      return {
+        ...state,
+        status: action.status,
+        review: action.review,
+        statusChanged: action.statusChanged,
+      };
+    case "RESET_CHANGED_STATUS":
+      return {
+        ...state,
+        statusChanged: action.statusChanged,
+        requestId: action.requestId,
+      };
+    default:
+      throw new Error("Something went wrong");
+  }
+};
+
+// review id will be accessed from url params
+const Request = () => {
   const classes = useStyles();
-  // would it be better to keep data inside one state, or have several state?
-  // store current request
-  const [request, setRequest] = useState(null);
-  const [submitClicked, setSubmitClicked] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState(false);
-  const [message, setMessage] = useState("");
+  const [state, dispatch] = useReducer(reducer, initState);
 
   // API call to get request
   useEffect(() => {
-    if (!request) handleInitState();
-    else if (!submitClicked) {
-      if (request.status === "accepted") postRequest(true);
-      if (request.status === "declined") postRequest(false);
-      setSubmitClicked(true);
-    } else if (submitMessage) {
-      // api call to update data
-      console.log(request.embeddedReview);
+    if (!state.status) {
+      handleInitState();
     }
-  }, [request]);
+    if (state.statusChanged && state.status === "accepted") {
+      sendRequest(true, state.requestId);
+      dispatch({
+        type: "RESET_CHANGED_STATUS",
+        statusChanged: false,
+      });
+    }
+    if (state.statusChanged && state.status === "declined") {
+      sendRequest(false, state.requestId);
+      console.log(state.requestId);
+      dispatch({
+        type: "RESET_CHANGED_STATUS",
+        statusChanged: false,
+        requestId: "",
+      });
+    }
+  }, [state.status]);
 
   // set initial state at first render
-  const handleInitState = async (req) => {
-    const fetchedRequest = await getRequest(reviewId);
-    setRequest(fetchedRequest.data);
+  const handleInitState = async () => {
+    // make sure to remove review id
+    const req = await getRequest("5f25daa9c1d256faa18f4cd9");
+    dispatch({
+      type: "FETCH_REQ",
+      status: req.data.status,
+      review: req.data.embeddedReview,
+      requestId: req.data._id,
+    });
   };
 
-  // sending request to /request when accept/decline
-  const postRequest = async (isAccepted) => {
-    await sendRequest(isAccepted, request._id);
+  // accept & reject button
+  const ActionButtons = () => {
+    if (state.status === "pending") {
+      return (
+        <CardActions>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => handleAccept()}
+          >
+            Accept
+          </Button>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={() => handleDecline()}
+          >
+            Decline
+          </Button>
+        </CardActions>
+      );
+    } else return <></>;
   };
 
   // accept logic
   const handleAccept = () => {
-    setRequest({ ...request, status: "accepted" });
-  };
-
-  // decline logic
-  const handleDecline = () => {
-    setRequest({ request: null });
-  };
-
-  // handle submitting message and code
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // placeholder request to update DB
-    setRequest((request) => {
-      request.embeddedReview.messages.push({
-        _id: "hadsfkaf",
-        messageText: "Hello there",
-        codeSnippet: "New code",
-      });
-      return { ...request };
+    dispatch({
+      type: "STATUS_ACCEPTED",
+      status: "accepted",
+      statusChanged: true,
     });
-    setSubmitMessage(true);
+  };
+
+  // // decline logic
+  const handleDecline = () => {
+    dispatch({
+      type: "STATUS_DECLINED",
+      status: "declined",
+      review: null,
+      statusChanged: true,
+    });
+  };
+
+  // message field and button
+  const MessageField = () => {
+    if (state.status === "accepted") {
+      return (
+        // this should show a message text area and a code editor underneath
+        <React.Fragment>
+          <CardContent>
+            <TextField
+              label="Message"
+              multiline
+              rows={6}
+              variant="filled"
+              fullWidth={true}
+              // TODO - handle text field change
+            />
+          </CardContent>
+          <CardContent className={classes.messageBtn}>
+            <Button
+              color="primary"
+              variant="contained"
+              // TODO - handle submit message button click
+            >
+              Submit
+            </Button>
+          </CardContent>
+        </React.Fragment>
+      );
+    } else return <></>;
   };
 
   return (
     <React.Fragment>
-      {request && request.embeddedReview ? (
+      {state.review ? (
         <Card className={classes.request}>
-          <CardHeader title={request.embeddedReview.title} />
+          <CardHeader title={state.review.title} />
           <hr></hr>
-          {request.embeddedReview.messages.map((item) => (
+          {state.review.messages.map((item) => (
             <CardContent key={item._id}>
               <Typography variant="body2" component="p">
                 {item.messageText}
               </Typography>
-              {/* put another card to hold code snippet */}
               <CardContent className={classes.code}>
                 <Typography
                   variant="body2"
@@ -110,52 +204,8 @@ const Request = ({ reviewId }) => {
               </CardContent>
             </CardContent>
           ))}
-          {request.status === "accepted" && !submitMessage ? (
-            // this should show a message text area and a code editor underneath
-            <React.Fragment>
-              <CardContent>
-                <TextField
-                  label="Message"
-                  multiline
-                  rows={6}
-                  variant="filled"
-                  fullWidth={true}
-                  onChange={(e) => setMessage(e.target.value)}
-                />
-              </CardContent>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>
-            </React.Fragment>
-          ) : (
-            <></>
-          )}
-          <CardActions>
-            {request.status === "pending" ? (
-              <React.Fragment>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => handleAccept()}
-                >
-                  Accept
-                </Button>
-                <Button
-                  color="primary"
-                  variant="outlined"
-                  onClick={() => handleDecline()}
-                >
-                  Decline
-                </Button>
-              </React.Fragment>
-            ) : (
-              <></>
-            )}
-          </CardActions>
+          <MessageField />
+          <ActionButtons />
         </Card>
       ) : (
         <></>
