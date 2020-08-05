@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -10,6 +10,9 @@ import TextField from "@material-ui/core/TextField";
 
 // API call
 import { sendRequest, getRequest } from "../services/reviewRequest";
+
+// code editor
+import PrismEditor from "../components/Editor/DraftEditor";
 
 const useStyles = makeStyles((theme) => ({
   request: {
@@ -88,7 +91,6 @@ const Request = () => {
     }
     if (state.statusChanged && state.status === "declined") {
       sendRequest(false, state.requestId);
-      console.log(state.requestId);
       dispatch({
         type: "RESET_CHANGED_STATUS",
         statusChanged: false,
@@ -99,8 +101,7 @@ const Request = () => {
 
   // set initial state at first render
   const handleInitState = async () => {
-    // make sure to remove review id
-    const req = await getRequest("5f25daa9c1d256faa18f4cd9");
+    const req = await getRequest();
     dispatch({
       type: "FETCH_REQ",
       status: req.data.status,
@@ -111,6 +112,25 @@ const Request = () => {
 
   // accept & reject button
   const ActionButtons = () => {
+    // accept logic
+    const handleAccept = () => {
+      dispatch({
+        type: "STATUS_ACCEPTED",
+        status: "accepted",
+        statusChanged: true,
+      });
+    };
+
+    // // decline logic
+    const handleDecline = () => {
+      dispatch({
+        type: "STATUS_DECLINED",
+        status: "declined",
+        review: null,
+        statusChanged: true,
+      });
+    };
+
     if (state.status === "pending") {
       return (
         <CardActions>
@@ -133,46 +153,49 @@ const Request = () => {
     } else return <></>;
   };
 
-  // accept logic
-  const handleAccept = () => {
-    dispatch({
-      type: "STATUS_ACCEPTED",
-      status: "accepted",
-      statusChanged: true,
-    });
-  };
-
-  // // decline logic
-  const handleDecline = () => {
-    dispatch({
-      type: "STATUS_DECLINED",
-      status: "declined",
-      review: null,
-      statusChanged: true,
-    });
-  };
-
   // message field and button
   const MessageField = () => {
+    const [message, setMessage] = useState("");
+    const [editorHasContent, setEditorHasContent] = useState(false);
+
+    const handleSubmit = (text) => {
+      // Need to send this to DB? or sockets?
+      const request = {
+        content: text,
+      };
+    };
+
+    const handleHasContent = (value) => {
+      setEditorHasContent(value);
+    };
     if (state.status === "accepted") {
       return (
-        // this should show a message text area and a code editor underneath
         <React.Fragment>
           <CardContent>
             <TextField
               label="Message"
               multiline
-              rows={6}
+              rows={2}
               variant="filled"
               fullWidth={true}
-              // TODO - handle text field change
+              onChange={(e) => setMessage(e.target.value)}
             />
+          </CardContent>
+          <CardContent>
+            <Typography>Write Code: </Typography>
+            <PrismEditor
+              language={state.review.language}
+              onSubmit={handleSubmit}
+              hasContent={handleHasContent}
+            ></PrismEditor>
           </CardContent>
           <CardContent className={classes.messageBtn}>
             <Button
               color="primary"
               variant="contained"
               // TODO - handle submit message button click
+              // where do the message and codeSnippet go? Into sockets or straight to the DB?
+              onClick={handleSubmit}
             >
               Submit
             </Button>
