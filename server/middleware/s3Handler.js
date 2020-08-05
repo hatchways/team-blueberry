@@ -1,11 +1,12 @@
 const aws = require("aws-sdk/");
 const S3_BUCKET = process.env.S3_BUCKET;
-const S3_URI = template`https://${S3_BUCKET}.s3.amazonaws.com/${"fileName"}`;
+const S3_URI = (fileName) =>
+  `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`;
 
 aws.config.update({
   region: process.env.REGION,
-  accessKeyId: process.env.ACCESS_KEY_ID,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
 const persistAvatar = async (req, res) => {
@@ -26,7 +27,7 @@ const persistAvatar = async (req, res) => {
       if (err) {
         throw new Error({ status: 424, message: err });
       }
-      return [data, S3_URI({ fileName })];
+      return [data, S3_URI(fileName)];
     }
   );
   console.log(data, uri);

@@ -6,6 +6,11 @@ const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
 const persistAvatar = require("../middleware/s3Handler");
 
+const handleError = (e, res) =>
+  e.status && e.message
+    ? res.status(e.status).send(e.message)
+    : res.status(400).send(e);
+
 module.exports = {
   // for logged in user
   async getMe(req, res, next) {
@@ -45,6 +50,7 @@ module.exports = {
   },
   async createUserAvatar(req, res) {
     try {
+      // TODO add additional middleware to enforce proper image type
       const signedURL = await persistAvatar(req);
       const user = await User.update({
         id: req.user.id,
@@ -53,7 +59,7 @@ module.exports = {
       return res.status(201).send(user);
     } catch (e) {
       console.log(e);
-      return res.status(500).send("Error updating user profile");
+      return handleError(e, res);
     }
   },
 
