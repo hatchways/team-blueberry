@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 // import models
 const { Review } = require("../models/review-request");
-
 // import request handler
 const requestHandler = require("./request");
 
@@ -28,7 +27,7 @@ module.exports = {
     newReview.save(function (err) {
       if (err) return console.log(err);
 
-      const status = "Pending",
+      const status = "pending",
         userLanguageLevel = data.languageLevel;
 
       requestHandler.createRequest(

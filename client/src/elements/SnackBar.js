@@ -5,11 +5,11 @@ import CloseIcon from "@material-ui/icons/Close";
 
 export default function SnackbarAlert(props) {
   const [open, setOpen] = React.useState(false);
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
 
