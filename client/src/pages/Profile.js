@@ -1,5 +1,4 @@
-import React from "react";
-import Typography from "@material-ui/core/Typography";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import Avatar from "@material-ui/core/Avatar";
@@ -13,6 +12,9 @@ import ProfileProjects from "./Profile/ProfileProjects";
 import Background from "../elements/Background";
 import Navbar from "../components/Navbar";
 import ProfileSkills from "./Profile/ProfileSkills";
+import ProfileName from "./Profile/ProfileName";
+import EditIcon from "@material-ui/icons/Edit";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,10 +39,20 @@ const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%, -50%)",
     border: "3px solid #fff",
   },
+  iconEdit: {
+    color: "gray",
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const Profile = ({ state, dispatch }) => {
   const classes = useStyles();
+  const [edit, setEdit] = useState(false);
+  const [name, setName] = useState("Steve Jobs");
+  const [about, setAbout] = useState("Apple Chief Officer");
+  const [files, setFiles] = useState([]);
   const skills = [
     { language: "JavaScript", level: "Advanced" },
     { language: "Java", level: "Expert" },
@@ -51,6 +63,19 @@ const Profile = ({ state, dispatch }) => {
     { title: "JS Code Review", link: "http://localhost:3000/" },
     { title: "New Java Code", link: "http://localhost:3000/" },
   ];
+
+  const handleEdit = () => {
+    setEdit(!edit);
+  };
+
+  const submit = (event) => {
+    event.preventDefault();
+    console.log("Submit!");
+    handleEdit();
+  };
+  const editName = (event) => setName(event.target.value);
+
+  const editAbout = (event) => setAbout(event.target.value);
 
   return (
     <Background solid>
@@ -74,13 +99,34 @@ const Profile = ({ state, dispatch }) => {
                   justify="center"
                   alignItems="center"
                 >
-                  <Grid item>
-                    <Box mt={7}>
-                      <PageHeader>Steve Jobs</PageHeader>
-                      <Typography variant="subtitle1">
-                        Apple Chief Officer
-                      </Typography>
-                    </Box>
+                  <ProfileName
+                    edit={edit}
+                    name={name}
+                    about={about}
+                    editName={editName}
+                    editAbout={editAbout}
+                    files={files}
+                    setFiles={setFiles}
+                  />
+
+                  <Grid item xs={1}>
+                    {!edit && (
+                      <EditIcon
+                        fontSize="large"
+                        className={classes.iconEdit}
+                        onClick={handleEdit}
+                      />
+                    )}
+                    {edit && (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        className={classes.button}
+                        onClick={submit}
+                      >
+                        Save
+                      </Button>
+                    )}
                   </Grid>
                   <Grid item>
                     <Box mt={8} />

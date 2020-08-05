@@ -19,7 +19,7 @@ export default function ProfileProjects({ projects }) {
     <Grid item container direction="row" spacing={5} justify="center">
       {projects.map((item) => {
         return (
-          <Grid item>
+          <Grid item key={item.title}>
             <Box>
               <img alt="Code" src={CodeImg} className={classes.project}></img>
             </Box>
