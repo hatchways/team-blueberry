@@ -7,6 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import Avatar from "@material-ui/core/Avatar";
 
 // API call
 import { sendRequest, getRequest } from "../services/reviewRequest";
@@ -41,7 +42,7 @@ const initState = {
 };
 const reducer = (state, action) => {
   switch (action.type) {
-    case "FETCH_REQ":
+    case "FETCH_REQUEST":
       return {
         ...state,
         status: action.status,
@@ -101,9 +102,11 @@ const Request = () => {
 
   // set initial state at first render
   const handleInitState = async () => {
-    const req = await getRequest();
+    const req = await getRequest({
+      /* Need to put review id in here */
+    });
     dispatch({
-      type: "FETCH_REQ",
+      type: "FETCH_REQUEST",
       status: req.data.status,
       review: req.data.embeddedReview,
       requestId: req.data._id,
@@ -172,6 +175,11 @@ const Request = () => {
       return (
         <React.Fragment>
           <CardContent>
+            <CardHeader
+              avatar={<Avatar>UI</Avatar>}
+              title="User's Name"
+              subheader="User's Job"
+            />
             <TextField
               label="Message"
               multiline
@@ -194,7 +202,7 @@ const Request = () => {
               color="primary"
               variant="contained"
               // TODO - handle submit message button click
-              // where do the message and codeSnippet go? Into sockets or straight to the DB?
+              // where do the message and codeSnippet go? Into sockets or straight into DB?
               onClick={handleSubmit}
             >
               Submit
