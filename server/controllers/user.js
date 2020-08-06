@@ -56,7 +56,7 @@ module.exports = {
         id: req.user.id,
         update: { avatar: signedURL },
       });
-      return res.status(201).send(user);
+      return res.status(201).json({ ...user });
     } catch (e) {
       console.log(e);
       return handleError(e, res);

@@ -87,6 +87,7 @@ userSchema.statics.update = function ({ id, update }) {
 userSchema.statics.getUser = function (id) {
   // TODO extract <select> from this static into generic options
   return this.findById(id, "avatar name position company languages").exec();
+};
 
 userSchema.statics.addCredits = function ({ user, credits }) {
   return this.findByIdAndUpdate(

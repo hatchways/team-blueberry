@@ -11,6 +11,7 @@
   "dependencies": {
     "aws-sdk": "^2.725.0",
     "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
     "bull": "^3.16.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -21,9 +22,9 @@
     "mongoose": "^5.9.25",
     "mongoose-seed": "^0.6.0",
     "morgan": "~1.9.1",
-    "stripe": "^8.79.0",
+    "nodemon": "^2.0.4",
     "redis": "^3.0.2",
-    "nodemon": "^2.0.4"
+    "stripe": "^8.79.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",

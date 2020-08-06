@@ -15,6 +15,7 @@ const persistAvatar = async (req, res) => {
   const fileName = req.user.id;
   const s3 = new aws.S3();
   const s3Params = {
+    Body: req.body,
     Bucket: S3_BUCKET,
     Key: fileName,
     Expires: 500,
@@ -22,25 +23,15 @@ const persistAvatar = async (req, res) => {
     ACL: "public-read",
   };
 
-  // obtain signedURL
-  const [data, uri] = await s3.getSignedUrl(
-    "putObject",
-    s3Params,
-    (err, data) => {
-      if (err) {
-        throw new Error({ status: 424, message: err });
-      }
-      return [data, S3_URI(fileName)];
-    }
-  );
-
   // Persist file in S3 Bucket
-  await s3.putObject(s3Params, (err, data) => {
+  const { url, ...data } = await s3.putObject(s3Params, (err, data) => {
     if (err) {
+      console.log(err);
       throw new Error({ status: 424, message: err });
     }
+    return data;
   });
-  return uri;
+  return S3_URI(fileName);
 };
 
 module.exports = persistAvatar;
