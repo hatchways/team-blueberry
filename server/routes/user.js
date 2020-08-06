@@ -36,10 +36,10 @@ router.post("/review", Auth, async (req, res) => {
 });
 
 router.post("/reviews", Auth, userController.getReviews);
-// need Auth there
-router.get("/request/:reviewId", userController.getRequest);
 
-// router.post("/request/addMessage", userController.addMessage);
+router.get("/request/:reviewId", Auth, userController.getRequest);
+
+router.post("/request/message", Auth, userController.sendReviewMessage);
 
 router.post("/request", Auth, userController.reviewRequest);
 

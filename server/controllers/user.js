@@ -141,4 +141,23 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+  async sendReviewMessage(req, res) {
+    const { userId } = req.user;
+    const { reviewId, message, codeSnippet } = req.body;
+    try {
+      const request = await Request.findOne({
+        "embeddedReview._id": reviewId,
+      });
+      request.embeddedReview.messages.push({
+        messageText: message,
+        codeSnippet: codeSnippet,
+        messagePostedBy: userId,
+        messagePostDate: new Date(),
+      });
+      await request.save();
+      return res.status(201).send(request.toObject());
+    } catch {
+      return res.status(500).send("Internal Server Error");
+    }
+  },
 };
