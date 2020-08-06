@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useReducer } from "react";
 import socket from "../services/sockets";
 import axios from "axios";
 import userContext from "../userContext";
+import calcDate from "../utils/calcDate";
 //MaterialUI imports
 import { makeStyles } from "@material-ui/core";
 import Badge from "@material-ui/core/Badge";
@@ -18,7 +19,7 @@ const useStyles = makeStyles({
   },
   seen: { background: "white" },
   unseen: {
-    background: "blue",
+    background: "#C2DFFF",
   },
   wrapper: {
     padding: "0 1vh 0 0",
@@ -53,16 +54,6 @@ const reducer = (state, action) => {
     default:
       throw new Error("State update error");
   }
-};
-
-//For time calculation
-const timeMap = {
-  minute: 60000,
-  hour: 3600000,
-  day: 86400000,
-  week: 604800000,
-  month: 2592000000,
-  year: 31536000000,
 };
 
 const Notifications = () => {
@@ -111,39 +102,6 @@ const Notifications = () => {
     }
 
     setAnchorNotificaton(null);
-  };
-
-  //Transform date to 'ago' format
-  const calcDate = (date) => {
-    const created = new Date(date);
-    const now = Date.now();
-    const timeDelta = now - created.valueOf();
-    let elapsed = 0;
-    if (timeDelta < timeMap.minute) {
-      return "just now";
-    } else if (timeDelta < timeMap.hour) {
-      elapsed = timeDelta / timeMap.minute;
-      elapsed = Math.floor(elapsed);
-      return `${elapsed} minute(s) ago`;
-    } else if (timeDelta < timeMap.day) {
-      elapsed = timeDelta / timeMap.hour;
-      elapsed = Math.floor(elapsed);
-      return `${elapsed} hour(s) ago`;
-    } else if (timeDelta < timeMap.week) {
-      elapsed = timeDelta / timeMap.day;
-      elapsed = Math.floor(elapsed);
-      return `${elapsed} day(s) ago`;
-    } else if (timeDelta < timeMap.month) {
-      elapsed = timeDelta / timeMap.week;
-      elapsed = Math.floor(elapsed);
-      return `${elapsed} week(s) ago`;
-    } else if (timeDelta < timeMap.year) {
-      elapsed = timeDelta / timeMap.month;
-      elapsed = Math.floor(elapsed);
-      return `${elapsed} month(s) ago`;
-    } else {
-      return "over a year ago";
-    }
   };
 
   return (

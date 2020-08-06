@@ -36,17 +36,17 @@ function App() {
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
-            <ProtectedRoute condition={() => state.user._id} path="/onboard">
+            <ProtectedRoute condition={() => state.user.id} path="/onboard">
               <OnBoard state={state} dispatch={dispatch} />
             </ProtectedRoute>
             <Route path="/" exact component={SignUp} />
-            <ProtectedRoute condition={() => state.user._id} path="/profile">
+            <ProtectedRoute condition={() => state.user.id} path="/profile">
               <Profile state={state} dispatch={dispatch} />
             </ProtectedRoute>
-            <ProtectedRoute condition={() => state.user._id} path="/reviews">
+            <ProtectedRoute condition={() => state.user.id} path="/reviews">
               <Reviews state={state} dispatch={dispatch} />
             </ProtectedRoute>
-            <ProtectedRoute condition={() => state.user._id} path="/balance">
+            <ProtectedRoute condition={() => state.user.id} path="/balance">
               <Balance state={state} dispatch={dispatch} />
             </ProtectedRoute>
             <ProtectedRoute
