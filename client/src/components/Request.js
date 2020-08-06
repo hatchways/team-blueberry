@@ -162,13 +162,12 @@ const Request = () => {
     const [editorHasContent, setEditorHasContent] = useState(false);
 
     const handleSubmit = async (text) => {
-      // Need to send this to DB? or sockets?
       const request = {
         content: text,
       };
-      console.log(request);
+      // TODO saving codeSnippet as an object to be read by Prism Code Component
       try {
-        const req = await sendMessage(reviewId, message, "New code");
+        const req = await sendMessage(reviewId, message, request);
         dispatch({
           type: "FETCH_REQUEST",
           review: req.embeddedReview,
