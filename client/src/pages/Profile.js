@@ -1,20 +1,21 @@
-import React, { useState } from "react";
-import Grid from "@material-ui/core/Grid";
-import Container from "@material-ui/core/Container";
-import Avatar from "@material-ui/core/Avatar";
-import Box from "@material-ui/core/Box";
+import React, { useState, useContext } from "react";
+import userContext from "../userContext";
 import AvatarImage from "./Profile/img/avatar.png";
-import Paper from "@material-ui/core/Paper";
-import { makeStyles } from "@material-ui/core/styles";
-import PageHeader from "../elements/PageHeader";
 import ProfileStats from "./Profile/ProfileStats";
-import ProfileProjects from "./Profile/ProfileProjects";
+// import ProfileProjects from "./Profile/ProfileProjects";
 import Background from "../elements/Background";
 import Navbar from "../components/Navbar";
 import ProfileSkills from "./Profile/ProfileSkills";
 import ProfileName from "./Profile/ProfileName";
+//Material UI imports
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
+import Avatar from "@material-ui/core/Avatar";
+import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,20 +50,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = ({ state, dispatch }) => {
   const classes = useStyles();
+  const user = useContext(userContext);
+  console.log("Profile:", user);
   const [edit, setEdit] = useState(false);
-  const [name, setName] = useState("Steve Jobs");
-  const [about, setAbout] = useState("Apple Chief Officer");
+  const [name, setName] = useState(user.name);
+  const [about, setAbout] = useState(user.email);
   const [files, setFiles] = useState([]);
-  const skills = [
-    { language: "JavaScript", level: "Advanced" },
-    { language: "Java", level: "Expert" },
-    { language: "PHP", level: "Expert" },
-    { language: "C++", level: "Beginner" },
-  ];
-  const projects = [
-    { title: "JS Code Review", link: "http://localhost:3000/" },
-    { title: "New Java Code", link: "http://localhost:3000/" },
-  ];
 
   const handleEdit = () => {
     setEdit(!edit);
@@ -73,6 +66,7 @@ const Profile = ({ state, dispatch }) => {
     console.log("Submit!");
     handleEdit();
   };
+
   const editName = (event) => setName(event.target.value);
 
   const editAbout = (event) => setAbout(event.target.value);
@@ -101,8 +95,8 @@ const Profile = ({ state, dispatch }) => {
                 >
                   <ProfileName
                     edit={edit}
-                    name={name}
-                    about={about}
+                    name={user.name}
+                    about={user.email}
                     editName={editName}
                     editAbout={editAbout}
                     files={files}
@@ -129,19 +123,14 @@ const Profile = ({ state, dispatch }) => {
                     )}
                   </Grid>
                   <Grid item>
-                    <Box mt={8} />
+                    <Box mt={10} />
                   </Grid>
                   <ProfileStats years="5" reviews="10" rating="4.7" />
                   <Grid item>
-                    <Box mt={8} />
+                    <Box mt={10} />
                   </Grid>
-                  <ProfileSkills skills={skills} />
-                  <Grid item>
-                    <Box mt={8} mb={5}>
-                      <PageHeader>Projects</PageHeader>
-                    </Box>
-                  </Grid>
-                  <ProfileProjects projects={projects} />
+                  <ProfileSkills skills={user.languages} />
+                  {/* <ProfileProjects projects={projects} /> */}
                 </Grid>
               </Paper>
             </Container>
