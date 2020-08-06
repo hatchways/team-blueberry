@@ -30,8 +30,7 @@ router.put("/update-read", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const notification = await createNotification(req.query); //for test purposes
-    // const notification = await createNotification(req.body);
+    const notification = await createNotification(req.body);
     console.log(notification);
     res.status(200).send(notification);
   } catch (error) {
