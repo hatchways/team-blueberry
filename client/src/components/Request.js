@@ -11,6 +11,7 @@ import Avatar from "@material-ui/core/Avatar";
 
 // API call
 import { sendRequest, getRequest } from "../services/reviewRequest";
+import { sendMessage } from "../services/sendReviewMessage";
 
 // code editor
 import PrismEditor from "../components/Editor/DraftEditor";
@@ -102,14 +103,12 @@ const Request = () => {
 
   // set initial state at first render
   const handleInitState = async () => {
-    const req = await getRequest({
-      /* Need to put review id in here */
-    });
+    const req = await getRequest(/*review id here */);
     dispatch({
       type: "FETCH_REQUEST",
-      status: req.data.status,
-      review: req.data.embeddedReview,
-      requestId: req.data._id,
+      status: req.status,
+      review: req.embeddedReview,
+      requestId: req._id,
     });
   };
 
@@ -157,15 +156,33 @@ const Request = () => {
   };
 
   // message field and button
-  const MessageField = () => {
+  const MessageField = ({ dispatch, reviewId }) => {
     const [message, setMessage] = useState("");
+    const [makeSubmit, setMakeSubmit] = useState(false);
     const [editorHasContent, setEditorHasContent] = useState(false);
 
-    const handleSubmit = (text) => {
+    const handleSubmit = async (text) => {
       // Need to send this to DB? or sockets?
       const request = {
         content: text,
       };
+      console.log(request);
+      try {
+        const req = await sendMessage(reviewId, message, "New code");
+        dispatch({
+          type: "FETCH_REQUEST",
+          review: req.embeddedReview,
+          requestId: req._id,
+        });
+      } catch (err) {
+        // TODO handle error better
+        console.error(err.message);
+      }
+      setMakeSubmit(false);
+    };
+
+    const startSubmit = () => {
+      setMakeSubmit(true);
     };
 
     const handleHasContent = (value) => {
@@ -193,18 +210,13 @@ const Request = () => {
             <Typography>Write Code: </Typography>
             <PrismEditor
               language={state.review.language}
+              makeSubmit={makeSubmit}
               onSubmit={handleSubmit}
               hasContent={handleHasContent}
             ></PrismEditor>
           </CardContent>
           <CardContent className={classes.messageBtn}>
-            <Button
-              color="primary"
-              variant="contained"
-              // TODO - handle submit message button click
-              // where do the message and codeSnippet go? Into sockets or straight into DB?
-              onClick={handleSubmit}
-            >
+            <Button color="primary" variant="contained" onClick={startSubmit}>
               Submit
             </Button>
           </CardContent>
@@ -213,29 +225,44 @@ const Request = () => {
     } else return <></>;
   };
 
+  const ReviewerHeader = ({ index }) => {
+    if (index) {
+      return (
+        // TODO access to user's name and job title here
+        <CardHeader
+          avatar={<Avatar>UI</Avatar>}
+          title="User's Name"
+          subheader="User's Job"
+        />
+      );
+    } else return <></>;
+  };
   return (
     <React.Fragment>
       {state.review ? (
         <Card className={classes.request}>
           <CardHeader title={state.review.title} />
           <hr></hr>
-          {state.review.messages.map((item) => (
-            <CardContent key={item._id}>
-              <Typography variant="body2" component="p">
-                {item.messageText}
-              </Typography>
-              <CardContent className={classes.code}>
-                <Typography
-                  variant="body2"
-                  component="p"
-                  className={classes.codeText}
-                >
-                  {item.codeSnippet}
+          {state.review.messages.map((item, index) => (
+            <React.Fragment key={item._id}>
+              <ReviewerHeader index={index} />
+              <CardContent>
+                <Typography variant="body2" component="p">
+                  {item.messageText}
                 </Typography>
+                <CardContent className={classes.code}>
+                  <Typography
+                    variant="body2"
+                    component="p"
+                    className={classes.codeText}
+                  >
+                    {item.codeSnippet}
+                  </Typography>
+                </CardContent>
               </CardContent>
-            </CardContent>
+            </React.Fragment>
           ))}
-          <MessageField />
+          <MessageField reviewId={/*review id here*/} dispatch={dispatch} />
           <ActionButtons />
         </Card>
       ) : (
