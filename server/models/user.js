@@ -61,8 +61,8 @@ userSchema.pre("save", async function (next) {
 userSchema.set("toObject", {
   transform: function (doc, ret, options) {
     ret.id = ret._id;
-    delete ret._id;
     delete ret.password;
+    delete ret._id;
     return ret;
   },
 });
@@ -87,6 +87,14 @@ userSchema.statics.update = function ({ id, update }) {
 userSchema.statics.getUser = function (id) {
   // TODO extract <select> from this static into generic options
   return this.findById(id, "avatar name position company languages").exec();
+
+userSchema.statics.addCredits = function ({ user, credits }) {
+  return this.findByIdAndUpdate(
+    user,
+    { $inc: { balance: credits } },
+    { new: true, returnOriginal: false }
+    // ! toObject MUST be called manually !
+  ).toObject();
 };
 
 module.exports = mongoose.model("User", userSchema);
