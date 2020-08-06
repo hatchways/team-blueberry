@@ -27,7 +27,7 @@ export const getRequest = async (reviewId) => {
       withCredentials: true,
       url: `/api/user/request/${reviewId}`,
     });
-    return res;
+    return res.data;
   } catch (err) {
     // TODO - need better error handling
     return console.error(err);
