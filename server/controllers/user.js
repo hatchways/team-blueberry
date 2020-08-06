@@ -4,6 +4,7 @@ const { Review, Request } = require("../models/review-request");
 const findReviewerQueue = require("../queues/findReviewer");
 const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
+const { updateReview } = require("../mongoose-handlers/review");
 
 module.exports = {
   async showUser(req, res, next) {
@@ -128,6 +129,32 @@ module.exports = {
       }
     } catch {
       res.status(500).send("Internal Server Error");
+    }
+  },
+
+  // Complete and close review by checking amount of messages and applying rating and status changes
+  async closeReview(req, res) {
+    try {
+      const { reviewId, rating, complete } = req.body;
+
+      const review = await Review.findOne({ reviewId });
+
+      if (review.messages.length > 2 && complete) {
+        await Review.findByIdAndUpdate(
+          { _id: reviewId },
+          { $set: { rating: rating, status: "closed" } }
+        );
+        res.status(200).send({ message: "Review updated" });
+      } else {
+        return res.status(409).send({
+          message:
+            "Conflict in resource. Cannot set rating due to prerequisites not being met.",
+        });
+      }
+    } catch {
+      return res
+        .status(500)
+        .send({ message: "There was an internal server error." });
     }
   },
 };

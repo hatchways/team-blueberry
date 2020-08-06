@@ -18,4 +18,20 @@ module.exports = {
       }
     });
   },
+  updateUserRating: async (userId, rating, cb) => {
+    User.findById(userId, function (error, doc) {
+      if (error) {
+        cb(true, error);
+      }
+      try {
+        const rating = (doc.rating + rating) / 2;
+
+        doc.rating = rating;
+        doc.save(cb);
+      } catch (error) {
+        cb(true, error);
+        console.error(error);
+      }
+    });
+  },
 };

@@ -56,16 +56,4 @@ module.exports = {
         .send({ message: "There was an internal server error." });
     }
   },
-  async updateReview(req, res) {
-    try {
-      const reviewId = req.body.reviewId;
-
-      // need to finish https://mongoosejs.com/docs/api/query.html#query_Query-findOneAndUpdate
-      await Review.findOneAndUpdate({ _id: reviewId });
-    } catch {
-      return res
-        .status(500)
-        .send({ message: "There was an internal server error." });
-    }
-  },
 };

@@ -35,6 +35,8 @@ router.post("/review", Auth, async (req, res) => {
   }
 });
 
+router.put("/reviews/complete", Auth, userController.closeReview);
+
 router.post("/reviews", Auth, userController.getReviews);
 
 router.post("/request", Auth, userController.reviewRequest);
