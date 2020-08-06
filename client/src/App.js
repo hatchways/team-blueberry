@@ -25,10 +25,6 @@ function App() {
   }, [dispatch]);
   console.log(state);
 
-  // Maybe we should wrap it this way?
-  // if (state.loading) {
-  //   return "Loading";
-  // } else { }
   return (
     <userContext.Provider value={state.user}>
       <MuiThemeProvider theme={theme}>
@@ -36,6 +32,7 @@ function App() {
           <Switch>
             <Route path="/signup" component={SignUp} />
             <Route path="/login" component={Login} />
+            <Route path="/test" component={Profile} />
             <ProtectedRoute condition={() => state.user.id} path="/onboard">
               <OnBoard state={state} dispatch={dispatch} />
             </ProtectedRoute>

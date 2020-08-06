@@ -81,7 +81,7 @@ const Notifications = () => {
 
   useEffect(() => {
     setSeen(state.notifications.every((item) => item.seen === true));
-  });
+  }, [anchorNotificaton]);
 
   const handleMenu = (event) => {
     setAnchorNotificaton(event.currentTarget);

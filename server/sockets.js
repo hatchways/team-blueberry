@@ -26,12 +26,6 @@ class SocketConfig {
 
 const socketListeners = (socket) => {
   console.log("User connected via sockets");
-
-  // Subscribe after login:
-  socket.on("login", (userId) => {
-    console.log("User joined room " + userId);
-    socket.join(userId);
-  });
 };
 
 const sockets = new SocketConfig();
