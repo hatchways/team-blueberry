@@ -78,11 +78,21 @@ export default function Dropzone({ files, setFiles }) {
     multiple: false,
     onDrop: (acceptedFiles) => {
       setFiles(
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
+        acceptedFiles.map((file) => {
+          const reader = new FileReader();
+
+          reader.onabort = () => console.log("file reading was aborted");
+          reader.onerror = () => console.log("file reading has failed");
+          reader.onload = () => {
+            // Do whatever you want with the file contents
+            const binaryStr = reader.result;
+            Object.assign(file, { bin: binaryStr });
+          };
+          reader.readAsArrayBuffer(file);
+          return Object.assign(file, {
             preview: URL.createObjectURL(file),
-          })
-        )
+          });
+        })
       );
     },
   });

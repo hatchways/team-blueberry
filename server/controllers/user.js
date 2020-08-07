@@ -4,18 +4,18 @@ const { Review, Request } = require("../models/review-request");
 const findReviewerQueue = require("../queues/findReviewer");
 const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
+const persistAvatar = require("../middleware/s3Handler");
+
+const handleError = (e, res) =>
+  e.status && e.message
+    ? res.status(e.status).send(e.message)
+    : res.status(400).send(e);
 
 module.exports = {
-  async showUser(req, res, next) {
-    //We may not need the check for logged in user any longer due to Auth middleware, as Auth is checked prior to each API call
-    // check for logged in user
-    const userId = req.user ? req.user.id : null;
-    if (!userId)
-      return res
-        .status(401)
-        .send("You are not authorized to access this resource");
+  // for logged in user
+  async getMe(req, res, next) {
     try {
-      const user = await User.findById(userId)
+      const user = await User.findById(req.user.id)
         .exec()
         .then((user) => user.toObject());
       return res.status(200).send({ ...user });
@@ -23,9 +23,43 @@ module.exports = {
       // TODO maybe handle exception if user is logged in but db does not return
       // consider security implications
       console.log(e);
-      return res
-        .status(401)
-        .send("You are not authorized to access this resource");
+      return res.status(500).send("Error fetching user profile");
+    }
+  },
+  // for other user
+  async getUser(req, res, next) {
+    try {
+      const user = await User.getUser(req.params.userId);
+      return res.status(200).send(user);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).send("Error fetching user profile");
+    }
+  },
+  async updateUser(req, res, next) {
+    try {
+      const user = await User.update({
+        id: req.user.id,
+        update: { ...req.body },
+      });
+      return res.status(200).send(user);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).send("Error updating user profile");
+    }
+  },
+  async createUserAvatar(req, res) {
+    try {
+      // TODO add additional middleware to enforce proper image type
+      const signedURL = await persistAvatar(req);
+      const user = await User.update({
+        id: req.user.id,
+        update: { avatar: signedURL },
+      });
+      return res.status(201).json({ ...user });
+    } catch (e) {
+      console.log(e);
+      return handleError(e, res);
     }
   },
 

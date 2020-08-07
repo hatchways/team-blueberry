@@ -55,6 +55,18 @@ export default (state, action) => {
     case "UPDATE_USER_LANGUAGES_SUCCESS": {
       return { ...state, user: action.user, loading: false, error: null };
     }
+    case "CREATE_USER_AVATAR_SUCCESS": {
+      return { ...state, loading: false, user: action.user };
+    }
+    case "CREATE_USER_AVATAR_ERROR": {
+      return { ...state, error: action.error, loading: false };
+    }
+    case "EDIT_USER_SUCCESS": {
+      return { ...state, loading: false, user: action.user };
+    }
+    case "EDIT_USER_ERROR": {
+      return { ...state, loading: false, error: action.error };
+    }
     case "REMOVE_USER": {
       return { ...state, loading: true };
     }

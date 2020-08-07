@@ -16,6 +16,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
+import { createUserAvatar, editUser } from "../services";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,9 +50,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Profile = ({ state, dispatch }) => {
+  const { languages = [], projects = [], ...user } = useContext(userContext);
   const classes = useStyles();
-  const user = useContext(userContext);
-  console.log("Profile:", user);
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState(user.name);
   const [about, setAbout] = useState(user.email);
@@ -63,7 +63,10 @@ const Profile = ({ state, dispatch }) => {
 
   const submit = (event) => {
     event.preventDefault();
-    console.log("Submit!");
+    if (files.length) {
+      createUserAvatar(files[0].bin)(dispatch);
+      editUser({ name })(dispatch);
+    }
     handleEdit();
   };
 
@@ -76,13 +79,10 @@ const Profile = ({ state, dispatch }) => {
       <Box flexWrap="nowrap" width={"100%"}>
         <Grid container direction="column">
           <Grid item>
-            <Navbar state={state} dispatch={dispatch} />
-          </Grid>
-          <Grid item>
             <Container component="main" maxWidth="md" className={classes.root}>
               <Avatar
                 alt="Profile image"
-                src={AvatarImage}
+                src={user.avatar || AvatarImage}
                 className={classes.avatar}
               />
               <Paper className={classes.paper}>

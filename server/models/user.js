@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const user = require("../mongoose-handlers/user");
 
 // basic user model
 const userSchema = new mongoose.Schema({
@@ -11,6 +12,18 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  avatar: {
+    type: String,
+    required: false,
+  },
+  position: {
+    type: String,
+    required: false,
+  },
+  company: {
+    type: String,
+    required: false,
   },
   // credits for reviews
   balance: {
@@ -53,6 +66,28 @@ userSchema.set("toObject", {
     return ret;
   },
 });
+
+userSchema.statics.update = function ({ id, update }) {
+  return (
+    this.findById(id, (err, user) => {
+      const { avatar, name, position, company } = update;
+      user.avatar = avatar || user.avatar;
+      user.name = name || user.name;
+      user.position = position || user.position;
+      user.company = company || user.company;
+      // TODO add update to projects
+      user.save();
+    })
+      .exec()
+      // ! toObject MUST be called manually !
+      .then((user) => user.toObject())
+  );
+};
+
+userSchema.statics.getUser = function (id) {
+  // TODO extract <select> from this static into generic options
+  return this.findById(id, "avatar name position company languages").exec();
+};
 
 userSchema.statics.addCredits = function ({ user, credits }) {
   return this.findByIdAndUpdate(
