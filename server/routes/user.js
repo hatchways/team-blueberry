@@ -7,7 +7,11 @@ const mongoose = require("mongoose");
 // import Auth middleware
 const Auth = require("../middleware/auth");
 
-router.get("/me", Auth, userController.showUser);
+router.get("/me", Auth, userController.getMe);
+router.post("/me/avatar", Auth, userController.createUserAvatar);
+router.put("/me", Auth, userController.updateUser);
+
+router.get("/:userId", userController.getUser);
 
 router.put("/languages", Auth, userController.updateUserLanguages);
 // Auth,

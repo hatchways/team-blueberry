@@ -105,7 +105,7 @@ export default function AddCodeDialog(props) {
                   makeSubmit={makeSubmit}
                   onSubmit={handleSubmit}
                   hasContent={handleHasContent}
-                ></PrismEditor>
+                />
               </Grid>
               <Grid item container justify="center">
                 <SubmitButton onClick={startSubmit}>Submit</SubmitButton>
