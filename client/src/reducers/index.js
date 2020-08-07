@@ -36,7 +36,6 @@ export default (state, action) => {
     case "FINISH_LOAD": {
       return { ...state, loading: false };
     }
-
     case "GET_LANGUAGES": {
       return { ...state, loading: true };
     }
@@ -67,11 +66,23 @@ export default (state, action) => {
     case "EDIT_USER_ERROR": {
       return { ...state, loading: false, error: action.error };
     }
+    case "CREATE_CODE_SUCCESS": {
+      return { ...state, loading: false, error: null };
+    }
+    case "CREATE_CODE_ERROR": {
+      return { ...state, loading: false, error: action.error };
+    }
     case "REMOVE_USER": {
       return { ...state, loading: true };
     }
     case "REMOVE_USER_SUCCESS": {
       return { ...state, user: action.user, loading: false, error: null };
+    }
+    case "GET_USER_REVIEWS_SUCCESS": {
+      return { ...state, reviews: action.reviews, loading: false };
+    }
+    case "GET_USER_REVIEWS_ERROR": {
+      return { ...state, error: action.error, loading: false };
     }
     case "REMOVE_USER_ERROR": {
       return { ...state, error: action.user, loading: false };

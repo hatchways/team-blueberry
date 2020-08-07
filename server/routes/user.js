@@ -10,21 +10,17 @@ router.get("/me", Auth, userController.getMe);
 router.post("/me/avatar", Auth, userController.createUserAvatar);
 router.put("/me", Auth, userController.updateUser);
 
-router.get("/:userId", userController.getUser);
-
 router.put("/languages", Auth, userController.updateUserLanguages);
 
 router.post("/review", Auth, async (req, res) => {
   try {
     const userId = req.user;
-
     const data = {
       language: req.body.language,
-      languageLevel: req.body.languageLevel,
       title: req.body.title,
       message: req.body.message,
     };
-
+    console.log(data);
     await userController.createReview(userId, data, async (requestId) => {
       await findReviewerQueue.add("findReviewer", {
         requestId,
@@ -32,13 +28,13 @@ router.post("/review", Auth, async (req, res) => {
       });
       res.status(201).send({ message: "Success" });
     });
-  } catch {
+  } catch (e) {
+    console.log(e);
     res.status(500).send({ message: "There was an internal server error." });
-    console.log("There was an error in creating review.");
   }
 });
 
-router.post("/reviews", Auth, userController.getReviews);
+router.get("/reviews", Auth, userController.getReviews);
 
 router.post("/request/message", Auth, userController.sendReviewMessage);
 

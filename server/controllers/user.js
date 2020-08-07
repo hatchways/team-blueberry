@@ -95,7 +95,10 @@ module.exports = {
       message = data.message;
     const messagePostedBy = userId;
     const messagePostDate = new Date();
-
+    const user = await User.findById(userId);
+    const userLanguageLevel = user.languages[language]
+      ? user.languages[language].level
+      : 0;
     const newReview = new Review({
       title,
       language,
@@ -106,8 +109,7 @@ module.exports = {
     newReview.save(function (err) {
       if (err) return console.log(err);
 
-      const status = "pending",
-        userLanguageLevel = data.languageLevel;
+      const status = "pending";
 
       requestHandler.createRequest(
         {
@@ -123,6 +125,7 @@ module.exports = {
   // gets all relevant reviews
   async getReviews(req, res) {
     try {
+      // ? what is this ?
       if (req.body.singleTarget) {
         const reviewId = req.body.reviewId;
         const request = await Request.findOne({
@@ -135,6 +138,8 @@ module.exports = {
         const reviews = await Review.find({ userId: userId });
         return res.status(201).json({ reviews });
       }
+      const reviews = await Review.find({ userId: req.user.id });
+      return res.status(201).json({ reviews });
     } catch (error) {
       console.error(error.message);
       return res
