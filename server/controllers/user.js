@@ -112,6 +112,17 @@ module.exports = {
         .send({ message: "There was an internal server error." });
     }
   },
+  async getRequest(req, res) {
+    const { reviewId } = req.params;
+    try {
+      const request = await Request.findOne({
+        "embeddedReview._id": reviewId,
+      });
+      res.status(201).send(request.toObject());
+    } catch (err) {
+      return res.status(500).send("Internal Server Error");
+    }
+  },
   // accept or reject request
   async reviewRequest(req, res) {
     const userId = req.user;
@@ -137,6 +148,25 @@ module.exports = {
       }
     } catch {
       res.status(500).send("Internal Server Error");
+    }
+  },
+  async sendReviewMessage(req, res) {
+    const { userId } = req.user;
+    const { reviewId, message, codeSnippet } = req.body;
+    try {
+      const request = await Request.findOne({
+        "embeddedReview._id": reviewId,
+      });
+      request.embeddedReview.messages.push({
+        messageText: message,
+        codeSnippet: codeSnippet,
+        messagePostedBy: userId,
+        messagePostDate: new Date(),
+      });
+      await request.save();
+      return res.status(201).send(request.toObject());
+    } catch {
+      return res.status(500).send("Internal Server Error");
     }
   },
 };
