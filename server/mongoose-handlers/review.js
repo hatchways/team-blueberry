@@ -10,8 +10,7 @@ module.exports = {
     // create const variables from data
     const language = data.language,
       title = data.title,
-      codeSnippet = data.codeSnippet,
-      messageText = data.messageText;
+      message = data.message;
     const messagePostedBy = userId;
     const messagePostDate = new Date();
 
@@ -19,9 +18,7 @@ module.exports = {
       title,
       language,
       userId,
-      messages: [
-        { messageText, codeSnippet, messagePostedBy, messagePostDate },
-      ],
+      messages: [{ message, messagePostedBy, messagePostDate }],
     });
 
     newReview.save(function (err) {
@@ -48,7 +45,6 @@ module.exports = {
         const _id = req.body.reviewId;
 
         const review = await Review.findOne(_id);
-        console.log(review);
 
         res.status(201).json({ review });
       } else {
