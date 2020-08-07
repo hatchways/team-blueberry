@@ -19,12 +19,6 @@ const userSchema = new mongoose.Schema({
     min: 0,
     required: true,
   },
-  payments: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "Payment",
-    },
-  ],
   name: {
     type: String,
     required: true,
@@ -53,9 +47,20 @@ userSchema.pre("save", async function (next) {
 // ! Calling toObject will always remove password
 userSchema.set("toObject", {
   transform: function (doc, ret, options) {
+    ret.id = ret._id;
     delete ret.password;
+    delete ret._id;
     return ret;
   },
 });
+
+userSchema.statics.addCredits = function ({ user, credits }) {
+  return this.findByIdAndUpdate(
+    user,
+    { $inc: { balance: credits } },
+    { new: true, returnOriginal: false }
+    // ! toObject MUST be called manually !
+  ).toObject();
+};
 
 module.exports = mongoose.model("User", userSchema);

@@ -1,7 +1,6 @@
 // Import Axios
 const axios = require("axios");
 
-
 // Handle all requests to API here
 module.exports = {
   async getFromAPI(config) {
@@ -18,7 +17,6 @@ module.exports = {
   async putToAPI(config) {
     try {
       const response = await axios(config);
-
       return response;
     } catch (error) {
       console.error(error);
@@ -28,7 +26,8 @@ module.exports = {
   },
   async postToAPI(config) {
     try {
-      await axios(config);
+      const response = await axios(config);
+      return response;
     } catch (error) {
       console.error(error.message, error.response.status);
       return false;
