@@ -125,16 +125,36 @@ module.exports = {
   // gets all relevant reviews
   async getReviews(req, res) {
     try {
-      const userId = req.user;
+      if (req.body.singleTarget) {
+        const _id = req.body.reviewId;
 
-      const reviews = await Review.find({ userId });
+        const review = await Review.findOne({ _id });
 
-      res.status(201).json({ reviews });
-    } catch {
+        res.status(201).json({ review });
+      } else {
+        const userId = req.body.user;
+
+        const reviews = await Review.find({ userId: userId });
+
+        res.status(201).json({ reviews });
+      }
+    } catch (error) {
+      console.error(error.message);
       console.log("There was an error getting reviews.");
       return res
         .status(500)
         .send({ message: "There was an internal server error." });
+    }
+  },
+  async getRequest(req, res) {
+    const { reviewId } = req.params;
+    try {
+      const request = await Request.findOne({
+        "embeddedReview._id": reviewId,
+      });
+      res.status(201).send(request.toObject());
+    } catch (err) {
+      return res.status(500).send("Internal Server Error");
     }
   },
   // accept or reject request
@@ -162,6 +182,25 @@ module.exports = {
       }
     } catch {
       res.status(500).send("Internal Server Error");
+    }
+  },
+  async sendReviewMessage(req, res) {
+    const { userId } = req.user;
+    const { reviewId, message, codeSnippet } = req.body;
+    try {
+      const request = await Request.findOne({
+        "embeddedReview._id": reviewId,
+      });
+      request.embeddedReview.messages.push({
+        messageText: message,
+        codeSnippet: codeSnippet,
+        messagePostedBy: userId,
+        messagePostDate: new Date(),
+      });
+      await request.save();
+      return res.status(201).send(request.toObject());
+    } catch {
+      return res.status(500).send("Internal Server Error");
     }
   },
 };

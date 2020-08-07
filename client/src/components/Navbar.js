@@ -4,17 +4,16 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import Avatar from "@material-ui/core/Avatar";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import Badge from "@material-ui/core/Badge";
 import MenuIcon from "@material-ui/icons/Menu";
 import CodeIcon from "@material-ui/icons/Code";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Link } from "react-router-dom";
 import AddCodeDialog from "./UploadCode";
+import Notifications from "./Notifications";
 
 // import logout api
 import logout from "../services/logout";
@@ -68,7 +67,7 @@ const Navbar = ({ state, dispatch }) => {
   const [open, setOpen] = useState(false);
 
   // navbar logic
-  const [anchorNotificaton, setAnchorNotificaton] = useState(null);
+  // const [anchorNotificaton, setAnchorNotificaton] = useState(null);
   const [anchorMenu, setAnchorMenu] = useState(null);
 
   // handle UploadCode open/close
@@ -76,15 +75,15 @@ const Navbar = ({ state, dispatch }) => {
     setOpen(false);
   };
 
-  // notification
-  const handleNotificaton = (event) => {
-    setAnchorNotificaton(event.currentTarget);
-  };
+  // // notification
+  // const handleNotificaton = (event) => {
+  //   setAnchorNotificaton(event.currentTarget);
+  // };
 
-  // close notification
-  const handleCloseNotificaton = () => {
-    setAnchorNotificaton(null);
-  };
+  // // close notification
+  // const handleCloseNotificaton = () => {
+  //   setAnchorNotificaton(null);
+  // };
 
   // add review logic --> populating notifications
 
@@ -131,30 +130,7 @@ const Navbar = ({ state, dispatch }) => {
                 Balance
               </Link>
               {/* Populating notifications with badge --> show number of notifications? */}
-              <Badge color="primary" variant="dot" overlap="circle">
-                <IconButton
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleNotificaton}
-                  color="inherit"
-                  className={classes.notification}
-                >
-                  <NotificationsNoneIcon />
-                </IconButton>
-              </Badge>
-              <Menu
-                id="notification-menu"
-                anchorEl={anchorNotificaton}
-                getContentAnchorEl={null}
-                open={Boolean(anchorNotificaton)}
-                onClose={() => setAnchorNotificaton(null)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                transformOrigin={{ vertical: "top", horizontal: "center" }}
-              >
-                <MenuItem onClick={() => handleCloseNotificaton()}>
-                  Review
-                </MenuItem>
-              </Menu>
+              <Notifications />
               <Button
                 color="primary"
                 variant="outlined"

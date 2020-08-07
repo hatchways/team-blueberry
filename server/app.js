@@ -9,6 +9,7 @@ const redis = require("redis");
 
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
+const notificationsRouter = require("./routes/notification");
 const paymentRouter = require("./routes/payment");
 
 // imports for mongoose models could go here
@@ -59,7 +60,10 @@ app.use(express.static(join(__dirname, "public")));
 app.use("/api", indexRouter);
 app.use("/api/payment", auth, paymentRouter);
 
+
 app.use("/api/user", auth, userRouter);
+app.use("/notifications", notificationsRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

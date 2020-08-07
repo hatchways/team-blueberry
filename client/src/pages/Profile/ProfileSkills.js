@@ -42,25 +42,30 @@ export default function ProfileSkills({ skills }) {
         return "No image";
     }
   };
-  return (
-    <Grid item container direction="row" justify="space-evenly" spacing={5}>
-      {skills.map((item) => {
-        return (
-          <Grid item key={item.language}>
-            <Box>
-              <img
-                key={item.language}
-                alt={item.language}
-                src={getImg(item.language)}
-                className={classes.logo}
-              ></img>
-            </Box>
-            <Box fontSize="h6.fontSize" textAlign="center">
-              {item.level}
-            </Box>
-          </Grid>
-        );
-      })}
-    </Grid>
-  );
+  console.log(!skills);
+  if (!skills) {
+    return null;
+  } else {
+    return (
+      <Grid item container direction="row" justify="space-evenly" spacing={5}>
+        {skills.map((item) => {
+          return (
+            <Grid item key={item.language}>
+              <Box>
+                <img
+                  key={item.language}
+                  alt={item.language}
+                  src={getImg(item.language)}
+                  className={classes.logo}
+                ></img>
+              </Box>
+              <Box fontSize="h6.fontSize" textAlign="center">
+                {item.level}
+              </Box>
+            </Grid>
+          );
+        })}
+      </Grid>
+    );
+  }
 }
