@@ -93,18 +93,14 @@ module.exports = {
   async getReviews(req, res) {
     try {
       if (req.body.singleTarget) {
-        const _id = req.body.reviewId;
-
-        const review = await Review.findOne({ _id });
-
-        res.status(201).json({ review });
+        const reviewId = req.body.reviewId;
+        const request = await Request.findOne({
+          "embeddedReview._id": reviewId,
+        });
+        res.status(201).json({ request });
       } else {
         const userId = req.user.id;
-
         const reviews = await Review.find({ userId: userId });
-
-        console.log(reviews);
-
         return res.status(201).json({ reviews });
       }
     } catch (error) {
@@ -128,6 +124,7 @@ module.exports = {
   },
   // accept or reject request
   async reviewRequest(req, res) {
+    console.log("In here");
     const userId = req.user;
     // accept or reject contains requestId
     const { isAccepted, requestId } = req.body;

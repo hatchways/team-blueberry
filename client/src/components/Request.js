@@ -8,9 +8,11 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Avatar from "@material-ui/core/Avatar";
+import { useParams } from "react-router-dom";
 
 // API call
-import { sendRequest, getRequest } from "../services/reviewRequest";
+import { sendRequest } from "../services/reviewRequest";
+import { getReview } from "../services/reviews";
 import { sendMessage } from "../services/sendReviewMessage";
 
 // code editor
@@ -75,15 +77,13 @@ const reducer = (state, action) => {
 };
 
 // review id will be accessed from url params
-const Request = () => {
+const Request = ({ globalDispatch }) => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initState);
-
+  const { reviewId } = useParams();
   // API call to get request
   useEffect(() => {
-    if (!state.status) {
-      handleInitState();
-    }
+    handleInitState();
     if (state.statusChanged && state.status === "accepted") {
       sendRequest(true, state.requestId);
       dispatch({
@@ -99,11 +99,11 @@ const Request = () => {
         requestId: "",
       });
     }
-  }, [state.status]);
-
+  }, [reviewId]);
   // set initial state at first render
   const handleInitState = async () => {
-    const req = await getRequest(/*review id here */);
+    const req = await getReview(reviewId, globalDispatch);
+    // handle if getReview is null
     dispatch({
       type: "FETCH_REQUEST",
       status: req.status,
@@ -261,7 +261,7 @@ const Request = () => {
               </CardContent>
             </React.Fragment>
           ))}
-          <MessageField reviewId={/*review id here*/} dispatch={dispatch} />
+          <MessageField reviewId={reviewId} dispatch={dispatch} />
           <ActionButtons />
         </Card>
       ) : (

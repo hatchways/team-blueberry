@@ -23,10 +23,10 @@ router.post("/review", async (req, res) => {
     };
 
     await userController.createReview(userId, data, async (requestId) => {
-      // await findReviewerQueue.add("findReviewer", {
-      //   requestId,
-      //   isDelayed: false,
-      // });
+      await findReviewerQueue.add("findReviewer", {
+        requestId,
+        isDelayed: false,
+      });
       res.status(201).send({ message: "Success" });
     });
   } catch {
@@ -37,7 +37,7 @@ router.post("/review", async (req, res) => {
 
 router.post("/reviews", Auth, userController.getReviews);
 
-router.get("/request/:reviewId", Auth, userController.getRequest);
+// router.get("/request/:reviewId", Auth, userController.getRequest);
 
 router.post("/request/message", Auth, userController.sendReviewMessage);
 

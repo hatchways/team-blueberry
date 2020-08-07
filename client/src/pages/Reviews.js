@@ -30,6 +30,9 @@ import List from "@material-ui/core/List";
 import { CardActionArea, Paper, Divider, TextField } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
+// component imports
+import Request from "../components/Request";
+
 const useStyles = makeStyles((theme) => ({
   card: {
     minWidth: "100%",
@@ -78,46 +81,6 @@ const Reviews = ({ state, dispatch }) => {
     fetchData();
   }, []);
 
-  const ReviewPanel = (props) => {
-    const [fetchedReview, setFetchedReview] = React.useState();
-    let { reviewId } = useParams();
-    const loadReview = async (reviewId) => {
-      try {
-        const result = await getReview(reviewId, dispatch);
-
-        if (result.status != 201) {
-          return false;
-        } else {
-          setFetchedReview(() => result);
-        }
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    useEffect(() => {
-      loadReview(reviewId);
-    }, []);
-
-    return fetchedReview ? (
-      <Grid item classNames={classes.reviewPanelContent}>
-        <Typography component="h1" variant="h3">
-          {fetchedReview.review.title}
-        </Typography>
-        <Divider />
-        <Button>Submit</Button>
-        <Typography color="textSecondary" gutterBottom>
-          {dateToYMD(new Date(fetchedReview.review.reviewCreatedDate))}
-        </Typography>
-        <TextField></TextField>
-      </Grid>
-    ) : (
-      <Typography component="h1" variant="h3">
-        Invalid Review
-      </Typography>
-    );
-  };
-
   const handleListItemClick = (event, index, props) => {
     setSelectedIndex(index);
   };
@@ -125,11 +88,10 @@ const Reviews = ({ state, dispatch }) => {
   const ReviewCard = (props) => {
     let { path, url } = useRouteMatch();
     return (
-      <React.Fragment
+      <div
         key={props.reviewId}
         selected={selectedIndex === props.index}
         onClick={(event) => handleListItemClick(event, props.index, props)}
-        className={classes.reviews}
       >
         <Typography
           color="textPrimary"
@@ -146,7 +108,7 @@ const Reviews = ({ state, dispatch }) => {
         >
           {dateToYMD(props.date)}
         </Typography>
-      </React.Fragment>
+      </div>
     );
   };
 
@@ -218,7 +180,7 @@ const Reviews = ({ state, dispatch }) => {
                   </Typography>
                 </Route>
                 <Route path={`${path}/:reviewId`}>
-                  <ReviewPanel></ReviewPanel>
+                  <Request globalDispatch={dispatch} />
                 </Route>
               </Switch>
             </Paper>

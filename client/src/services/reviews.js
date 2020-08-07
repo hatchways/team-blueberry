@@ -40,7 +40,7 @@ const getReview = async (reviewId, dispatch) => {
   }
 
   dispatch({ type: "GET_USER_REVIEW_SUCCESS" });
-  return response.data;
+  return response.data.request;
 };
 
 module.exports = { getReviews, getReview };
