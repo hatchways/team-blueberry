@@ -42,7 +42,6 @@ const getReview = async (reviewId, dispatch) => {
   dispatch({ type: "GET_USER_REVIEW_SUCCESS" });
 
   const result = response.data;
-  console.log(result.embeddedReview.messages);
   return result;
 };
 

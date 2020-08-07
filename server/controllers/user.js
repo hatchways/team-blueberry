@@ -137,7 +137,6 @@ module.exports = {
       }
     } catch (error) {
       console.error(error.message);
-      console.log("There was an error getting reviews.");
       return res
         .status(500)
         .send({ message: "There was an internal server error." });
@@ -156,7 +155,6 @@ module.exports = {
   },
   // accept or reject request
   async reviewRequest(req, res) {
-    console.log("In here");
     const userId = req.user;
     // accept or reject contains requestId
     const { isAccepted, requestId } = req.body;
@@ -189,8 +187,6 @@ module.exports = {
       const request = await Request.findOne({
         "embeddedReview._id": reviewId,
       });
-
-      console.log("requestObject line 194", request);
 
       request.embeddedReview.messages.push({
         message: message,
