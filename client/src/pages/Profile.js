@@ -54,9 +54,9 @@ const Profile = ({ state, dispatch }) => {
   const classes = useStyles();
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState(user.name);
-  const [about, setAbout] = useState(user.email);
+  const [about, setAbout] = useState(user.company);
   const [files, setFiles] = useState([]);
-
+  console.log(user);
   const handleEdit = () => {
     setEdit(!edit);
   };
