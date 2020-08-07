@@ -38,12 +38,14 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "100vh",
   },
   reviewTitles: {
-    display: "flex",
-    justifyContent: "center",
+    margin: theme.spacing(4),
+  },
+  reviewMainTitle: {
+    marginRight: theme.spacing(1),
   },
   reviews: {
-    margin: theme.spacing(3),
-    padding: theme.spacing(2),
+    margin: theme.spacing(4),
+    padding: theme.spacing(4),
     overflow: "auto",
     cursor: "pointer",
   },
@@ -153,21 +155,27 @@ const Reviews = ({ state, dispatch }) => {
     <Grid container direction="column">
       <Router>
         <Grid item container>
-          <Grid item xs={3} className={classes.reviewsHeight}>
-            <div className={classes.reviewTitles}>
-              <Typography color="textPrimary" compoment="h1" variant="h3">
-                Reviews
-              </Typography>
-              <Typography
-                color="textPrimary"
-                compoment="h1"
-                variant="h4"
-                color="secondary"
-              >
-                ({reviews ? reviews.length : 0})
-              </Typography>
-            </div>
-            <div>
+          <Grid item xs={4} className={classes.reviewsHeight}>
+            <React.Fragment>
+              <div className={classes.reviewTitles}>
+                <Typography
+                  color="textPrimary"
+                  component="h1"
+                  variant="h4"
+                  display="inline"
+                  className={classes.reviewMainTitle}
+                >
+                  Reviews
+                </Typography>
+                <Typography
+                  component="h1"
+                  variant="h5"
+                  display="inline"
+                  color="secondary"
+                >
+                  ({reviews ? reviews.length : 0})
+                </Typography>
+              </div>
               {Array.isArray(reviews)
                 ? reviews.map((item, idx) => {
                     return (
@@ -199,9 +207,9 @@ const Reviews = ({ state, dispatch }) => {
                     );
                   })
                 : "is not a review"}
-            </div>
+            </React.Fragment>
           </Grid>
-          <Grid item xs={9} className={classes.background}>
+          <Grid item xs={8} className={classes.background}>
             <Paper className={classes.reviewPanel}>
               <Switch>
                 <Route exact path={path}>
