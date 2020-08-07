@@ -59,53 +59,28 @@ const useStyles = makeStyles((theme) => ({
 const Reviews = ({ state, dispatch }) => {
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(false);
-  const [reviews, setReviews] = React.useState(false);
-
+  const reviews = state.reviews || [];
   const fetchData = async () => {
-    const result = await getReviews(dispatch);
-
-    if (result.status != 201) {
-      return false;
-    } else {
-      setReviews(result.reviews);
-    }
+    await getReviews(dispatch);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const ReviewPanel = (props) => {
-    const [fetchedReview, setFetchedReview] = React.useState();
+  const ReviewPanel = ({ reviews }) => {
     let { reviewId } = useParams();
-
-    const loadReview = async (reviewId) => {
-      try {
-        const result = await getReview(reviewId, dispatch);
-
-        if (result.status != 201) {
-          return false;
-        } else {
-          setFetchedReview(() => result);
-        }
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    useEffect(() => {
-      loadReview(reviewId);
-    }, []);
+    const fetchedReview = reviews.find(({ _id }) => _id === reviewId);
 
     return fetchedReview ? (
       <Grid item classNames={classes.reviewPanelContent}>
         <Typography component="h1" variant="h3">
-          {fetchedReview.review.title}
+          {fetchedReview.title}
         </Typography>
         <Divider />
         <Button>Submit</Button>
         <Typography color="textSecondary" gutterBottom>
-          {dateToYMD(new Date(fetchedReview.review.reviewCreatedDate))}
+          {dateToYMD(new Date(fetchedReview.reviewCreatedDate))}
         </Typography>
         <TextField></TextField>
       </Grid>
@@ -209,7 +184,7 @@ const Reviews = ({ state, dispatch }) => {
               })
             ) : (
               <ListItem>
-                <Button>Refresh</Button>
+                <Button onClick={() => fetchData()}>Refresh</Button>
               </ListItem>
             )}
           </List>
@@ -223,7 +198,7 @@ const Reviews = ({ state, dispatch }) => {
                 </Typography>
               </Route>
               <Route path={`${path}/:reviewId`}>
-                <ReviewPanel></ReviewPanel>
+                <ReviewPanel reviews={reviews}></ReviewPanel>
               </Route>
             </Switch>
           </Paper>
