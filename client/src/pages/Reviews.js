@@ -36,10 +36,12 @@ const useStyles = makeStyles((theme) => ({
   card: {
     minWidth: "100%",
   },
+  reviewsHeight: {
+    minHeight: "100vh",
+  },
   reviewTitles: {
-    display: "grid",
-    textAlign: "center",
-    flexDirection: "row",
+    display: "flex",
+    justifyContent: "center",
   },
   reviews: {
     margin: theme.spacing(2),
@@ -160,12 +162,17 @@ const Reviews = ({ state, dispatch }) => {
     <Grid container direction="column">
       <Router>
         <Grid Item container>
-          <Grid xs={3}>
+          <Grid xs={3} className={classes.reviewsHeight}>
             <div className={classes.reviewTitles}>
-              <Typography color="textPrimary" compoment="h1" variant="h4">
+              <Typography color="textPrimary" compoment="h1" variant="h3">
                 Reviews
               </Typography>
-              <Typography color="textPrimary" compoment="h1" variant="h5">
+              <Typography
+                color="textPrimary"
+                compoment="h1"
+                variant="h4"
+                color="secondary"
+              >
                 ({reviews ? reviews.length : 0})
               </Typography>
             </div>
@@ -194,7 +201,7 @@ const Reviews = ({ state, dispatch }) => {
               )}
             </List>
           </Grid>
-          <Grid xs={9}>
+          <Grid xs={9} className={classes.background}>
             <Paper className={classes.reviewPanel}>
               <Switch>
                 <Route exact path={path}>
