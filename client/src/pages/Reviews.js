@@ -11,7 +11,7 @@ import {
 import { getReviews, getReview } from "../services/reviews";
 
 //import utilities
-import { dateToYMD } from "../utils/dateUtil";
+import dateToYMD from "../utils/dateUtil";
 
 //Material-ui imports
 import Typography from "@material-ui/core/Typography";
@@ -30,8 +30,6 @@ import List from "@material-ui/core/List";
 import { CardActionArea, Paper, Divider, TextField } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
-// const drawerWidth = 360;
-
 const useStyles = makeStyles((theme) => ({
   card: {
     minWidth: "100%",
@@ -44,7 +42,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   reviews: {
-    margin: theme.spacing(2),
+    margin: theme.spacing(3),
+    padding: theme.spacing(2),
+    overflow: "auto",
+    cursor: "pointer",
+  },
+  selectedReviewPaper: {
+    border: `solid ${theme.palette.primary.main} 1px`,
   },
   reviewPanel: {
     margin: theme.spacing(6),
@@ -65,12 +69,7 @@ const Reviews = ({ state, dispatch }) => {
 
   const fetchData = async () => {
     const result = await getReviews(dispatch);
-
-    if (result.status != 201) {
-      return false;
-    } else {
-      setReviews(result.reviews);
-    }
+    setReviews(result.reviews);
   };
 
   useEffect(() => {
@@ -80,7 +79,6 @@ const Reviews = ({ state, dispatch }) => {
   const ReviewPanel = (props) => {
     const [fetchedReview, setFetchedReview] = React.useState();
     let { reviewId } = useParams();
-
     const loadReview = async (reviewId) => {
       try {
         const result = await getReview(reviewId, dispatch);
@@ -125,35 +123,28 @@ const Reviews = ({ state, dispatch }) => {
   const ReviewCard = (props) => {
     let { path, url } = useRouteMatch();
     return (
-      <ListItem
+      <React.Fragment
         key={props.reviewId}
         selected={selectedIndex === props.index}
         onClick={(event) => handleListItemClick(event, props.index, props)}
         className={classes.reviews}
       >
-        <Card className={classes.card}>
-          <CardContent>
-            <React.Fragment>
-              <Typography
-                color="textPrimary"
-                gutterBottom
-                compoment="h1"
-                variant="h6"
-              >
-                {props.reviewTitle}
-              </Typography>
-              <Typography
-                className={classes.title}
-                color="textSecondary"
-                gutterBottom
-              >
-                <MoreVertIcon button></MoreVertIcon>
-                {props.date}
-              </Typography>
-            </React.Fragment>
-          </CardContent>
-        </Card>
-      </ListItem>
+        <Typography
+          color="textPrimary"
+          gutterBottom
+          compoment="h1"
+          variant="h6"
+        >
+          {props.reviewTitle}
+        </Typography>
+        <Typography
+          className={classes.title}
+          color="textSecondary"
+          gutterBottom
+        >
+          {dateToYMD(props.date)}
+        </Typography>
+      </React.Fragment>
     );
   };
 
@@ -176,30 +167,39 @@ const Reviews = ({ state, dispatch }) => {
                 ({reviews ? reviews.length : 0})
               </Typography>
             </div>
-            <List component="nav">
-              {Array.isArray(reviews) ? (
-                reviews.map((item, idx) => {
-                  return (
-                    <Link
-                      to={`${path}/${item._id}`}
-                      key={idx}
-                      className={classes.link}
-                    >
-                      <ReviewCard
-                        index={idx}
-                        reviewId={item._id}
-                        reviewTitle={item.title}
-                        date={new Date(item.reviewCreatedDate)}
-                      ></ReviewCard>
-                    </Link>
-                  );
-                })
-              ) : (
-                <ListItem>
-                  <Button>Refresh</Button>
-                </ListItem>
-              )}
-            </List>
+            <div>
+              {Array.isArray(reviews)
+                ? reviews.map((item, idx) => {
+                    return (
+                      <Link
+                        to={`${path}/${item._id}`}
+                        key={idx}
+                        className={classes.link}
+                      >
+                        <Paper
+                          variant="outlined"
+                          className={
+                            selectedIndex == idx
+                              ? [
+                                  classes.selectedReviewPaper,
+                                  classes.reviews,
+                                ].join(" ")
+                              : classes.reviews
+                          }
+                          onClick={(event) => handleListItemClick(event, idx)}
+                        >
+                          <ReviewCard
+                            index={idx}
+                            reviewId={item._id}
+                            reviewTitle={item.title}
+                            date={item.reviewCreatedDate}
+                          ></ReviewCard>
+                        </Paper>
+                      </Link>
+                    );
+                  })
+                : "is not a review"}
+            </div>
           </Grid>
           <Grid item xs={9} className={classes.background}>
             <Paper className={classes.reviewPanel}>

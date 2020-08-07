@@ -1,4 +1,5 @@
 const dateToYMD = (date) => {
+  let internalDate = new Date(date);
   var strArray = [
     "Jan",
     "Feb",
@@ -13,10 +14,10 @@ const dateToYMD = (date) => {
     "Nov",
     "Dec",
   ];
-  var d = date.getDate();
-  var m = strArray[date.getMonth()];
-  var y = date.getFullYear();
+  var d = internalDate.getDate();
+  var m = strArray[internalDate.getMonth()];
+  var y = internalDate.getFullYear();
   return "" + (d <= 9 ? "" + d : d) + " " + m + " " + y;
 };
 
-module.exports = { dateToYMD };
+export default dateToYMD;
