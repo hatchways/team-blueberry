@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const findReviewerQueue = require("../queues/findReviewer");
+
 const userController = require("../controllers/user");
 
 // import Auth middleware
@@ -14,11 +15,11 @@ router.put("/languages", Auth, userController.updateUserLanguages);
 
 router.post("/review", Auth, async (req, res) => {
   try {
-    const userId = req.user;
+    const userId = req.user.id;
     const data = {
       language: req.body.language,
       title: req.body.title,
-      message: req.body.message,
+      content: req.body.content,
     };
     console.log(data);
     await userController.createReview(userId, data, async (requestId) => {
@@ -35,6 +36,9 @@ router.post("/review", Auth, async (req, res) => {
 });
 
 router.get("/reviews", Auth, userController.getReviews);
+
+router.get("/request/:reviewId", Auth, userController.getRequest);
+router.get("/:userId", userController.getUser);
 
 router.post("/request/message", Auth, userController.sendReviewMessage);
 

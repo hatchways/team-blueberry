@@ -1,19 +1,13 @@
 import axios from "axios";
-import {
-  ContentState,
-  EditorState,
-  convertToRaw,
-  convertFromRaw,
-} from "draft-js";
 
-export const sendMessage = async (reviewId, message) => {
+export const sendMessage = async (reviewId, message, codeSnippet) => {
   try {
-    message = JSON.stringify(convertToRaw(message));
     const res = await axios({
       method: "POST",
       data: {
         reviewId,
         message,
+        codeSnippet,
       },
       withCredentials: true,
       url: "/api/user/request/message",

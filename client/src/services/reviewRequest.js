@@ -16,3 +16,20 @@ export const sendRequest = async (isAccepted, requestId) => {
     return console.error("Fail to post request");
   }
 };
+
+export const getRequest = async (reviewId) => {
+  try {
+    const res = await axios({
+      method: "GET",
+      params: {
+        reviewId,
+      },
+      withCredentials: true,
+      url: `/api/user/request/${reviewId}`,
+    });
+    return res.data;
+  } catch (err) {
+    // TODO - need better error handling
+    return console.error(err);
+  }
+};

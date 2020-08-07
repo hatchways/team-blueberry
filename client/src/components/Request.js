@@ -1,29 +1,31 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
 import Avatar from "@material-ui/core/Avatar";
-import { useParams } from "react-router-dom";
-import { Divider } from "@material-ui/core";
 
 // API call
-import { sendRequest } from "../services/reviewRequest";
-import { getReview } from "../services/reviews";
+import { sendRequest, getRequest } from "../services/reviewRequest";
 import { sendMessage } from "../services/sendReviewMessage";
 
 // code editor
 import PrismEditor from "../components/Editor/DraftEditor";
-import { convertFromRaw } from "draft-js";
 
 const useStyles = makeStyles((theme) => ({
   request: {
+    margin: theme.spacing(6),
     borderRadius: "0px",
     overflow: "scroll",
   },
-  message: {
+  code: {
+    background: "#EAF0F8",
+  },
+  codeText: {
     overflow: "scroll",
     maxHeight: "20em",
   },
@@ -39,7 +41,6 @@ const initState = {
   requestId: "",
   statusChanged: false,
 };
-
 const reducer = (state, action) => {
   switch (action.type) {
     case "FETCH_REQUEST":
@@ -74,15 +75,15 @@ const reducer = (state, action) => {
 };
 
 // review id will be accessed from url params
-const Request = ({ globalDispatch }) => {
+const Request = () => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initState);
-  const [editorHasContent, setEditorHasContent] = useState(false);
-  const { reviewId } = useParams();
 
   // API call to get request
   useEffect(() => {
-    handleInitState();
+    if (!state.status) {
+      handleInitState();
+    }
     if (state.statusChanged && state.status === "accepted") {
       sendRequest(true, state.requestId);
       dispatch({
@@ -98,12 +99,11 @@ const Request = ({ globalDispatch }) => {
         requestId: "",
       });
     }
-  }, [reviewId]);
+  }, [state.status]);
 
   // set initial state at first render
   const handleInitState = async () => {
-    const req = await getReview(reviewId, globalDispatch);
-    // handle if getReview is null
+    const req = await getRequest(/*review id here */);
     dispatch({
       type: "FETCH_REQUEST",
       status: req.status,
@@ -157,29 +157,22 @@ const Request = ({ globalDispatch }) => {
 
   // message field and button
   const MessageField = ({ dispatch, reviewId }) => {
+    const [message, setMessage] = useState("");
     const [makeSubmit, setMakeSubmit] = useState(false);
     const [editorHasContent, setEditorHasContent] = useState(false);
-    let isMounted = false;
-
-    useEffect(() => {
-      isMounted = true;
-    }, []);
 
     const handleSubmit = async (text) => {
       const request = {
         content: text,
       };
+      // TODO saving codeSnippet as an object to be read by Prism Code Component
       try {
-        if (isMounted) {
-          const req = await sendMessage(reviewId, request);
-          dispatch({
-            type: "FETCH_REQUEST",
-            review: req.embeddedReview,
-            requestId: req._id,
-          });
-        } else {
-          return;
-        }
+        const req = await sendMessage(reviewId, message, request);
+        dispatch({
+          type: "FETCH_REQUEST",
+          review: req.embeddedReview,
+          requestId: req._id,
+        });
       } catch (err) {
         // TODO handle error better
         console.error(err.message);
@@ -202,6 +195,14 @@ const Request = ({ globalDispatch }) => {
               avatar={<Avatar>UI</Avatar>}
               title="User's Name"
               subheader="User's Job"
+            />
+            <TextField
+              label="Message"
+              multiline
+              rows={2}
+              variant="filled"
+              fullWidth={true}
+              onChange={(e) => setMessage(e.target.value)}
             />
           </CardContent>
           <CardContent>
@@ -235,36 +236,38 @@ const Request = ({ globalDispatch }) => {
       );
     } else return <></>;
   };
-  const handleHasContent = (value) => {
-    setEditorHasContent(value);
-  };
-
   return (
-    <div className={classes.request}>
+    <React.Fragment>
       {state.review ? (
-        <React.Fragment>
+        <Card className={classes.request}>
           <CardHeader title={state.review.title} />
-          <Divider />
+          <hr></hr>
           {state.review.messages.map((item, index) => (
             <React.Fragment key={item._id}>
-              <ReviewerHeader />
+              <ReviewerHeader index={index} />
               <CardContent>
-                <PrismEditor
-                  language={state.review.language}
-                  hasContent={handleHasContent}
-                  readOnly
-                  content={JSON.parse(convertFromRaw(item.nmessage))}
-                ></PrismEditor>
+                <Typography variant="body2" component="p">
+                  {item.messageText}
+                </Typography>
+                <CardContent className={classes.code}>
+                  <Typography
+                    variant="body2"
+                    component="p"
+                    className={classes.codeText}
+                  >
+                    {item.codeSnippet}
+                  </Typography>
+                </CardContent>
               </CardContent>
             </React.Fragment>
           ))}
-          <MessageField reviewId={reviewId} dispatch={dispatch} />
+          <MessageField reviewId={/*review id here*/} dispatch={dispatch} />
           <ActionButtons />
-        </React.Fragment>
+        </Card>
       ) : (
         <></>
       )}
-    </div>
+    </React.Fragment>
   );
 };
 

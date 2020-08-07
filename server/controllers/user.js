@@ -5,7 +5,6 @@ const findReviewerQueue = require("../queues/findReviewer");
 const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
 const persistAvatar = require("../middleware/s3Handler");
-const mongoose = require("mongoose");
 
 const handleError = (e, res) =>
   e.status && e.message
@@ -88,11 +87,11 @@ module.exports = {
       });
     }
   },
-  async createReview(userId, data, cb) {
+  createReview: async (userId, data, cb) => {
     // create const variables from data
     const language = data.language,
       title = data.title,
-      message = data.message;
+      codeSnippet = data.codeSnippet;
     const messagePostedBy = userId;
     const messagePostDate = new Date();
     const user = await User.findById(userId);
@@ -103,7 +102,7 @@ module.exports = {
       title,
       language,
       userId,
-      messages: [{ message, messagePostedBy, messagePostDate }],
+      messages: [{ codeSnippet, messagePostedBy, messagePostDate }],
     });
 
     newReview.save(function (err) {
@@ -127,21 +126,17 @@ module.exports = {
     try {
       // ? what is this ?
       if (req.body.singleTarget) {
-        const reviewId = req.body.reviewId;
-        const request = await Request.findOne({
-          "embeddedReview._id": reviewId,
-        });
+        const _id = req.body.reviewId;
 
-        res.status(201).json(request.toObject());
-      } else {
-        const userId = req.user.id;
-        const reviews = await Review.find({ userId: userId });
-        return res.status(201).json({ reviews });
+        const review = await Review.findOne({ _id });
+
+        return res.status(201).json({ review });
       }
       const reviews = await Review.find({ userId: req.user.id });
       return res.status(201).json({ reviews });
     } catch (error) {
       console.error(error.message);
+      console.log("There was an error getting reviews.");
       return res
         .status(500)
         .send({ message: "There was an internal server error." });
@@ -187,14 +182,14 @@ module.exports = {
   },
   async sendReviewMessage(req, res) {
     const { userId } = req.user;
-    const { reviewId, message } = req.body;
+    const { reviewId, message, codeSnippet } = req.body;
     try {
       const request = await Request.findOne({
         "embeddedReview._id": reviewId,
       });
-
       request.embeddedReview.messages.push({
-        message: message,
+        messageText: message,
+        codeSnippet: codeSnippet,
         messagePostedBy: userId,
         messagePostDate: new Date(),
       });
