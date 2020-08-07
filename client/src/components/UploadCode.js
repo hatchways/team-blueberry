@@ -10,8 +10,9 @@ import PrismEditor from "../components/Editor/DraftEditor";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Box } from "@material-ui/core";
 import Alert from "../elements/SnackBar";
+import { createCode } from "../services";
 
-export default function AddCodeDialog(props) {
+export default function AddCodeDialog({ dispatch, open, handleClose }) {
   const [title, setTitle] = useState("");
   const [language, setLanguage] = useState("");
   const [makeSubmit, setMakeSubmit] = useState(false);
@@ -27,20 +28,21 @@ export default function AddCodeDialog(props) {
     "C++",
     "Ruby",
   ];
-  const handleSubmit = (text) => {
+  const handleSubmit = async (text) => {
     //Wrap up data and send to server.
     const request = {
       title: title,
-      language: languages,
+      language: language,
       content: text,
     };
 
     //SEND REQUEST AND close dialog
     console.log(request);
+    createCode(request)(dispatch);
     setTitle("");
     setLanguage("");
     setMakeSubmit(false);
-    props.handleClose();
+    handleClose();
   };
 
   const handleHasContent = (value) => {
@@ -57,12 +59,7 @@ export default function AddCodeDialog(props) {
 
   return (
     <React.Fragment>
-      <Dialog
-        fullWidth
-        maxWidth="md"
-        open={props.open}
-        onClose={props.handleClose}
-      >
+      <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
         <DialogContent>
           <PageHeader>Request a code review</PageHeader>
           <Box mt={5} mb={5} pl={5} pr={5}>

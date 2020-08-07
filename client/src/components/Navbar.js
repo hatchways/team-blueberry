@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -14,6 +14,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Link } from "react-router-dom";
 import AddCodeDialog from "./UploadCode";
 import Notifications from "./Notifications";
+import userContext from "../userContext";
 
 // import logout api
 import logout from "../services/logout";
@@ -61,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = ({ state, dispatch }) => {
+  const user = useContext(userContext);
   const classes = useStyles();
 
   // Open UploadCode dialog
@@ -109,7 +111,7 @@ const Navbar = ({ state, dispatch }) => {
 
   return (
     <div className={classes.root}>
-      <AddCodeDialog open={open} handleClose={handleClose} />
+      <AddCodeDialog open={open} dispatch={dispatch} handleClose={handleClose} />
       <AppBar position="static" color="secondary">
         <Toolbar>
           <div className={classes.title}>
@@ -143,7 +145,13 @@ const Navbar = ({ state, dispatch }) => {
               </Button>
               <div className={classes.avatar}>
                 {/* input user's image */}
-                <Avatar src="">UI {/* here is the user initial */}</Avatar>
+                <Avatar src={user.avatar}>
+                  {/* here is the user initial */}
+                  {user.name
+                    .split(/\s|-/)
+                    .map((str) => str[0])
+                    .join("")}{" "}
+                </Avatar>
               </div>
               <Button
                 className={classes.buttonMenu}

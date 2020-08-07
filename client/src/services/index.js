@@ -107,3 +107,18 @@ export const editUser = (body) => async (dispatch) => {
     dispatch({ type: "EDIT_USER_ERROR", error: { ...e } });
   }
 };
+
+export const createCode = (body) => async (dispatch) => {
+  dispatch({ type: "FETCH" });
+  try {
+    const { data } = await axios({
+      url: `/api/user/review`,
+      method: "POST",
+      data: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    });
+    dispatch({ type: "CREATE_CODE_SUCCESS", data });
+  } catch (e) {
+    dispatch({ type: "CREATE_CODE_ERROR", error: { ...e } });
+  }
+};

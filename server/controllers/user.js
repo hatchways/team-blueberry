@@ -91,25 +91,24 @@ module.exports = {
     // create const variables from data
     const language = data.language,
       title = data.title,
-      codeSnippet = data.codeSnippet,
-      messageText = data.messageText;
+      codeSnippet = data.codeSnippet;
     const messagePostedBy = userId;
     const messagePostDate = new Date();
-
+    const user = await User.findById(userId);
+    const userLanguageLevel = user.languages[language]
+      ? user.languages[language].level
+      : 0;
     const newReview = new Review({
       title,
       language,
       userId,
-      messages: [
-        { messageText, codeSnippet, messagePostedBy, messagePostDate },
-      ],
+      messages: [{ codeSnippet, messagePostedBy, messagePostDate }],
     });
 
     newReview.save(function (err) {
       if (err) return console.log(err);
 
-      const status = "pending",
-        userLanguageLevel = data.languageLevel;
+      const status = "pending";
 
       requestHandler.createRequest(
         {
@@ -125,19 +124,16 @@ module.exports = {
   // gets all relevant reviews
   async getReviews(req, res) {
     try {
+      // ? what is this ?
       if (req.body.singleTarget) {
         const _id = req.body.reviewId;
 
         const review = await Review.findOne({ _id });
 
-        res.status(201).json({ review });
-      } else {
-        const userId = req.body.user;
-
-        const reviews = await Review.find({ userId: userId });
-
-        res.status(201).json({ reviews });
+        return res.status(201).json({ review });
       }
+      const reviews = await Review.find({ userId: req.user.id });
+      return res.status(201).json({ reviews });
     } catch (error) {
       console.error(error.message);
       console.log("There was an error getting reviews.");
