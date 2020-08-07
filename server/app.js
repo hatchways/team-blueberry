@@ -7,8 +7,10 @@ const mongoose = require("mongoose");
 const redis = require("redis");
 
 const indexRouter = require("./routes/index");
-const pingRouter = require("./routes/ping");
 const userRouter = require("./routes/user");
+const paymentRouter = require("./routes/payment");
+
+// imports for mongoose models could go here
 const auth = require("./middleware/auth");
 
 // db config
@@ -19,6 +21,7 @@ mongoose
   .connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
+    useFindAndModify: false,
   })
   .then(() => {
     console.log(`Connected to ${dbUrl}`);
@@ -52,7 +55,8 @@ app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
 
 app.use("/api", indexRouter);
-app.use("/ping", pingRouter);
+app.use("/api/payment", auth, paymentRouter);
+
 
 app.use("/api/user", auth, userRouter);
 

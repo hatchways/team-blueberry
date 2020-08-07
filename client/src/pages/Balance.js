@@ -4,6 +4,7 @@ import userContext from "../userContext";
 import Background from "../elements/Background";
 import StyledPaper from "../elements/StyledPaper";
 import PageHeader from "../elements/PageHeader";
+import SubmitButton from "../elements/SubmitButton";
 import {
   Button,
   Card,
@@ -13,13 +14,27 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { reviewCredits } from "../utils/itemLookup";
 
+const useStyles = makeStyles((theme) => ({
+  form: {
+    width: "100%",
+    textAlign: "center",
+  },
+  formChild: {
+    margin: theme.spacing(2),
+    padding: theme.spacing(1),
+  },
+}));
+
 const BalancePage = ({ state, dispatch }) => {
-  const priorTopUp = state.cart.find((item) => item.name === reviewCredits.name)
-    ?.quantity;
+  const classes = useStyles();
+  const priorTopUp = state?.cart?.find(
+    (item) => item.name === reviewCredits.name
+  )?.quantity;
   const user = useContext(userContext);
   const [topUp, setTopUp] = useState(
     () => priorTopUp || reviewCredits.quantity
@@ -32,7 +47,7 @@ const BalancePage = ({ state, dispatch }) => {
     if (id === "decr" && topUp > 0) return setTopUp(topUp - 1);
   };
 
-  const handleCheckout = (e) => {
+  const handleCheckout = async (e) => {
     dispatch({
       type: "ADD_ITEM_TO_CART",
       item: { ...reviewCredits, quantity: topUp },
@@ -42,7 +57,7 @@ const BalancePage = ({ state, dispatch }) => {
 
   return (
     <Background solid>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <StyledPaper mt={20}>
           {/* Page Heading */}
@@ -57,62 +72,71 @@ const BalancePage = ({ state, dispatch }) => {
           </Typography>
           <Divider style={{ alignSelf: "stretch" }} variant="fullWidth" />
           {/* Page Form */}
-          <Typography component="h2" variant="h5">
-            Top Up:
-          </Typography>
-          <Card variant="outlined" style={{}}>
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              alignContent="center"
-              justify="space-between"
-              style={{ display: "flex" }}
-              wrap="nowrap"
+          <form className={classes.form}>
+            <Typography
+              className={classes.formChild}
+              component="h2"
+              variant="h5"
             >
-              <Grid item>
-                <Button
-                  onClick={handleClick}
-                  id="decr"
-                  variant="contained"
-                  size="small"
-                  disabled={state.loading || !topUp}
-                  aria-label="Subtract Credit"
-                >
-                  <RemoveIcon />
-                </Button>
+              Top Up:
+            </Typography>
+            <Typography component="h3" variant="h6">
+              ${reviewCredits.unitCost} per Credit
+            </Typography>
+            <Card className={classes.formChild} variant="outlined" style={{}}>
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                alignContent="center"
+                justify="space-between"
+                style={{ display: "flex" }}
+                wrap="nowrap"
+              >
+                <Grid item>
+                  <Button
+                    onClick={handleClick}
+                    id="decr"
+                    variant="contained"
+                    size="small"
+                    disabled={state.loading || !topUp}
+                    aria-label="Subtract Credit"
+                  >
+                    <RemoveIcon />
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Typography
+                    aria-label="Credits to Purchase"
+                    component="h2"
+                    variant="h6"
+                  >
+                    {topUp}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    onClick={handleClick}
+                    id="incr"
+                    variant="contained"
+                    size="small"
+                    disabled={state.loading}
+                    aria-label="Add Credit"
+                  >
+                    <AddIcon />
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Typography
-                  aria-label="Credits to Purchase"
-                  component="h2"
-                  variant="h6"
-                >
-                  {topUp}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={handleClick}
-                  id="incr"
-                  variant="contained"
-                  size="small"
-                  disabled={state.loading}
-                  aria-label="Add Credit"
-                >
-                  <AddIcon />
-                </Button>
-              </Grid>
-            </Grid>
-          </Card>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={state.loading}
-            onClick={handleCheckout}
-          >
-            Checkout
-          </Button>
+            </Card>
+            <SubmitButton
+              variant="contained"
+              color="primary"
+              disabled={state.loading}
+              onClick={handleCheckout}
+            >
+              Checkout
+            </SubmitButton>
+          </form>
         </StyledPaper>
       </Container>
     </Background>
