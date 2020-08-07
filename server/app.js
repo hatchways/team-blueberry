@@ -2,12 +2,14 @@ const createError = require("http-errors");
 const express = require("express");
 const { join } = require("path");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const redis = require("redis");
 
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
+const notificationsRouter = require("./routes/notification");
 const paymentRouter = require("./routes/payment");
 
 // imports for mongoose models could go here
@@ -52,13 +54,14 @@ app.use(logger("dev"));
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(bodyParser.raw({ type: "image/jpg", limit: "1mb" }));
 app.use(express.static(join(__dirname, "public")));
 
 app.use("/api", indexRouter);
 app.use("/api/payment", auth, paymentRouter);
 
-// auth,
-app.use("/api/user", userRouter);
+app.use("/api/user", auth, userRouter);
+app.use("/notifications", notificationsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

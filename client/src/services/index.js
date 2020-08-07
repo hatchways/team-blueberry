@@ -77,3 +77,33 @@ export const confirmPaymentIntent = (id) => async (dispatch) => {
     dispatch({ type: "CONFIRM_PAYMENT_INTENT_ERROR", error: { ...e } });
   }
 };
+
+export const createUserAvatar = (body) => async (dispatch) => {
+  dispatch({ type: "FETCH" });
+  try {
+    const { data } = await axios({
+      url: `/api/user/me/avatar`,
+      method: "POST",
+      data: body,
+      headers: { "Content-Type": "image/jpg" },
+    });
+    dispatch({ type: "CREATE_USER_AVATAR_SUCCESS", user: data });
+  } catch (e) {
+    dispatch({ type: "CREATE_USER_AVATAR_ERROR", error: { ...e } });
+  }
+};
+
+export const editUser = (body) => async (dispatch) => {
+  dispatch({ type: "FETCH" });
+  try {
+    const { data } = await axios({
+      url: `api/user/me`,
+      method: "PUT",
+      data: body,
+      headers: { "Content-Type": "application/json" },
+    });
+    dispatch({ type: "EDIT_USER_SUCCESS", user: data });
+  } catch (e) {
+    dispatch({ type: "EDIT_USER_ERROR", error: { ...e } });
+  }
+};
