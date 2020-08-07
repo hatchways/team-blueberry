@@ -19,9 +19,12 @@ const reviewSchema = new mongoose.Schema({
 
   messages: [
     {
-      // Editor returns an object that is converted to a JSON string and stored, needs to be parsed on frontend
-      message: {
-        type: Object,
+      messageText: {
+        type: String,
+      },
+
+      codeSnippet: {
+        type: String,
       },
 
       // References message user owner

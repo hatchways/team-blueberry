@@ -31,6 +31,7 @@ const getReview = async (reviewId, dispatch) => {
     method: "post",
     url: "/api/user/reviews",
     data: {
+      user: "5f20c02f42b72242883a7674",
       singleTarget: true,
       reviewId: reviewId,
     },
@@ -43,9 +44,7 @@ const getReview = async (reviewId, dispatch) => {
   }
 
   dispatch({ type: "GET_USER_REVIEW_SUCCESS" });
-
-  const result = response.data;
-  return result;
+  return response.data;
 };
 
 module.exports = { getReviews, getReview };

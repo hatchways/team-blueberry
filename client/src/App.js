@@ -22,7 +22,6 @@ import "./App.css";
 function App() {
   const [state, dispatch] = useReducer(reducer, {}, initState);
 
-  console.log(state);
   useEffect(() => {
     userGet()(dispatch);
     return () => dispatch("FINISH_LOAD");
