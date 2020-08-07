@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const userGet = (body) => async (dispatch) => {
-  dispatch({ type: "FETCH_USER" });
+  dispatch({ type: "FETCH" });
   await axios({
     method: "GET",
     withCredentials: true,

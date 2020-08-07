@@ -1,7 +1,8 @@
 const User = require("../models/user");
-const reviewModel = require("../mongoose-handlers/review");
 const userModel = require("../mongoose-handlers/user");
-const Review = require("../models/review-request");
+const { Review, Request } = require("../models/review-request");
+const findReviewerQueue = require("../queues/findReviewer");
+const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
 
 module.exports = {
@@ -73,7 +74,7 @@ module.exports = {
     newReview.save(function (err) {
       if (err) return console.log(err);
 
-      const status = "Pending",
+      const status = "pending",
         userLanguageLevel = data.languageLevel;
 
       requestHandler.createRequest(
@@ -90,16 +91,82 @@ module.exports = {
   // gets all relevant reviews
   async getReviews(req, res) {
     try {
-      const userId = req.user;
+      if (req.body.singleTarget) {
+        const _id = req.body.reviewId;
 
-      const reviews = await Review.find({ userId });
+        const review = await Review.findOne({ _id });
 
-      res.status(201).json({ reviews });
-    } catch {
+        res.status(201).json({ review });
+      } else {
+        const userId = req.body.user;
+
+        const reviews = await Review.find({ userId: userId });
+
+        res.status(201).json({ reviews });
+      }
+    } catch (error) {
+      console.error(error.message);
       console.log("There was an error getting reviews.");
       return res
         .status(500)
         .send({ message: "There was an internal server error." });
+    }
+  },
+  async getRequest(req, res) {
+    const { reviewId } = req.params;
+    try {
+      const request = await Request.findOne({
+        "embeddedReview._id": reviewId,
+      });
+      res.status(201).send(request.toObject());
+    } catch (err) {
+      return res.status(500).send("Internal Server Error");
+    }
+  },
+  // accept or reject request
+  async reviewRequest(req, res) {
+    const userId = req.user;
+    // accept or reject contains requestId
+    const { isAccepted, requestId } = req.body;
+    try {
+      const job = await checkStatusQueue.getJob(requestId.toString());
+      job.remove();
+      if (isAccepted) {
+        await Request.findByIdAndUpdate(requestId, {
+          status: "accepted",
+        });
+        res.status(201).send("Reviewer Accepted");
+      } else {
+        await Request.findByIdAndUpdate(requestId, {
+          $push: { reviewersDeclined: userId },
+        });
+        findReviewerQueue.add("findReviewer", {
+          requestId,
+          isDelayed: false,
+        });
+        res.status(201).send("Reviewer Rejected");
+      }
+    } catch {
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  async sendReviewMessage(req, res) {
+    const { userId } = req.user;
+    const { reviewId, message, codeSnippet } = req.body;
+    try {
+      const request = await Request.findOne({
+        "embeddedReview._id": reviewId,
+      });
+      request.embeddedReview.messages.push({
+        messageText: message,
+        codeSnippet: codeSnippet,
+        messagePostedBy: userId,
+        messagePostDate: new Date(),
+      });
+      await request.save();
+      return res.status(201).send(request.toObject());
+    } catch {
+      return res.status(500).send("Internal Server Error");
     }
   },
 };
