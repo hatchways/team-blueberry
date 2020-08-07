@@ -18,8 +18,7 @@ router.post("/review", async (req, res) => {
       language: req.body.language,
       languageLevel: req.body.languageLevel,
       title: req.body.title,
-      codeSnippet: req.body.codeSnippet,
-      messageText: req.body.messageText,
+      message: { content: "TEST" },
     };
 
     await userController.createReview(userId, data, async (requestId) => {

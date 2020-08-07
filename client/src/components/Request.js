@@ -20,14 +20,10 @@ import PrismEditor from "../components/Editor/DraftEditor";
 
 const useStyles = makeStyles((theme) => ({
   request: {
-    margin: theme.spacing(6),
     borderRadius: "0px",
     overflow: "scroll",
   },
-  code: {
-    background: "#EAF0F8",
-  },
-  codeText: {
+  message: {
     overflow: "scroll",
     maxHeight: "20em",
   },
@@ -80,6 +76,7 @@ const reducer = (state, action) => {
 const Request = ({ globalDispatch }) => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initState);
+  const [editorHasContent, setEditorHasContent] = useState(false); // remove this if not needed
   const { reviewId } = useParams();
   // API call to get request
   useEffect(() => {
@@ -157,7 +154,6 @@ const Request = ({ globalDispatch }) => {
 
   // message field and button
   const MessageField = ({ dispatch, reviewId }) => {
-    const [message, setMessage] = useState("");
     const [makeSubmit, setMakeSubmit] = useState(false);
     const [editorHasContent, setEditorHasContent] = useState(false);
 
@@ -165,9 +161,10 @@ const Request = ({ globalDispatch }) => {
       const request = {
         content: text,
       };
+      console.log(request);
       // TODO saving codeSnippet as an object to be read by Prism Code Component
       try {
-        const req = await sendMessage(reviewId, message, request);
+        const req = await sendMessage(reviewId, request);
         dispatch({
           type: "FETCH_REQUEST",
           review: req.embeddedReview,
@@ -195,14 +192,6 @@ const Request = ({ globalDispatch }) => {
               avatar={<Avatar>UI</Avatar>}
               title="User's Name"
               subheader="User's Job"
-            />
-            <TextField
-              label="Message"
-              multiline
-              rows={2}
-              variant="filled"
-              fullWidth={true}
-              onChange={(e) => setMessage(e.target.value)}
             />
           </CardContent>
           <CardContent>
@@ -236,38 +225,46 @@ const Request = ({ globalDispatch }) => {
       );
     } else return <></>;
   };
+
+  // prism read only
+  const handleHasContent = (value) => {
+    setEditorHasContent(value);
+  };
   return (
-    <React.Fragment>
+    <div className={classes.request}>
       {state.review ? (
-        <Card className={classes.request}>
+        <React.Fragment>
           <CardHeader title={state.review.title} />
           <hr></hr>
           {state.review.messages.map((item, index) => (
             <React.Fragment key={item._id}>
               <ReviewerHeader index={index} />
               <CardContent>
-                <Typography variant="body2" component="p">
-                  {item.messageText}
+                {/* need a prism editor read only */}
+                <PrismEditor
+                  language={state.review.language}
+                  hasContent={handleHasContent}
+                  readOnly
+                  content={item.message ? item.message.content : ""}
+                ></PrismEditor>
+                <Typography
+                  variant="body2"
+                  component="p"
+                  className={classes.message}
+                >
+                  {/* name of message object */}
+                  {item.message ? item.message.content : ""}
                 </Typography>
-                <CardContent className={classes.code}>
-                  <Typography
-                    variant="body2"
-                    component="p"
-                    className={classes.codeText}
-                  >
-                    {item.codeSnippet}
-                  </Typography>
-                </CardContent>
               </CardContent>
             </React.Fragment>
           ))}
           <MessageField reviewId={reviewId} dispatch={dispatch} />
           <ActionButtons />
-        </Card>
+        </React.Fragment>
       ) : (
         <></>
       )}
-    </React.Fragment>
+    </div>
   );
 };
 

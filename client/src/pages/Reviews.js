@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
   },
   reviewPanel: {
     margin: theme.spacing(6),
-    textAlign: "center",
   },
   link: {
     textDecoration: "none",
