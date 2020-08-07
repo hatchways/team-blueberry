@@ -36,9 +36,6 @@ const useStyles = makeStyles((theme) => ({
   card: {
     minWidth: "100%",
   },
-  reviewWindow: {
-    margin: "auto",
-  },
   reviewTitles: {
     display: "grid",
     textAlign: "center",
@@ -160,55 +157,57 @@ const Reviews = ({ state, dispatch }) => {
 
   let { path, url } = useRouteMatch();
   return (
-    <Grid container>
+    <Grid container direction="column">
       <Router>
-        <Grid item xs={3}>
-          <div className={classes.reviewTitles}>
-            <Typography color="textPrimary" compoment="h1" variant="h4">
-              Reviews
-            </Typography>
-            <Typography color="textPrimary" compoment="h1" variant="h5">
-              ({reviews ? reviews.length : 0})
-            </Typography>
-          </div>
-          <List component="nav">
-            {Array.isArray(reviews) ? (
-              reviews.map((item, idx) => {
-                return (
-                  <Link
-                    to={`${path}/${item._id}`}
-                    key={idx}
-                    className={classes.link}
-                  >
-                    <ReviewCard
-                      index={idx}
-                      reviewId={item._id}
-                      reviewTitle={item.title}
-                      date={new Date(item.reviewCreatedDate)}
-                    ></ReviewCard>
-                  </Link>
-                );
-              })
-            ) : (
-              <ListItem>
-                <Button>Refresh</Button>
-              </ListItem>
-            )}
-          </List>
-        </Grid>
-        <Grid item xs={9} className={classes.background}>
-          <Paper className={classes.reviewPanel}>
-            <Switch>
-              <Route exact path={path}>
-                <Typography component="h1" variant="h4">
-                  Select a Review
-                </Typography>
-              </Route>
-              <Route path={`${path}/:reviewId`}>
-                <ReviewPanel></ReviewPanel>
-              </Route>
-            </Switch>
-          </Paper>
+        <Grid Item container>
+          <Grid xs={3}>
+            <div className={classes.reviewTitles}>
+              <Typography color="textPrimary" compoment="h1" variant="h4">
+                Reviews
+              </Typography>
+              <Typography color="textPrimary" compoment="h1" variant="h5">
+                ({reviews ? reviews.length : 0})
+              </Typography>
+            </div>
+            <List component="nav">
+              {Array.isArray(reviews) ? (
+                reviews.map((item, idx) => {
+                  return (
+                    <Link
+                      to={`${path}/${item._id}`}
+                      key={idx}
+                      className={classes.link}
+                    >
+                      <ReviewCard
+                        index={idx}
+                        reviewId={item._id}
+                        reviewTitle={item.title}
+                        date={new Date(item.reviewCreatedDate)}
+                      ></ReviewCard>
+                    </Link>
+                  );
+                })
+              ) : (
+                <ListItem>
+                  <Button>Refresh</Button>
+                </ListItem>
+              )}
+            </List>
+          </Grid>
+          <Grid xs={9}>
+            <Paper className={classes.reviewPanel}>
+              <Switch>
+                <Route exact path={path}>
+                  <Typography component="h1" variant="h4">
+                    Select a Review
+                  </Typography>
+                </Route>
+                <Route path={`${path}/:reviewId`}>
+                  <ReviewPanel></ReviewPanel>
+                </Route>
+              </Switch>
+            </Paper>
+          </Grid>
         </Grid>
       </Router>
     </Grid>
