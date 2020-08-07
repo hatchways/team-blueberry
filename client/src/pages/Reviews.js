@@ -10,6 +10,9 @@ import {
 // Import reviews service
 import { getReviews, getReview } from "../services/reviews";
 
+//import utilities
+import { dateToYMD } from "../utils/dateUtil";
+
 //Material-ui imports
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -120,27 +123,6 @@ const Reviews = ({ state, dispatch }) => {
     setSelectedIndex(index);
   };
 
-  function dateToYMD(date) {
-    var strArray = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    var d = date.getDate();
-    var m = strArray[date.getMonth()];
-    var y = date.getFullYear();
-    return "" + (d <= 9 ? "" + d : d) + " " + m + " " + y;
-  }
-
   const ReviewCard = (props) => {
     let { path, url } = useRouteMatch();
     return (
@@ -202,7 +184,7 @@ const Reviews = ({ state, dispatch }) => {
                       index={idx}
                       reviewId={item._id}
                       reviewTitle={item.title}
-                      date={dateToYMD(new Date(item.reviewCreatedDate))}
+                      date={new Date(item.reviewCreatedDate)}
                     ></ReviewCard>
                   </Link>
                 );

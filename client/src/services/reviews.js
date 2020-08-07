@@ -8,9 +8,6 @@ const getReviews = async (dispatch) => {
   const config = {
     method: "post",
     url: "/api/user/reviews",
-    data: {
-      user: "5f20c02f42b72242883a7674",
-    },
   };
 
   const response = await request.postToAPI(config);
@@ -31,7 +28,6 @@ const getReview = async (reviewId, dispatch) => {
     method: "post",
     url: "/api/user/reviews",
     data: {
-      user: "5f20c02f42b72242883a7674",
       singleTarget: true,
       reviewId: reviewId,
     },

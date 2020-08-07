@@ -30,11 +30,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Background(props) {
   const classes = useStyles();
 
-  // Need to implement switch for in app themes
-  const getBackroundType = (type) => {
-    const backgrounds = {};
-  };
-
   return (
     <div className={props.gradient ? classes.gradient : classes.solid}>
       {props.children}

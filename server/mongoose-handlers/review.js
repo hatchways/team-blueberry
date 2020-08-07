@@ -48,7 +48,6 @@ module.exports = {
         const _id = req.body.reviewId;
 
         const review = await Review.findOne(_id);
-        console.log(review);
 
         res.status(201).json({ review });
       } else {
