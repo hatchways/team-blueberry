@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 // Draftjs editor imports
-import Draft, { Editor, EditorState, RichUtils, convertToRaw } from "draft-js";
+import Draft, {
+  Editor,
+  EditorState,
+  RichUtils,
+  convertToRaw,
+  convertFromRaw,
+} from "draft-js";
 import CodeUtils from "draft-js-code";
 import PrismDecorator from "draft-js-prism";
 import Prism from "prismjs";
@@ -46,7 +52,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyEditor = ({ language, makeSubmit, onSubmit, hasContent }) => {
+const MyEditor = ({
+  language,
+  makeSubmit,
+  onSubmit,
+  hasContent,
+  content,
+  readOnly,
+}) => {
   const classes = useStyles();
 
   const mappedLanguage = languagesGrammar[language] || null;
@@ -56,9 +69,16 @@ const MyEditor = ({ language, makeSubmit, onSubmit, hasContent }) => {
     defaultSyntax: mappedLanguage,
   });
 
-  const [editorState, setEditorState] = useState(
-    EditorState.createEmpty(decorator)
-  );
+  const createInitialState = (content) => {
+    if (content) {
+      const currentContent = convertFromRaw(content);
+      return EditorState.createWithContent(currentContent, decorator);
+    }
+    return EditorState.createEmpty(decorator);
+  };
+
+  const [editorState, setEditorState] = useState(createInitialState(content));
+
   //Amending code blocks for Prism
   const getBlockStyle = (block) => {
     switch (block.getType()) {
@@ -157,15 +177,17 @@ const MyEditor = ({ language, makeSubmit, onSubmit, hasContent }) => {
       onSubmit({ text: rawText });
       setEditorState(EditorState.createEmpty(decorator));
     }
-  }, [makeSubmit]);
+  }, [decorator, onSubmit, editorState, makeSubmit]);
 
   return (
-    <div className={classes.editor}>
-      <Toolbar
-        editorState={editorState}
-        RichUtils={RichUtils}
-        setEditorState={setEditorState}
-      />
+    <div className={!readOnly ? classes.editor : "false"}>
+      {!readOnly && (
+        <Toolbar
+          editorState={editorState}
+          RichUtils={RichUtils}
+          setEditorState={setEditorState}
+        />
+      )}
       <Editor
         editorState={editorState}
         onChange={onChange}
@@ -175,6 +197,7 @@ const MyEditor = ({ language, makeSubmit, onSubmit, hasContent }) => {
         blockStyleFn={getBlockStyle}
         onTab={onTab}
         ref={editor}
+        readOnly={readOnly}
       />
     </div>
   );
