@@ -161,8 +161,8 @@ const Reviews = ({ state, dispatch }) => {
   return (
     <Grid container direction="column">
       <Router>
-        <Grid Item container>
-          <Grid xs={3} className={classes.reviewsHeight}>
+        <Grid item container>
+          <Grid item xs={3} className={classes.reviewsHeight}>
             <div className={classes.reviewTitles}>
               <Typography color="textPrimary" compoment="h1" variant="h3">
                 Reviews
@@ -201,7 +201,7 @@ const Reviews = ({ state, dispatch }) => {
               )}
             </List>
           </Grid>
-          <Grid xs={9} className={classes.background}>
+          <Grid item xs={9} className={classes.background}>
             <Paper className={classes.reviewPanel}>
               <Switch>
                 <Route exact path={path}>

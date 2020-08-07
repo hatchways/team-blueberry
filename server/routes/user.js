@@ -3,17 +3,17 @@ const router = express.Router();
 const findReviewerQueue = require("../queues/findReviewer");
 
 const userController = require("../controllers/user");
-
+const mongoose = require("mongoose");
 // import Auth middleware
 const Auth = require("../middleware/auth");
 
 router.get("/me", Auth, userController.showUser);
 
 router.put("/languages", Auth, userController.updateUserLanguages);
-
-router.post("/review", Auth, async (req, res) => {
+// Auth,
+router.post("/review", async (req, res) => {
   try {
-    const userId = req.user;
+    const userId = mongoose.Types.ObjectId(req.body.user);
     const data = {
       language: req.body.language,
       languageLevel: req.body.languageLevel,
@@ -23,10 +23,10 @@ router.post("/review", Auth, async (req, res) => {
     };
 
     await userController.createReview(userId, data, async (requestId) => {
-      await findReviewerQueue.add("findReviewer", {
-        requestId,
-        isDelayed: false,
-      });
+      // await findReviewerQueue.add("findReviewer", {
+      //   requestId,
+      //   isDelayed: false,
+      // });
       res.status(201).send({ message: "Success" });
     });
   } catch {

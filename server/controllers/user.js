@@ -4,6 +4,7 @@ const { Review, Request } = require("../models/review-request");
 const findReviewerQueue = require("../queues/findReviewer");
 const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
+const mongoose = require("mongoose");
 
 module.exports = {
   async showUser(req, res, next) {
@@ -98,11 +99,13 @@ module.exports = {
 
         res.status(201).json({ review });
       } else {
-        const userId = req.body.user;
+        const userId = req.user.id;
 
         const reviews = await Review.find({ userId: userId });
 
-        res.status(201).json({ reviews });
+        console.log(reviews);
+
+        return res.status(201).json({ reviews });
       }
     } catch (error) {
       console.error(error.message);
