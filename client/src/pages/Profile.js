@@ -4,7 +4,6 @@ import AvatarImage from "./Profile/img/avatar.png";
 import ProfileStats from "./Profile/ProfileStats";
 // import ProfileProjects from "./Profile/ProfileProjects";
 import Background from "../elements/Background";
-import Navbar from "../components/Navbar";
 import ProfileSkills from "./Profile/ProfileSkills";
 import ProfileName from "./Profile/ProfileName";
 //Material UI imports
@@ -56,7 +55,7 @@ const Profile = ({ state, dispatch }) => {
   const [name, setName] = useState(user.name);
   const [about, setAbout] = useState(user.email);
   const [files, setFiles] = useState([]);
-
+  console.log(user);
   const handleEdit = () => {
     setEdit(!edit);
   };

@@ -23,7 +23,7 @@ export const theme = createMuiTheme({
     },
     background: {
       gradient: "linear-gradient(to bottom, #778ae0, #6e3adb)",
-      solid: "#ffffff",
+      solid: "#ecf0fa",
       inAppBackdrop: "#ecf0fa",
     },
     navbar: "#501CBD",
