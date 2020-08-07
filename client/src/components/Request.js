@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import Avatar from "@material-ui/core/Avatar";
 import { useParams } from "react-router-dom";
+import { Divider } from "@material-ui/core";
 
 // API call
 import { sendRequest } from "../services/reviewRequest";
@@ -17,6 +16,7 @@ import { sendMessage } from "../services/sendReviewMessage";
 
 // code editor
 import PrismEditor from "../components/Editor/DraftEditor";
+import { convertFromRaw } from "draft-js";
 
 const useStyles = makeStyles((theme) => ({
   request: {
@@ -39,6 +39,7 @@ const initState = {
   requestId: "",
   statusChanged: false,
 };
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "FETCH_REQUEST":
@@ -76,8 +77,9 @@ const reducer = (state, action) => {
 const Request = ({ globalDispatch }) => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initState);
-  const [editorHasContent, setEditorHasContent] = useState(false); // remove this if not needed
+  const [editorHasContent, setEditorHasContent] = useState(false);
   const { reviewId } = useParams();
+
   // API call to get request
   useEffect(() => {
     handleInitState();
@@ -97,6 +99,7 @@ const Request = ({ globalDispatch }) => {
       });
     }
   }, [reviewId]);
+
   // set initial state at first render
   const handleInitState = async () => {
     const req = await getReview(reviewId, globalDispatch);
@@ -156,20 +159,27 @@ const Request = ({ globalDispatch }) => {
   const MessageField = ({ dispatch, reviewId }) => {
     const [makeSubmit, setMakeSubmit] = useState(false);
     const [editorHasContent, setEditorHasContent] = useState(false);
+    let isMounted = false;
+
+    useEffect(() => {
+      isMounted = true;
+    }, []);
 
     const handleSubmit = async (text) => {
       const request = {
         content: text,
       };
-      console.log(request);
-      // TODO saving codeSnippet as an object to be read by Prism Code Component
       try {
-        const req = await sendMessage(reviewId, request);
-        dispatch({
-          type: "FETCH_REQUEST",
-          review: req.embeddedReview,
-          requestId: req._id,
-        });
+        if (isMounted) {
+          const req = await sendMessage(reviewId, request);
+          dispatch({
+            type: "FETCH_REQUEST",
+            review: req.embeddedReview,
+            requestId: req._id,
+          });
+        } else {
+          return;
+        }
       } catch (err) {
         // TODO handle error better
         console.error(err.message);
@@ -225,36 +235,26 @@ const Request = ({ globalDispatch }) => {
       );
     } else return <></>;
   };
-
-  // prism read only
   const handleHasContent = (value) => {
     setEditorHasContent(value);
   };
+
   return (
     <div className={classes.request}>
       {state.review ? (
         <React.Fragment>
           <CardHeader title={state.review.title} />
-          <hr></hr>
+          <Divider />
           {state.review.messages.map((item, index) => (
             <React.Fragment key={item._id}>
-              <ReviewerHeader index={index} />
+              <ReviewerHeader />
               <CardContent>
-                {/* need a prism editor read only */}
                 <PrismEditor
                   language={state.review.language}
                   hasContent={handleHasContent}
                   readOnly
-                  content={item.message ? item.message.content : ""}
+                  content={JSON.parse(convertFromRaw(item.nmessage))}
                 ></PrismEditor>
-                <Typography
-                  variant="body2"
-                  component="p"
-                  className={classes.message}
-                >
-                  {/* name of message object */}
-                  {item.message ? item.message.content : ""}
-                </Typography>
               </CardContent>
             </React.Fragment>
           ))}

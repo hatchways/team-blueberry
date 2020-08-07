@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useParams,
   Link,
   useRouteMatch,
 } from "react-router-dom";
@@ -16,19 +15,8 @@ import dateToYMD from "../utils/dateUtil";
 //Material-ui imports
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import Background from "../elements/Background";
-import StyledPaper from "../elements/StyledPaper";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import { theme } from "../themes/theme";
-import ListItem from "@material-ui/core/ListItem";
-import List from "@material-ui/core/List";
-import { CardActionArea, Paper, Divider, TextField } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Paper from "@material-ui/core/Paper";
 
 // component imports
 import Request from "../components/Request";

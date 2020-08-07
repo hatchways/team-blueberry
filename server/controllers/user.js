@@ -12,7 +12,6 @@ const handleError = (e, res) =>
     ? res.status(e.status).send(e.message)
     : res.status(400).send(e);
 
-
 module.exports = {
   // for logged in user
   async getMe(req, res, next) {
@@ -89,9 +88,7 @@ module.exports = {
       });
     }
   },
-  createReview: async (userId, data, cb) => {
-    //const {language, title, message} = data;
-
+  async createReview(userId, data, cb) {
     // create const variables from data
     const language = data.language,
       title = data.title,
@@ -131,7 +128,8 @@ module.exports = {
         const request = await Request.findOne({
           "embeddedReview._id": reviewId,
         });
-        res.status(201).json({ request });
+
+        res.status(201).json(request.toObject());
       } else {
         const userId = req.user.id;
         const reviews = await Review.find({ userId: userId });
@@ -186,14 +184,16 @@ module.exports = {
   },
   async sendReviewMessage(req, res) {
     const { userId } = req.user;
-    const { reviewId, message, codeSnippet } = req.body;
+    const { reviewId, message } = req.body;
     try {
       const request = await Request.findOne({
         "embeddedReview._id": reviewId,
       });
+
+      console.log("requestObject line 194", request);
+
       request.embeddedReview.messages.push({
-        messageText: message,
-        codeSnippet: codeSnippet,
+        message: message,
         messagePostedBy: userId,
         messagePostDate: new Date(),
       });
