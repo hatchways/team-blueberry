@@ -18,7 +18,7 @@ import StyledPaper from "../elements/StyledPaper";
 import PageHeader from "../elements/PageHeader";
 
 //Languages services import
-import { updateLanguages, getLanguages } from "../services/languages";
+import { updateLanguages } from "../services/languages";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OnBoard = ({ state, dispatch }) => {
+const OnBoard = ({ state, dispatch, history }) => {
   const classes = useStyles();
 
   const languages = [
@@ -91,7 +91,7 @@ const OnBoard = ({ state, dispatch }) => {
     if (!allValid) {
       setSubmitClicked(true);
     } else {
-      updateLanguages(skillList, dispatch);
+      // updateLanguages(skillList, dispatch);
 
       console.log(skillList);
       console.log("Submit");

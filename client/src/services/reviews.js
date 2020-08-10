@@ -38,7 +38,7 @@ const getReview = async (reviewId, dispatch) => {
   };
 
   const response = await request.postToAPI(config);
-  if (response.status != 201) {
+  if (response.status !== 201) {
     dispatch({ type: "GET_USER_REVIEW_ERROR" });
     return { status: response.status };
   }

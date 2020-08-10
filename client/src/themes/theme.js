@@ -4,10 +4,6 @@ export const theme = createMuiTheme({
   typography: {
     fontFamily: '"Roboto"',
     fontSize: 12,
-
-    h1: {
-      // could customize the h1 variant as well
-    },
   },
   palette: {
     primary: {
@@ -24,7 +20,6 @@ export const theme = createMuiTheme({
     background: {
       gradient: "linear-gradient(to bottom, #778ae0, #6e3adb)",
       solid: "#ecf0fa",
-      inAppBackdrop: "#ecf0fa",
     },
     navbar: "#501CBD",
     divider: "#000000",

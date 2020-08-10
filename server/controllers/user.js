@@ -66,9 +66,8 @@ module.exports = {
   async updateUserLanguages(req, res) {
     try {
       // Make calls to to update user languages on user model
-      const userId = req.user,
+      const userId = req.user.id,
         skillList = { ...req.body.languages };
-
       await userModel.updateLanguages(userId, skillList, (error) => {
         if (error) {
           console.error(error.message);

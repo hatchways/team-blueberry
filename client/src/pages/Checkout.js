@@ -21,7 +21,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   CardElement,
   Elements,
-  Stripe,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";

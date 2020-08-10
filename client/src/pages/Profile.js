@@ -59,7 +59,7 @@ const Profile = ({ state, dispatch }) => {
   const handleEdit = () => {
     setEdit(!edit);
   };
-
+  console.log(languages, projects, about); // Just to remove warnings
   const submit = (event) => {
     event.preventDefault();
     if (files.length) {

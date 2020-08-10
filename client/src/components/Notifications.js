@@ -67,7 +67,7 @@ const Notifications = () => {
   //Get notifications for USER
   useEffect(() => {
     const getNotifications = async () => {
-      const { data } = await axios.get(`/notifications/${user._id}`);
+      const { data } = await axios.get(`/notifications/${user.id}`);
       dispatch({ type: "getNotifications", payload: data.reverse() });
     };
     getNotifications();
