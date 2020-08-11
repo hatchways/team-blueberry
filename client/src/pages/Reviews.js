@@ -57,8 +57,7 @@ const useStyles = makeStyles((theme) => ({
 const Reviews = ({ state, dispatch }) => {
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(false);
-  const [reviews, setReviews] = React.useState(false);
-
+  const reviews = state.reviews || [];
   const fetchData = async () => {
     const result = await getReviews(dispatch);
     setReviews(result.reviews);
@@ -68,6 +67,29 @@ const Reviews = ({ state, dispatch }) => {
     fetchData();
   }, []);
 
+
+  const ReviewPanel = ({ reviews }) => {
+    let { reviewId } = useParams();
+    const fetchedReview = reviews.find(({ _id }) => _id === reviewId);
+
+    return fetchedReview ? (
+      <Grid item classNames={classes.reviewPanelContent}>
+        <Typography component="h1" variant="h3">
+          {fetchedReview.title}
+        </Typography>
+        <Divider />
+        <Button>Submit</Button>
+        <Typography color="textSecondary" gutterBottom>
+          {dateToYMD(new Date(fetchedReview.reviewCreatedDate))}
+        </Typography>
+        <TextField></TextField>
+      </Grid>
+    ) : (
+      <Typography component="h1" variant="h3">
+        Invalid Review
+      </Typography>
+    );
+  };
   const handleListItemClick = (event, index, props) => {
     setSelectedIndex(index);
   };

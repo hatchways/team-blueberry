@@ -2,22 +2,25 @@
 const request = require("../utils/requestHandlers");
 
 const getReviews = async (dispatch) => {
-  dispatch({ type: "GET_USER_REVIEWS" });
+  dispatch({ type: "FETCH" });
 
   //Make get call to api for retrieving reviews on current user, make sure to remove and fix user in body
   const config = {
-    method: "post",
+    method: "get",
     url: "/api/user/reviews",
   };
-
-  const response = await request.postToAPI(config);
-  if (response.status != 201) {
-    dispatch({ type: "GET_USER_REVIEWS_ERROR" });
-    return { status: response.status };
+  try {
+    const { data } = await request.postToAPI(config);
+    dispatch({
+      type: "GET_USER_REVIEWS_SUCCESS",
+      reviews: data.reviews,
+    });
+  } catch (e) {
+    dispatch({
+      type: "GET_USER_REVIEWS_ERROR",
+      error: { ...e },
+    });
   }
-
-  dispatch({ type: "GET_USER_REVIEWS_SUCCESS" });
-  return response.data;
 };
 
 const getReview = async (reviewId, dispatch) => {
