@@ -10,19 +10,8 @@ const useStyles = makeStyles((theme) => ({
   },
   solid: {
     height: "100vh",
+    overflowY: "auto",
     background: theme.palette.background.solid,
-    display: "flex",
-  },
-  inApp: {
-    height: "100vh",
-    overflowY: "auto",
-    background: "#ecf0fa",
-    display: "flex",
-  },
-  inAppMenu: {
-    height: "100vh",
-    overflowY: "auto",
-    background: "#ffffff",
     display: "flex",
   },
 }));

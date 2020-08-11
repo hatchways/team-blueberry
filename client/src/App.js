@@ -16,6 +16,7 @@ import Profile from "./pages/Profile";
 import Reviews from "./pages/Reviews";
 import Balance from "./pages/Balance";
 import Checkout from "./pages/Checkout";
+import Loading from "./pages/Loading";
 
 import "./App.css";
 
@@ -31,21 +32,25 @@ function App() {
     <userContext.Provider value={state.user}>
       <loadingContext.Provider value={state.loading}>
         <MuiThemeProvider theme={theme}>
-          {state.loading ? (
-            "loading"
-          ) : (
-            <BrowserRouter>
-              <ProtectedElement
-                // ! must remain within Router
-                // ? still don't like the location condition, but unsure of how to handle index
-                condition={() =>
-                  state.user.id && window.location.pathname !== "/"
-                }
-              >
-                <Navbar state={state} dispatch={dispatch} />
-              </ProtectedElement>
-              <Switch>
-                <ProtectedRoute
+          <BrowserRouter>
+            <ProtectedElement
+              // ! must remain within Router
+              // ? still don't like the location condition, but unsure of how to handle index
+              condition={() =>
+                state.user.id &&
+                window.location.pathname !== "/" &&
+                window.location.pathname !== "/login" &&
+                window.location.pathname !== "/onBoard"
+              }
+            >
+              <Navbar state={state} dispatch={dispatch} />
+            </ProtectedElement>
+            <Switch>
+              <Route path="/login" component={Login} />
+              <Route path="/onboard" component={OnBoard} />
+              <Route path="/profile" component={Profile} />
+              <Route path="/" exact component={SignUp} />
+              {/* <ProtectedRoute
                   condition={() => !state.user.id}
                   path="/signup"
                   redirect="/profile"
@@ -79,10 +84,9 @@ function App() {
                   redirect="/balance"
                 >
                   <Checkout state={state} dispatch={dispatch} />
-                </ProtectedRoute>
-              </Switch>
-            </BrowserRouter>
-          )}
+                </ProtectedRoute> */}
+            </Switch>
+          </BrowserRouter>
         </MuiThemeProvider>
       </loadingContext.Provider>
     </userContext.Provider>

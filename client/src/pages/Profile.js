@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import userContext from "../userContext";
 import AvatarImage from "./Profile/img/avatar.png";
 import ProfileStats from "./Profile/ProfileStats";
-// import ProfileProjects from "./Profile/ProfileProjects";
+import ProfileProjects from "./Profile/ProfileProjects";
 import Background from "../elements/Background";
 import ProfileSkills from "./Profile/ProfileSkills";
 import ProfileName from "./Profile/ProfileName";
@@ -48,18 +48,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const skills = [
+  { language: "JavaScript", level: "Advanced" },
+  { language: "Java", level: "Expert" },
+  { language: "PHP", level: "Expert" },
+  { language: "C++", level: "Beginner" },
+];
+
+const projects = [
+  { title: "JS Code Review", link: "http://localhost:3000/" },
+  { title: "New Java Code", link: "http://localhost:3000/" },
+];
+
 const Profile = ({ state, dispatch }) => {
-  const { languages = [], projects = [], ...user } = useContext(userContext);
+  const { ...user } = useContext(userContext);
   const classes = useStyles();
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState(user.name);
   const [about, setAbout] = useState(user.email);
   const [files, setFiles] = useState([]);
-  console.log(user);
   const handleEdit = () => {
     setEdit(!edit);
   };
-  console.log(languages, projects, about); // Just to remove warnings
   const submit = (event) => {
     event.preventDefault();
     if (files.length) {
@@ -75,67 +85,65 @@ const Profile = ({ state, dispatch }) => {
 
   return (
     <Background solid>
-      <Box flexWrap="nowrap" width={"100%"}>
-        <Grid container direction="column">
-          <Grid item>
-            <Container component="main" maxWidth="md" className={classes.root}>
-              <Avatar
-                alt="Profile image"
-                src={user.avatar || AvatarImage}
-                className={classes.avatar}
-              />
-              <Paper className={classes.paper}>
-                <Grid
-                  item
-                  container
-                  direction="column"
-                  justify="center"
-                  alignItems="center"
-                >
-                  <ProfileName
-                    edit={edit}
-                    name={user.name}
-                    about={user.email}
-                    editName={editName}
-                    editAbout={editAbout}
-                    files={files}
-                    setFiles={setFiles}
-                  />
+      <Grid container direction="column">
+        <Grid item>
+          <Container component="main" maxWidth="md" className={classes.root}>
+            <Avatar
+              alt="Profile image"
+              src={user.avatar || AvatarImage}
+              className={classes.avatar}
+            />
+            <Paper className={classes.paper}>
+              <Grid
+                item
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+              >
+                <ProfileName
+                  edit={edit}
+                  name={user.name}
+                  about={user.email}
+                  editName={editName}
+                  editAbout={editAbout}
+                  files={files}
+                  setFiles={setFiles}
+                />
 
-                  <Grid item xs={1}>
-                    {!edit && (
-                      <EditIcon
-                        fontSize="large"
-                        className={classes.iconEdit}
-                        onClick={handleEdit}
-                      />
-                    )}
-                    {edit && (
-                      <Button
-                        variant="contained"
-                        size="small"
-                        className={classes.button}
-                        onClick={submit}
-                      >
-                        Save
-                      </Button>
-                    )}
-                  </Grid>
-                  <Grid item>
-                    <Box mt={10} />
-                  </Grid>
-                  <ProfileStats years="5" reviews="10" rating="4.7" />
-                  <Grid item>
-                    <Box mt={10} />
-                  </Grid>
-                  <ProfileSkills skills={user.languages} />
-                  {/* <ProfileProjects projects={projects} /> */}
+                <Grid item xs={1}>
+                  {!edit && (
+                    <EditIcon
+                      fontSize="large"
+                      className={classes.iconEdit}
+                      onClick={handleEdit}
+                    />
+                  )}
+                  {edit && (
+                    <Button
+                      variant="contained"
+                      size="small"
+                      className={classes.button}
+                      onClick={submit}
+                    >
+                      Save
+                    </Button>
+                  )}
                 </Grid>
-              </Paper>
-            </Container>
-          </Grid>
+                <Grid item>
+                  <Box mt={10} />
+                </Grid>
+                <ProfileStats years="5" reviews="10" rating="4.7" />
+                <Grid item>
+                  <Box mt={10} />
+                </Grid>
+                <ProfileSkills skills={skills} />
+                <ProfileProjects projects={projects} />
+              </Grid>
+            </Paper>
+          </Container>
         </Grid>
-      </Box>
+      </Grid>
     </Background>
   );
 };
