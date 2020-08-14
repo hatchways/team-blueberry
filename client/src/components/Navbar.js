@@ -15,9 +15,8 @@ import { Link } from "react-router-dom";
 import AddCodeDialog from "./UploadCode";
 import Notifications from "./Notifications";
 import userContext from "../userContext";
-import { Redirect } from "react-router-dom";
 // import logout api
-import { userLogout } from "../services/loginService";
+import logout from "../services/logout";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,7 +101,8 @@ const Navbar = ({ state, dispatch }) => {
 
   // add logout functionality
   const handleLogout = () => {
-    userLogout();
+    logout();
+    // userLogout();
     setAnchorMenu(null);
     window.location.replace("/");
   };
