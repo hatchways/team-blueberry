@@ -55,7 +55,6 @@ const Profile = ({ state, dispatch }) => {
   const [name, setName] = useState(user.name);
   const [about, setAbout] = useState(user.email);
   const [files, setFiles] = useState([]);
-  console.log(user);
   const handleEdit = () => {
     setEdit(!edit);
   };

@@ -42,7 +42,6 @@ export default function ProfileSkills({ skills }) {
         return "No image";
     }
   };
-  console.log(!skills);
   if (!skills) {
     return null;
   } else {

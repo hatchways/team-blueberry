@@ -15,7 +15,6 @@ import { Link } from "react-router-dom";
 import AddCodeDialog from "./UploadCode";
 import Notifications from "./Notifications";
 import userContext from "../userContext";
-
 // import logout api
 import logout from "../services/logout";
 
@@ -102,8 +101,10 @@ const Navbar = ({ state, dispatch }) => {
 
   // add logout functionality
   const handleLogout = () => {
-    logout(dispatch);
+    logout();
+    // userLogout();
     setAnchorMenu(null);
+    window.location.replace("/");
   };
 
   // add responsiveness
@@ -112,7 +113,11 @@ const Navbar = ({ state, dispatch }) => {
 
   return (
     <div className={classes.root}>
-      <AddCodeDialog open={open} dispatch={dispatch} handleClose={handleClose} />
+      <AddCodeDialog
+        open={open}
+        dispatch={dispatch}
+        handleClose={handleClose}
+      />
       <AppBar position="static" color="secondary">
         <Toolbar>
           <div className={classes.title}>

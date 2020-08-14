@@ -65,15 +65,15 @@ const Notifications = () => {
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);
 
   //Get notifications for USER
-  useEffect(() => {
-    const getNotifications = async () => {
-      const { data } = await axios.get(`/notifications/${user._id}`);
-      dispatch({ type: "getNotifications", payload: data.reverse() });
-    };
-    getNotifications();
-    socket.subscribe("notifications", handleSocketNotification);
-    return () => socket.unsubscribe("notifications");
-  }, [user]);
+  // useEffect(() => {
+  //   const getNotifications = async () => {
+  //     const { data } = await axios.get(`/notifications/${user._id}`);
+  //     dispatch({ type: "getNotifications", payload: data.reverse() });
+  //   };
+  //   getNotifications();
+  //   socket.subscribe("notifications", handleSocketNotification);
+  //   return () => socket.unsubscribe("notifications");
+  // }, [user]);
 
   const handleSocketNotification = (notification) => {
     dispatch({ type: "newNotification", payload: notification });

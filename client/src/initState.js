@@ -1,1 +1,1 @@
-export default () => ({ user: {} });
+export default () => ({ user: {}, loading: true });
