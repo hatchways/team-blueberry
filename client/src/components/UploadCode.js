@@ -10,7 +10,7 @@ import PrismEditor from "../components/Editor/DraftEditor";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Box } from "@material-ui/core";
 import Alert from "../elements/SnackBar";
-import { createCode } from "../services";
+import { createCode } from "../services/index.js";
 
 export default function AddCodeDialog({ dispatch, open, handleClose }) {
   const [title, setTitle] = useState("");
@@ -37,7 +37,6 @@ export default function AddCodeDialog({ dispatch, open, handleClose }) {
     };
 
     //SEND REQUEST AND close dialog
-    console.log(request);
     createCode(request)(dispatch);
     setTitle("");
     setLanguage("");

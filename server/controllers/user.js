@@ -136,8 +136,6 @@ module.exports = {
         const reviews = await Review.find({ userId: userId });
         return res.status(201).json({ reviews });
       }
-      const reviews = await Review.find({ userId: req.user.id });
-      return res.status(201).json({ reviews });
     } catch (error) {
       console.error(error.message);
       return res
@@ -158,7 +156,7 @@ module.exports = {
   },
   // accept or reject request
   async reviewRequest(req, res) {
-    const userId = req.user;
+    const userId = req.user.id;
     // accept or reject contains requestId
     const { isAccepted, requestId } = req.body;
     try {
