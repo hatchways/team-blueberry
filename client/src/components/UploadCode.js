@@ -37,7 +37,6 @@ export default function AddCodeDialog({ dispatch, open, handleClose }) {
     };
 
     //SEND REQUEST AND close dialog
-    console.log(request);
     createCode(request)(dispatch);
     setTitle("");
     setLanguage("");

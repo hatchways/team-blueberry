@@ -14,13 +14,12 @@ router.put("/languages", Auth, userController.updateUserLanguages);
 
 router.post("/review", Auth, async (req, res) => {
   try {
-    const userId = req.user;
+    const userId = req.user.id;
     const data = {
       language: req.body.language,
       title: req.body.title,
-      message: req.body.message,
+      message: JSON.stringify(req.body.content.text),
     };
-    console.log(data);
     await userController.createReview(userId, data, async (requestId) => {
       await findReviewerQueue.add("findReviewer", {
         requestId,

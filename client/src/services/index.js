@@ -114,7 +114,7 @@ export const createCode = (body) => async (dispatch) => {
     const { data } = await axios({
       url: `/api/user/review`,
       method: "POST",
-      data: JSON.stringify(body),
+      data: body,
       headers: { "Content-Type": "application/json" },
     });
     dispatch({ type: "CREATE_CODE_SUCCESS", data });
