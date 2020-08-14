@@ -1,8 +1,10 @@
 const request = require("../utils/requestHandlers");
 
 const config = {
-  method: "post",
-  url: "http://localhost:3001/api/logout",
+  method: "POST",
+  data: {},
+  withCredentials: true,
+  url: "/api/logout",
 };
 
 const logout = async (dispatch) => {

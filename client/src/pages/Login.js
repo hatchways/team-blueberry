@@ -39,7 +39,7 @@ export default function Login(props) {
     } else {
       userLogin(loginEmail, loginPassword)
         .then((res) => {
-          props.history.push("/profile");
+          window.location.replace("/profile");
         })
         .catch((error) => {
           //If getting 409 - raise email error
