@@ -1,37 +1,28 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import Avatar from "@material-ui/core/Avatar";
+import { useParams } from "react-router-dom";
+import { Divider } from "@material-ui/core";
+import userContext from "../userContext";
+import ActionButtons from "./AcceptRejectButton";
+import Message from "./Message";
 
 // API call
-import { sendRequest, getRequest } from "../services/reviewRequest";
-import { sendMessage } from "../services/sendReviewMessage";
+import { getReview } from "../services/reviews";
 
 // code editor
 import PrismEditor from "../components/Editor/DraftEditor";
 
 const useStyles = makeStyles((theme) => ({
   request: {
-    margin: theme.spacing(6),
     borderRadius: "0px",
     overflow: "scroll",
   },
-  code: {
-    background: "#EAF0F8",
-  },
-  codeText: {
+  message: {
     overflow: "scroll",
-    maxHeight: "20em",
-  },
-  messageBtn: {
-    paddingTop: 0,
-    paddingBottom: 0,
+    maxHeight: "15em",
   },
 }));
 
@@ -41,6 +32,7 @@ const initState = {
   requestId: "",
   statusChanged: false,
 };
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "FETCH_REQUEST":
@@ -75,35 +67,20 @@ const reducer = (state, action) => {
 };
 
 // review id will be accessed from url params
-const Request = () => {
+const Request = ({ globalDispatch }) => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initState);
+  const [editorHasContent, setEditorHasContent] = useState(false);
+  const { reviewId } = useParams();
 
-  // API call to get request
   useEffect(() => {
-    if (!state.status) {
-      handleInitState();
-    }
-    if (state.statusChanged && state.status === "accepted") {
-      sendRequest(true, state.requestId);
-      dispatch({
-        type: "RESET_CHANGED_STATUS",
-        statusChanged: false,
-      });
-    }
-    if (state.statusChanged && state.status === "declined") {
-      sendRequest(false, state.requestId);
-      dispatch({
-        type: "RESET_CHANGED_STATUS",
-        statusChanged: false,
-        requestId: "",
-      });
-    }
-  }, [state.status]);
+    handleInitState();
+  }, [reviewId]);
 
   // set initial state at first render
   const handleInitState = async () => {
-    const req = await getRequest(/*review id here */);
+    const req = await getReview(reviewId, globalDispatch);
+    // TODO error handling for dispatch
     dispatch({
       type: "FETCH_REQUEST",
       status: req.status,
@@ -112,162 +89,62 @@ const Request = () => {
     });
   };
 
-  // accept & reject button
-  const ActionButtons = () => {
-    // accept logic
-    const handleAccept = () => {
-      dispatch({
-        type: "STATUS_ACCEPTED",
-        status: "accepted",
-        statusChanged: true,
-      });
-    };
-
-    // // decline logic
-    const handleDecline = () => {
-      dispatch({
-        type: "STATUS_DECLINED",
-        status: "declined",
-        review: null,
-        statusChanged: true,
-      });
-    };
-
-    if (state.status === "pending") {
-      return (
-        <CardActions>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => handleAccept()}
-          >
-            Accept
-          </Button>
-          <Button
-            color="primary"
-            variant="outlined"
-            onClick={() => handleDecline()}
-          >
-            Decline
-          </Button>
-        </CardActions>
-      );
-    } else return <></>;
-  };
-
-  // message field and button
-  const MessageField = ({ dispatch, reviewId }) => {
-    const [message, setMessage] = useState("");
-    const [makeSubmit, setMakeSubmit] = useState(false);
-    const [editorHasContent, setEditorHasContent] = useState(false);
-
-    const handleSubmit = async (text) => {
-      const request = {
-        content: text,
-      };
-      // TODO saving codeSnippet as an object to be read by Prism Code Component
-      try {
-        const req = await sendMessage(reviewId, message, request);
-        dispatch({
-          type: "FETCH_REQUEST",
-          review: req.embeddedReview,
-          requestId: req._id,
-        });
-      } catch (err) {
-        // TODO handle error better
-        console.error(err.message);
-      }
-      setMakeSubmit(false);
-    };
-
-    const startSubmit = () => {
-      setMakeSubmit(true);
-    };
-
-    const handleHasContent = (value) => {
-      setEditorHasContent(value);
-    };
-    if (state.status === "accepted") {
-      return (
-        <React.Fragment>
-          <CardContent>
-            <CardHeader
-              avatar={<Avatar>UI</Avatar>}
-              title="User's Name"
-              subheader="User's Job"
-            />
-            <TextField
-              label="Message"
-              multiline
-              rows={2}
-              variant="filled"
-              fullWidth={true}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-          </CardContent>
-          <CardContent>
-            <Typography>Write Code: </Typography>
-            <PrismEditor
-              language={state.review.language}
-              makeSubmit={makeSubmit}
-              onSubmit={handleSubmit}
-              hasContent={handleHasContent}
-            ></PrismEditor>
-          </CardContent>
-          <CardContent className={classes.messageBtn}>
-            <Button color="primary" variant="contained" onClick={startSubmit}>
-              Submit
-            </Button>
-          </CardContent>
-        </React.Fragment>
-      );
-    } else return <></>;
-  };
-
+  // reviewer header
   const ReviewerHeader = ({ index }) => {
+    const user = useContext(userContext);
     if (index) {
       return (
-        // TODO access to user's name and job title here
+        // TODO job title and avatar
         <CardHeader
-          avatar={<Avatar>UI</Avatar>}
-          title="User's Name"
-          subheader="User's Job"
+          avatar={<Avatar>{user.name[0]}</Avatar>}
+          title={user.name}
+          subheader={user.job || `${user.name}'s Job`}
         />
       );
     } else return <></>;
   };
+
+  const handleHasContent = (value) => {
+    setEditorHasContent(value);
+  };
+
   return (
-    <React.Fragment>
+    <div className={classes.request}>
       {state.review ? (
-        <Card className={classes.request}>
+        <React.Fragment>
           <CardHeader title={state.review.title} />
-          <hr></hr>
+          <Divider />
           {state.review.messages.map((item, index) => (
             <React.Fragment key={item._id}>
               <ReviewerHeader index={index} />
-              <CardContent>
-                <Typography variant="body2" component="p">
-                  {item.messageText}
-                </Typography>
-                <CardContent className={classes.code}>
-                  <Typography
-                    variant="body2"
-                    component="p"
-                    className={classes.codeText}
-                  >
-                    {item.codeSnippet}
-                  </Typography>
-                </CardContent>
+              <CardContent className={classes.message}>
+                {/* TODO edit readOnly style */}
+                <PrismEditor
+                  language={state.review.language}
+                  hasContent={handleHasContent}
+                  readOnly
+                  content={JSON.parse(item.message)}
+                ></PrismEditor>
               </CardContent>
             </React.Fragment>
           ))}
-          <MessageField reviewId={/*review id here*/} dispatch={dispatch} />
-          <ActionButtons />
-        </Card>
+          <Message
+            reviewId={reviewId}
+            dispatch={dispatch}
+            status={state.status}
+            statusChanged={state.statusChanged}
+            language={state.review.language}
+          />
+          <ActionButtons
+            status={state.status}
+            dispatch={dispatch}
+            requestId={state.requestId}
+          />
+        </React.Fragment>
       ) : (
         <></>
       )}
-    </React.Fragment>
+    </div>
   );
 };
 
