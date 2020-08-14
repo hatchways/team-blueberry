@@ -1,13 +1,12 @@
 import axios from "axios";
 
-export const sendMessage = async (reviewId, message, codeSnippet) => {
+export const sendMessage = async (reviewId, message) => {
   try {
     const res = await axios({
       method: "POST",
       data: {
         reviewId,
-        message,
-        codeSnippet,
+        message: JSON.stringify(message),
       },
       withCredentials: true,
       url: "/api/user/request/message",
