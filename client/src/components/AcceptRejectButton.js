@@ -45,7 +45,7 @@ const ActionButtons = ({ status, dispatch, requestId, statusChanged }) => {
         </Button>
       </CardActions>
     );
-  } else return <></>;
+  } else return null;
 };
 
 export default ActionButtons;

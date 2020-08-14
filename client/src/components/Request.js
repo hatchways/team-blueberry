@@ -141,9 +141,7 @@ const Request = ({ globalDispatch }) => {
             requestId={state.requestId}
           />
         </React.Fragment>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </div>
   );
 };

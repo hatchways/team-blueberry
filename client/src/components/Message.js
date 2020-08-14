@@ -59,7 +59,7 @@ const Message = ({ dispatch, reviewId, status, language, statusChanged }) => {
         </CardContent>
       </React.Fragment>
     );
-  } else return <></>;
+  } else return null;
 };
 
 export default Message;
