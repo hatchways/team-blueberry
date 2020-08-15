@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const user = require("../mongoose-handlers/user");
 
 // basic user model
 const userSchema = new mongoose.Schema({
@@ -73,8 +72,8 @@ userSchema.statics.update = function ({ id, update }) {
       const { avatar, name, position, company } = update;
       user.avatar = avatar || user.avatar;
       user.name = name || user.name;
-      user.position = position || user.position;
-      user.company = company || user.company;
+      user.position = position;
+      user.company = company;
       // TODO add update to projects
       user.save();
     })

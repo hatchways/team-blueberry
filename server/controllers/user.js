@@ -36,7 +36,7 @@ module.exports = {
       return res.status(500).send("Error fetching user profile");
     }
   },
-  async updateUser(req, res, next) {
+  async updateUser(req, res) {
     try {
       const user = await User.update({
         id: req.user.id,
