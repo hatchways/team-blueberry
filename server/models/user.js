@@ -36,16 +36,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  languages: [
-    {
-      level: {
-        type: String,
-      },
-      language: {
-        type: String,
-      },
-    },
-  ],
+  languages: { type: Array },
 });
 
 // hash and store password before user is saved

@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Profile = ({ state, dispatch }) => {
-  const { languages = [], projects = [], ...user } = useContext(userContext);
+  const { ...user } = useContext(userContext);
   const classes = useStyles();
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState(user.name);

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { userSignUp } from "../services/signupService";
 //Material-ui imports
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -134,6 +135,8 @@ export default function SignIn(props) {
   //Submit button logic
   const [submitClicked, setSubmitClicked] = useState(false);
 
+  const history = useHistory();
+
   const submitHandler = (event) => {
     event.preventDefault();
 
@@ -158,7 +161,7 @@ export default function SignIn(props) {
         repeatedPassword.value
       )
         .then((res) => {
-          props.history.push("/onboard");
+          window.location.replace("/onBoard");
         })
         .catch((error) => {
           // ! BUG - check data type
