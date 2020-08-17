@@ -31,7 +31,6 @@ const updateLanguages = async (languages, dispatch) => {
     };
 
     const response = await request.putToAPI(config);
-    console.log(response.data);
     dispatch({
       type: "UPDATE_USER_LANGUAGES_SUCCESS",
       user: response.data,
