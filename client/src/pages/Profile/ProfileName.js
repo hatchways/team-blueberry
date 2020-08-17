@@ -10,9 +10,11 @@ import DropZone from "./Dropzone";
 export default function ProfileName({
   edit,
   name,
-  about,
+  position,
+  company,
   editName,
-  editAbout,
+  editPosition,
+  editCompany,
   files,
   setFiles,
 }) {
@@ -32,16 +34,29 @@ export default function ProfileName({
             variant="outlined"
             label="Name"
             xs={6}
+            error={!name ? true : false}
+            helperText={!name ? "Name cannot be blank!" : null}
           />
         </Grid>
         <Grid item>
           <TextField
             fullWidth
             color="primary"
-            defaultValue={about}
-            onChange={editAbout}
+            defaultValue={company}
+            onChange={editCompany}
             variant="outlined"
-            label="About"
+            label="Company"
+            xs={6}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            color="primary"
+            defaultValue={position}
+            onChange={editPosition}
+            variant="outlined"
+            label="Position"
             xs={6}
           />
         </Grid>
@@ -52,7 +67,15 @@ export default function ProfileName({
       <Grid item>
         <Box mt={7}>
           <PageHeader>{name}</PageHeader>
-          <Typography variant="subtitle1">{about}</Typography>
+          <Typography variant="subtitle1">
+            {position && company
+              ? `${position} at ${company}`
+              : position
+              ? `${position}`
+              : company
+              ? `Works at ${company}`
+              : null}
+          </Typography>
         </Box>
       </Grid>
     );

@@ -53,7 +53,8 @@ const Profile = ({ state, dispatch }) => {
   const classes = useStyles();
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState(user.name);
-  const [about, setAbout] = useState(user.email);
+  const [position, setPosition] = useState(user.position);
+  const [company, setCompany] = useState(user.company);
   const [files, setFiles] = useState([]);
   const handleEdit = () => {
     setEdit(!edit);
@@ -61,17 +62,18 @@ const Profile = ({ state, dispatch }) => {
 
   const submit = (event) => {
     event.preventDefault();
+    // TODO set up s3 for images
     if (files.length) {
       createUserAvatar(files[0].bin)(dispatch);
-      editUser({ name })(dispatch);
     }
-    handleEdit();
+    if (name) {
+      editUser({ name, position, company })(dispatch);
+      handleEdit();
+    }
   };
-
   const editName = (event) => setName(event.target.value);
-
-  const editAbout = (event) => setAbout(event.target.value);
-
+  const editPosition = (event) => setPosition(event.target.value);
+  const editCompany = (event) => setCompany(event.target.value);
   return (
     <Background solid>
       <Box flexWrap="nowrap" width={"100%"}>
@@ -93,14 +95,15 @@ const Profile = ({ state, dispatch }) => {
                 >
                   <ProfileName
                     edit={edit}
-                    name={user.name}
-                    about={user.email}
+                    name={name}
+                    position={position}
+                    company={company}
                     editName={editName}
-                    editAbout={editAbout}
+                    editPosition={editPosition}
+                    editCompany={editCompany}
                     files={files}
                     setFiles={setFiles}
                   />
-
                   <Grid item xs={1}>
                     {!edit && (
                       <EditIcon

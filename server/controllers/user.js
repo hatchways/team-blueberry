@@ -36,18 +36,21 @@ module.exports = {
       return res.status(500).send("Error fetching user profile");
     }
   },
-  async updateUser(req, res, next) {
+  async updateUser(req, res) {
+    const { name, company, position } = req.body;
     try {
-      const user = await User.update({
-        id: req.user.id,
-        update: { ...req.body },
-      });
-      return res.status(200).send(user);
+      const user = await User.findById(req.user.id);
+      user.name = user.name !== name ? name : user.name;
+      user.position = user.position !== position ? position : user.position;
+      user.company = user.company !== company ? company : user.company;
+      await user.save();
+      return res.status(200).send(user.toObject());
     } catch (e) {
       console.log(e);
       return res.status(500).send("Error updating user profile");
     }
   },
+  // TODO update function does not exist anymore
   async createUserAvatar(req, res) {
     try {
       // TODO add additional middleware to enforce proper image type
