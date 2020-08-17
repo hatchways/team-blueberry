@@ -70,7 +70,8 @@ module.exports = {
       const user = await User.findOne({ _id: userId });
       user.languages = [...skillList];
       await user.save();
-      return res.status(201).send(user);
+      console.log(user);
+      return res.status(201).send(user.toObject());
     } catch (e) {
       console.log(e);
       return res.status(500).send("Error updating user profile");

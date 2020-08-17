@@ -43,6 +43,7 @@ router.post("/register", async (req, res) => {
     return res.status(201).send({
       message: "User created!",
       token,
+      user: newUser.toObject(),
     });
   } catch {
     return res.status(500).send("Internal Server Error");
@@ -67,12 +68,12 @@ router.post("/login", async (req, res) => {
     return res.status(200).send({
       message: "User logged in!",
       token,
+      user: foundUser.toObject(),
     });
   } catch {
     return res.status(500).send("Internal Server Error");
   }
 });
-
 
 router.get("/languages", Auth, async (req, res) => {
   const languageList = await languages.getLanguages();
@@ -83,6 +84,5 @@ router.post("/logout", (req, res) => {
   res.clearCookie(cookieName);
   res.status(200).send("Cleared Cookie");
 });
-
 
 module.exports = router;

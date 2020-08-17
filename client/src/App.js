@@ -29,7 +29,6 @@ function App() {
     return () => dispatch("FINISH_LOAD");
   }, [dispatch]);
 
-  console.log(state);
   return (
     <userContext.Provider value={state.user}>
       <loadingContext.Provider value={state.loading}>
@@ -42,7 +41,7 @@ function App() {
                 // ! must remain within Router
                 // ? still don't like the location condition, but unsure of how to handle index
                 condition={() =>
-                  state.user.id && window.location.pathname !== "/onBoard"
+                  state.user.id && state.user.languages.length !== 0
                 }
               >
                 <Navbar state={state} dispatch={dispatch} />
@@ -51,18 +50,24 @@ function App() {
                 <ProtectedRoute
                   condition={() => !state.user.id}
                   path="/signup"
-                  redirect="/profile"
+                  redirect="/onboard"
                 >
-                  <SignUp />
+                  <SignUp state={state} dispatch={dispatch} />
                 </ProtectedRoute>
                 <ProtectedRoute
                   condition={() => !state.user.id}
                   path="/login"
+                  redirect="/onboard"
+                >
+                  <Login state={state} dispatch={dispatch} />
+                </ProtectedRoute>
+                <ProtectedRoute
+                  condition={() =>
+                    state.user.id && state.user.languages.length === 0
+                  }
+                  path="/onboard"
                   redirect="/profile"
                 >
-                  <Login />
-                </ProtectedRoute>
-                <ProtectedRoute condition={() => state.user.id} path="/onboard">
                   <OnBoard state={state} dispatch={dispatch} />
                 </ProtectedRoute>
 

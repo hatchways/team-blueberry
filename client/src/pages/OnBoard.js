@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 //Material-ui imports
 import Button from "@material-ui/core/Button";
@@ -91,14 +90,14 @@ const OnBoard = ({ state, dispatch }) => {
     if (!allValid) {
       setSubmitClicked(true);
     } else {
-      updateLanguages(skillList, dispatch)
-        .then((res) => {
-          console.log("REDIRECT");
-          history.push("/profile");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      updateLanguages(skillList, dispatch);
+      // .then((res) => {
+      //   console.log("REDIRECT");
+      //   history.push("/profile");
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      // });
     }
   };
 
