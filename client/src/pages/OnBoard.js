@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 //Material-ui imports
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -79,7 +78,6 @@ const OnBoard = ({ state, dispatch }) => {
     setSkillList(list);
   };
 
-  let history = useHistory();
   const handleSubmit = (event) => {
     event.preventDefault();
     let allValid = true;
@@ -91,13 +89,6 @@ const OnBoard = ({ state, dispatch }) => {
       setSubmitClicked(true);
     } else {
       updateLanguages(skillList, dispatch);
-      // .then((res) => {
-      //   console.log("REDIRECT");
-      //   history.push("/profile");
-      // })
-      // .catch((error) => {
-      //   console.log(error);
-      // });
     }
   };
 

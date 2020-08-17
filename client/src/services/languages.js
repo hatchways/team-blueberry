@@ -21,9 +21,6 @@ const getLanguages = async (dispatch) => {
 };
 
 const updateLanguages = async (languages, dispatch) => {
-  // dispatch({ type: "UPDATE_USER_LANGUAGES" });
-
-  //Make put call to api for updating languages on current user
   try {
     const config = {
       method: "put",
