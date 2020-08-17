@@ -101,10 +101,8 @@ const Navbar = ({ state, dispatch }) => {
 
   // add logout functionality
   const handleLogout = () => {
-    logout();
-    // userLogout();
+    logout(dispatch);
     setAnchorMenu(null);
-    window.location.replace("/");
   };
 
   // add responsiveness
