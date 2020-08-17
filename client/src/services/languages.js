@@ -21,6 +21,7 @@ const getLanguages = async (dispatch) => {
 };
 
 const updateLanguages = async (languages, dispatch) => {
+  dispatch({ type: "UPDATE_USER_LANGUAGES" });
   try {
     const config = {
       method: "put",
