@@ -70,10 +70,12 @@ module.exports = {
     try {
       const userId = req.user.id,
         skillList = req.body.languages;
-      const user = await User.findOne({ _id: userId });
-      user.languages = [...skillList];
-      await user.save();
-      return res.status(201).send(user.toObject());
+      await User.findOneAndUpdate(
+        { _id: userId },
+        { languages: [...skillList] }
+      );
+      const updatedUser = await User.findOne({ _id: userId });
+      return res.status(201).send(updatedUser.toObject());
     } catch (e) {
       return res.status(500).send("Error updating user profile");
     }
