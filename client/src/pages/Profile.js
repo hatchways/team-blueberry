@@ -17,12 +17,6 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { createUserAvatar, editUser } from "../services";
 
-// profile name, company, position
-import PageHeader from "../elements/PageHeader";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import DropZone from "./Profile/Dropzone";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     position: "relative",
@@ -78,9 +72,7 @@ const Profile = ({ state, dispatch }) => {
     }
   };
   const editName = (event) => setName(event.target.value);
-
   const editPosition = (event) => setPosition(event.target.value);
-
   const editCompany = (event) => setCompany(event.target.value);
   return (
     <Background solid>
@@ -101,76 +93,17 @@ const Profile = ({ state, dispatch }) => {
                   justify="center"
                   alignItems="center"
                 >
-                  {/* <ProfileName
+                  <ProfileName
                     edit={edit}
-                    name={user.name}
-                    position={user.position}
-                    company={user.company}
+                    name={name}
+                    position={position}
+                    company={company}
                     editName={editName}
                     editPosition={editPosition}
                     editCompany={editCompany}
                     files={files}
                     setFiles={setFiles}
-                  /> */}
-                  {/* Textfields were not responsive inside a child component, any other solution other than putting it back into parent componet? */}
-                  {edit ? (
-                    <Grid item container direction="column" spacing={3}>
-                      <Grid item>
-                        <Box mt={7} />
-                        <DropZone files={files} setFiles={setFiles} />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          color="primary"
-                          defaultValue={name}
-                          onChange={editName}
-                          variant="outlined"
-                          label="Name"
-                          xs={6}
-                          error={!name ? true : false}
-                          helperText={!name ? "Name cannot be blank!" : null}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          color="primary"
-                          defaultValue={company}
-                          onChange={editCompany}
-                          variant="outlined"
-                          label="Company"
-                          xs={6}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          color="primary"
-                          defaultValue={position}
-                          onChange={editPosition}
-                          variant="outlined"
-                          label="Position"
-                          xs={6}
-                        />
-                      </Grid>
-                    </Grid>
-                  ) : (
-                    <Grid item>
-                      <Box mt={7}>
-                        <PageHeader>{name}</PageHeader>
-                        <Typography variant="subtitle1">
-                          {position && company
-                            ? `${position} at ${company}`
-                            : position
-                            ? `${position}`
-                            : company
-                            ? `${company}`
-                            : null}
-                        </Typography>
-                      </Box>
-                    </Grid>
-                  )}
+                  />
                   <Grid item xs={1}>
                     {!edit && (
                       <EditIcon
