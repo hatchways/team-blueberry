@@ -39,43 +39,49 @@ module.exports = {
   async updateUser(req, res) {
     const { name, company, position } = req.body;
     try {
-      const user = await User.findById(req.user.id);
-      user.name = user.name !== name ? name : user.name;
-      user.position = user.position !== position ? position : user.position;
-      user.company = user.company !== company ? company : user.company;
-      await user.save();
+      const user = await User.findByIdAndUpdate(
+        req.user.id,
+        {
+          name: name,
+          position: position,
+          company: company,
+        },
+        { new: true }
+      );
       return res.status(200).send(user.toObject());
     } catch (e) {
       console.log(e);
       return res.status(500).send("Error updating user profile");
     }
   },
-  // TODO update function does not exist anymore
+  // TODO need to recheck once set up s3
   async createUserAvatar(req, res) {
     try {
       // TODO add additional middleware to enforce proper image type
       const signedURL = await persistAvatar(req);
-      const user = await User.update({
-        id: req.user.id,
-        update: { avatar: signedURL },
-      });
-      return res.status(201).json({ ...user });
+      const user = await User.findByIdAndUpdate(
+        req.user.id,
+        {
+          avatar: signedURL,
+        },
+        { new: true }
+      );
+      return res.status(201).json(user.toObject());
     } catch (e) {
       console.log(e);
       return handleError(e, res);
     }
   },
-
   async updateUserLanguages(req, res) {
     try {
       const userId = req.user.id,
         skillList = req.body.languages;
-      await User.findOneAndUpdate(
+      const user = await User.findOneAndUpdate(
         { _id: userId },
-        { languages: [...skillList] }
+        { languages: [...skillList] },
+        { new: true }
       );
-      const updatedUser = await User.findOne({ _id: userId });
-      return res.status(201).send(updatedUser.toObject());
+      return res.status(201).send(user.toObject());
     } catch (e) {
       return res.status(500).send("Error updating user profile");
     }
