@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const userGet = (body) => async (dispatch) => {
   dispatch({ type: "FETCH" });
-  await axios({
+  const userDoc = await axios({
     method: "GET",
     withCredentials: true,
     url: "/api/user/me",

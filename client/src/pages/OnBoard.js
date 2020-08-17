@@ -18,7 +18,7 @@ import StyledPaper from "../elements/StyledPaper";
 import PageHeader from "../elements/PageHeader";
 
 //Languages services import
-import { updateLanguages, getLanguages } from "../services/languages";
+import { updateLanguages } from "../services/languages";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -62,7 +62,6 @@ const OnBoard = ({ state, dispatch }) => {
     const name = event.target.name;
     const language = event.target.value;
     const list = [...skillList];
-
     list[index][name] = language;
     setSkillList(list);
   };
@@ -81,9 +80,7 @@ const OnBoard = ({ state, dispatch }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     let allValid = true;
-
     for (let i = 0; i < skillList.length; i++) {
       allValid =
         skillList[i].language && skillList[i].level && allValid ? true : false;
@@ -92,9 +89,6 @@ const OnBoard = ({ state, dispatch }) => {
       setSubmitClicked(true);
     } else {
       updateLanguages(skillList, dispatch);
-
-      console.log(skillList);
-      console.log("Submit");
     }
   };
 

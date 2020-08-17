@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { userLogin } from "../services/loginService";
+import userLogin from "../services/login";
+import { Link as RouterLink } from "react-router-dom";
 //Material-ui imports
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login(props) {
+export default function Login({ state, dispatch }) {
   const classes = useStyles();
 
   const [loginEmail, setLoginEmail] = useState("");
@@ -37,16 +38,9 @@ export default function Login(props) {
     if (!loginEmail || !loginPassword) {
       setSubmitClicked(true);
     } else {
-      userLogin(loginEmail, loginPassword)
-        .then((res) => {
-          window.location.replace("/profile");
-        })
-        .catch((error) => {
-          //If getting 409 - raise email error
-          if (error.response.data === "Incorrect email and password") {
-            setLoginError(error.response.data);
-          }
-        });
+      userLogin(loginEmail, loginPassword, dispatch).catch((error) => {
+        setLoginError(error.message);
+      });
     }
   };
 
@@ -117,7 +111,7 @@ export default function Login(props) {
                 </Typography>
               </Grid>
               <Grid item>
-                <Link href="/signup" variant="h6">
+                <Link component={RouterLink} to="/signup" variant="h6">
                   {"Create"}
                 </Link>
               </Grid>

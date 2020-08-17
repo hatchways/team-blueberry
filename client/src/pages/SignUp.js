@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { userSignUp } from "../services/signupService";
+import userSignUp from "../services/signup";
+import { Link as RouterLink } from "react-router-dom";
 //Material-ui imports
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -22,11 +23,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn(props) {
+export default function SignIn({ state, dispatch }) {
   const classes = useStyles();
 
   // ========== FORM VALIDATION LOGIC BEGIN ==========
-
   const [username, setUsername] = useState({
     value: "",
     error: "Field can not be blank",
@@ -155,23 +155,17 @@ export default function SignIn(props) {
         email.value,
         username.value,
         password.value,
-        repeatedPassword.value
-      )
-        .then((res) => {
-          props.history.push("/onboard");
-        })
-        .catch((error) => {
-          // ! BUG - check data type
-          if (error?.response?.data === "Email already exist!") {
-            setEmail((prev) => {
-              return {
-                value: prev.value,
-                error: error.response.data,
-                touched: true,
-              };
-            });
-          }
+        repeatedPassword.value,
+        dispatch
+      ).catch((error) => {
+        setEmail((prev) => {
+          return {
+            value: prev.value,
+            error: error.message,
+            touched: true,
+          };
         });
+      });
     }
   };
   return (
@@ -267,7 +261,7 @@ export default function SignIn(props) {
                 </Typography>
               </Grid>
               <Grid item>
-                <Link href="/login" variant="h6">
+                <Link component={RouterLink} to="/login" variant="h6">
                   {"Sign In"}
                 </Link>
               </Grid>

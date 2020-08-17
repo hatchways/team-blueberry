@@ -9,6 +9,21 @@ export default (state, action) => {
     case "FETCH_USER_SUCCESS": {
       return { ...state, user: action.user, loading: false, error: null };
     }
+    case "LOGOUT": {
+      return { ...state, loading: true };
+    }
+    case "LOGOUT_USER_ERROR": {
+      return { ...state, error: action.error, loading: false };
+    }
+    case "LOGOUT_USER_SUCCESS": {
+      return { ...state, user: {}, loading: false, error: null };
+    }
+    case "LOGIN": {
+      return { ...state, user: action.user, loading: false, error: null };
+    }
+    case "SIGNUP": {
+      return { ...state, user: action.user, loading: false, error: null };
+    }
     case "ADD_ITEM_TO_CART": {
       // TODO handle duplicates?
       return { ...state, loading: true, cart: [action.item] };

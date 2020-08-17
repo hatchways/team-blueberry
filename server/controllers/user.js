@@ -68,28 +68,17 @@ module.exports = {
 
   async updateUserLanguages(req, res) {
     try {
-      // Make calls to to update user languages on user model
-      const userId = req.user,
-        skillList = { ...req.body.languages };
-
-      await userModel.updateLanguages(userId, skillList, (error) => {
-        if (error) {
-          console.error(error.message);
-          return res.status(500).send({
-            message: "There was an internal server error.",
-          });
-        } else {
-          res.status(201).send({ message: "Success" });
-        }
-      });
-    } catch (error) {
-      console.log("There was an error in updating user languages.");
-      console.error(error);
-      return res.status(500).send({
-        message: "There was an internal server error.",
-      });
+      const userId = req.user.id,
+        skillList = req.body.languages;
+      const user = await User.findOne({ _id: userId });
+      user.languages = [...skillList];
+      await user.save();
+      return res.status(201).send(user.toObject());
+    } catch (e) {
+      return res.status(500).send("Error updating user profile");
     }
   },
+
   async createReview(userId, data, cb) {
     // create const variables from data
     const language = data.language,
