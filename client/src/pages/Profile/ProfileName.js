@@ -34,6 +34,9 @@ export default function ProfileName({
             variant="outlined"
             label="Name"
             xs={6}
+            // Error & HelperText do not work since name is not responsive being in a child component
+            error={!name ? true : false}
+            helperText={!name ? "Name cannot be blank!" : null}
           />
         </Grid>
         <Grid item>
