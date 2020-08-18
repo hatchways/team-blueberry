@@ -40,7 +40,7 @@ const reducer = (state, action) => {
       item.seen = true;
       return item;
     });
-    axios.put(`/notifications/update-read`, { notifications: unread });
+    axios.put(`api/notifications/update-read`, { notifications: unread });
     return unread;
   };
 
@@ -64,16 +64,16 @@ const Notifications = () => {
   const user = useContext(userContext);
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);
 
-  //Get notifications for USER
-  // useEffect(() => {
-  //   const getNotifications = async () => {
-  //     const { data } = await axios.get(`/notifications/${user._id}`);
-  //     dispatch({ type: "getNotifications", payload: data.reverse() });
-  //   };
-  //   getNotifications();
-  //   socket.subscribe("notifications", handleSocketNotification);
-  //   return () => socket.unsubscribe("notifications");
-  // }, [user]);
+  // Get notifications for USER from DB
+  useEffect(() => {
+    const getNotifications = async () => {
+      const { data } = await axios.get(`/api/notifications/${user.id}`);
+      dispatch({ type: "getNotifications", payload: data.reverse() });
+    };
+    getNotifications();
+    socket.subscribe("notifications", handleSocketNotification);
+    return () => socket.unsubscribe("notifications");
+  }, []);
 
   const handleSocketNotification = (notification) => {
     dispatch({ type: "newNotification", payload: notification });

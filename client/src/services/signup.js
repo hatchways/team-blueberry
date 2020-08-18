@@ -1,4 +1,5 @@
 import axios from "axios";
+import socket from "./sockets";
 
 export default async function userSignUp(
   email,
@@ -19,6 +20,7 @@ export default async function userSignUp(
       withCredentials: true,
       url: "/api/register",
     });
+    socket.login(result.data.user.id);
     dispatch({
       type: "SIGNUP",
       user: result.data.user,

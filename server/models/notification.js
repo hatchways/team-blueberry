@@ -7,15 +7,17 @@ const notificationSchema = new mongoose.Schema({
     index: true,
   },
   thread: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Request",
+    type: String,
+    // type: mongoose.Schema.Types.ObjectId,
+    // ref: "Request",
   },
   text: {
     type: String,
   },
   author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
+    // type: mongoose.Schema.Types.ObjectId,
+    // ref: "User",
   },
   seen: {
     type: Boolean,
