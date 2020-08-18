@@ -2,8 +2,7 @@
 const request = require("../utils/requestHandlers");
 
 const getReviews = async (dispatch) => {
-  dispatch({ type: "FETCH" });
-
+  dispatch({ type: "FETCH_REVIEWS" });
   //Make get call to api for retrieving reviews on current user, make sure to remove and fix user in body
   const config = {
     method: "post",
@@ -12,20 +11,19 @@ const getReviews = async (dispatch) => {
   try {
     const { data } = await request.postToAPI(config);
     dispatch({
-      type: "GET_USER_REVIEWS_SUCCESS",
+      type: "FETCH_REVIEWS_SUCCESS",
       reviews: data.reviews,
     });
-    return data;
   } catch (e) {
     dispatch({
-      type: "GET_USER_REVIEWS_ERROR",
-      error: { ...e },
+      type: "FETCH_REVIEWS_ERROR",
+      error: e.message,
     });
   }
 };
 
 const getReview = async (reviewId, dispatch) => {
-  dispatch({ type: "GET_USER_REVIEW" });
+  dispatch({ type: "FETCH_REQUEST" });
 
   //Make get call to api for retrieving reviews on current user
   const config = {
@@ -36,17 +34,20 @@ const getReview = async (reviewId, dispatch) => {
       reviewId: reviewId,
     },
   };
-
-  const response = await request.postToAPI(config);
-  if (response.status != 201) {
-    dispatch({ type: "GET_USER_REVIEW_ERROR" });
-    return { status: response.status };
+  try {
+    const { data } = await request.postToAPI(config);
+    dispatch({
+      type: "FETCH_REQUEST_SUCCESS",
+      status: data.status,
+      review: data.embeddedReview,
+      requestId: data._id,
+    });
+  } catch (e) {
+    dispatch({
+      type: "FETCH_REQUEST_ERROR",
+      error: e.message,
+    });
   }
-
-  dispatch({ type: "GET_USER_REVIEW_SUCCESS" });
-
-  const result = response.data;
-  return result;
 };
 
 module.exports = { getReviews, getReview };

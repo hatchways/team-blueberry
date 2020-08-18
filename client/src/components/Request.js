@@ -15,6 +15,9 @@ import { getReview } from "../services/reviews";
 // code editor
 import PrismEditor from "../components/Editor/DraftEditor";
 
+// element imports
+import Loading from "../elements/Loading";
+
 const useStyles = makeStyles((theme) => ({
   request: {
     borderRadius: "0px",
@@ -31,6 +34,8 @@ const initState = {
   review: null,
   requestId: "",
   statusChanged: false,
+  loading: false,
+  error: null,
 };
 
 const reducer = (state, action) => {
@@ -38,9 +43,21 @@ const reducer = (state, action) => {
     case "FETCH_REQUEST":
       return {
         ...state,
+        loading: true,
+      };
+    case "FETCH_REQUEST_SUCCESS":
+      return {
+        ...state,
         status: action.status,
         review: action.review,
         requestId: action.requestId,
+        loading: false,
+      };
+    case "FETCH_REQUEST_ERROR":
+      return {
+        ...state,
+        error: action.error,
+        loading: true,
       };
     case "STATUS_ACCEPTED":
       return {
@@ -67,7 +84,7 @@ const reducer = (state, action) => {
 };
 
 // review id will be accessed from url params
-const Request = ({ globalDispatch }) => {
+const Request = () => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initState);
   const [editorHasContent, setEditorHasContent] = useState(false);
@@ -75,18 +92,12 @@ const Request = ({ globalDispatch }) => {
 
   useEffect(() => {
     handleInitState();
+    // TODO remove request when unmounting
   }, [reviewId]);
 
   // set initial state at first render
   const handleInitState = async () => {
-    const req = await getReview(reviewId, globalDispatch);
-    // TODO error handling for dispatch
-    dispatch({
-      type: "FETCH_REQUEST",
-      status: req.status,
-      review: req.embeddedReview,
-      requestId: req._id,
-    });
+    await getReview(reviewId, dispatch);
   };
 
   // reviewer header
@@ -108,7 +119,9 @@ const Request = ({ globalDispatch }) => {
     setEditorHasContent(value);
   };
 
-  return (
+  return state.loading ? (
+    <Loading />
+  ) : (
     <div className={classes.request}>
       {state.review ? (
         <React.Fragment>
