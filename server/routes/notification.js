@@ -19,7 +19,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//Delete route
 router.delete("/:id", async (req, res) => {
   try {
     await deleteNotification(req.params.id);

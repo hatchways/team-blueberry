@@ -65,7 +65,6 @@ const Notifications = () => {
   const user = useContext(userContext);
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);
 
-  // Get notifications for USER from DB
   const getNotifications = async () => {
     const { data } = await axios.get(`/api/notifications/${user.id}`);
     dispatch({ type: "getNotifications", payload: data.reverse() });
