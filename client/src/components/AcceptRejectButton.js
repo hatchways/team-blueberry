@@ -13,7 +13,6 @@ const ActionButtons = ({ status, dispatch, requestId, selectedReviewer }) => {
     dispatch({
       type: "STATUS_ACCEPTED",
       status: "accepted",
-      statusChanged: true,
     });
   };
 
@@ -24,7 +23,6 @@ const ActionButtons = ({ status, dispatch, requestId, selectedReviewer }) => {
       type: "STATUS_DECLINED",
       status: "declined",
       review: null,
-      statusChanged: true,
     });
   };
 

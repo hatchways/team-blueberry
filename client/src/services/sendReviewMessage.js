@@ -1,6 +1,7 @@
 import axios from "axios";
 
-export const sendMessage = async (reviewId, message) => {
+export const sendMessage = async (reviewId, message, dispatch) => {
+  dispatch({ type: "SEND_MESSAGE" });
   try {
     const res = await axios({
       method: "POST",
@@ -11,9 +12,15 @@ export const sendMessage = async (reviewId, message) => {
       withCredentials: true,
       url: "/api/user/request/message",
     });
-    return res.data;
+    dispatch({
+      type: "SEND_MESSAGE_SUCCESS",
+      review: res.data.embeddedReview,
+      requestId: res.data.requestId,
+    });
   } catch (error) {
-    // TODO - need better error handling
-    return console.error(error.message, "Fail to post request");
+    dispatch({
+      type: "SEND_MESSAGE_ERROR",
+      error: error.message,
+    });
   }
 };

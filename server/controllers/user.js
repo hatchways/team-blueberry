@@ -195,7 +195,7 @@ module.exports = {
         messagePostDate: new Date(),
       });
       await request.save();
-      return res.status(201).send(request.toObject());
+      return res.status(201).send(request);
     } catch {
       return res.status(500).send("Internal Server Error");
     }

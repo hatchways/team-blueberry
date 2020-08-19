@@ -13,24 +13,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Message = ({ dispatch, reviewId, status, language, statusChanged }) => {
+const Message = ({ dispatch, reviewId, status, language }) => {
   const classes = useStyles();
   const [makeSubmit, setMakeSubmit] = useState(false);
   const [editorHasContent, setEditorHasContent] = useState(false);
 
   const handleSubmit = async (text) => {
     setMakeSubmit(false);
-    try {
-      const req = await sendMessage(reviewId, text.text);
-      dispatch({
-        type: "FETCH_REQUEST",
-        review: req.embeddedReview,
-        requestId: req._id,
-      });
-    } catch (err) {
-      // TODO handle error better
-      console.error(err.message);
-    }
+    await sendMessage(reviewId, text.text, dispatch);
   };
 
   const startSubmit = () => {
@@ -40,7 +30,7 @@ const Message = ({ dispatch, reviewId, status, language, statusChanged }) => {
   const handleHasContent = (value) => {
     setEditorHasContent(value);
   };
-  if (statusChanged && status === "accepted") {
+  if (status === "accepted") {
     return (
       <React.Fragment>
         <CardContent>
