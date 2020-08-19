@@ -34,6 +34,7 @@ const initState = {
   review: null,
   requestId: "",
   statusChanged: false,
+  selectedReviewer: null,
   loading: false,
   error: null,
 };
@@ -52,6 +53,7 @@ const reducer = (state, action) => {
         review: action.review,
         requestId: action.requestId,
         loading: false,
+        selectedReviewer: action.selectedReviewer,
       };
     case "FETCH_REQUEST_ERROR":
       return {
@@ -105,7 +107,6 @@ const Request = () => {
     const user = useContext(userContext);
     if (index) {
       return (
-        // TODO job title and avatar
         <CardHeader
           avatar={<Avatar>{user.name[0]}</Avatar>}
           title={user.name}
@@ -118,7 +119,6 @@ const Request = () => {
   const handleHasContent = (value) => {
     setEditorHasContent(value);
   };
-
   return state.loading ? (
     <Loading />
   ) : (
@@ -152,6 +152,7 @@ const Request = () => {
             status={state.status}
             dispatch={dispatch}
             requestId={state.requestId}
+            selectedReviewer={state.selectedReviewer}
           />
         </React.Fragment>
       ) : null}
