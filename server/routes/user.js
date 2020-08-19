@@ -21,13 +21,6 @@ router.post("/review", Auth, async (req, res) => {
       title: req.body.title,
       message: JSON.stringify(req.body.content.text),
     };
-    await createNotification({
-      // recipient: userId,
-      recipient: "5f3c45372421c5628414a45f",
-      thread: "Thread",
-      text: "Text",
-      author: "Author",
-    });
     await userController.createReview(userId, data, async (requestId) => {
       await findReviewerQueue.add("findReviewer", {
         requestId,

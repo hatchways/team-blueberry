@@ -7,26 +7,26 @@ const notificationSchema = new mongoose.Schema({
     index: true,
   },
   thread: {
-    type: String,
-    // type: mongoose.Schema.Types.ObjectId,
-    // ref: "Request",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Review",
   },
   text: {
     type: String,
   },
   author: {
-    type: String,
-    // type: mongoose.Schema.Types.ObjectId,
-    // ref: "User",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
   seen: {
     type: Boolean,
     default: false,
   },
-  created: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
+notificationSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
 
 module.exports = mongoose.model("Notification", notificationSchema);
