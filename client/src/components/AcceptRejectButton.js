@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import { sendRequest } from "../services/reviewRequest";
+import userContext from "../userContext";
 
 // accept & reject button
-const ActionButtons = ({ status, dispatch, requestId, statusChanged }) => {
+const ActionButtons = ({ status, dispatch, requestId, selectedReviewer }) => {
   // accept logic
+  const user = useContext(userContext);
   const handleAccept = () => {
     sendRequest(true, requestId);
     dispatch({
@@ -26,7 +28,7 @@ const ActionButtons = ({ status, dispatch, requestId, statusChanged }) => {
     });
   };
 
-  if (status === "pending") {
+  if (status === "pending" && user.id === selectedReviewer) {
     return (
       <CardActions>
         <Button
