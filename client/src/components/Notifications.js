@@ -66,11 +66,12 @@ const Notifications = () => {
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);
 
   // Get notifications for USER from DB
+  const getNotifications = async () => {
+    const { data } = await axios.get(`/api/notifications/${user.id}`);
+    dispatch({ type: "getNotifications", payload: data.reverse() });
+  };
+
   useEffect(() => {
-    const getNotifications = async () => {
-      const { data } = await axios.get(`/api/notifications/${user.id}`);
-      dispatch({ type: "getNotifications", payload: data.reverse() });
-    };
     getNotifications();
     socket.subscribe("notifications", handleSocketNotification);
     return () => socket.unsubscribe("notifications");
@@ -78,6 +79,8 @@ const Notifications = () => {
 
   const deleteNotification = (notificationId) => {
     axios.delete(`/api/notifications/${notificationId}`);
+    getNotifications();
+    state.notifications.length === 1 && setAnchorNotificaton(null);
   };
 
   const handleSocketNotification = (notification) => {
@@ -158,7 +161,6 @@ const Notifications = () => {
                 </Grid>
                 <Grid item xs={1}>
                   <IconButton
-                    aria-label="delete"
                     onClick={() => {
                       deleteNotification(item._id);
                     }}

@@ -24,16 +24,7 @@ const updateNotifications = async (notifications) => {
 };
 
 const deleteNotification = async (notificationId) => {
-  await Notification.findOneAndDelete(
-    { _id: notificationId },
-    (err, notification) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("Deleted notification : ", notification);
-      }
-    }
-  );
+  await Notification.findOneAndDelete({ _id: notificationId });
 };
 
 const getUsersNotifications = async (recipient) => {
