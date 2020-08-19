@@ -50,7 +50,6 @@ findReviewerQueue.process("findReviewer", async (job) => {
       }
     );
     const author = await User.findById(result.userOwner);
-    console.log(author);
     await createNotification({
       recipient: foundReviewer.id,
       text: "You have new request",
