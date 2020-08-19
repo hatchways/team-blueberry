@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles({
   menu: {
@@ -74,6 +75,10 @@ const Notifications = () => {
     socket.subscribe("notifications", handleSocketNotification);
     return () => socket.unsubscribe("notifications");
   }, []);
+
+  const deleteNotification = (notificationId) => {
+    axios.delete(`/api/notifications/${notificationId}`);
+  };
 
   const handleSocketNotification = (notification) => {
     dispatch({ type: "newNotification", payload: notification });
@@ -140,14 +145,26 @@ const Notifications = () => {
               }`}
               key={item._id}
             >
-              <Grid container className={classes.wrapper}>
-                <Grid item xs={12} className={classes.message}>
-                  <Typography variant="h6">{`${item.text} by ${item.author}`}</Typography>
+              <Grid container direction="row">
+                <Grid item container className={classes.wrapper} xs={11}>
+                  <Grid item xs={12} className={classes.message}>
+                    <Typography variant="h6">{item.text}</Typography>
+                  </Grid>
+                  <Grid item xs={12} className={classes.time}>
+                    <Typography variant="subtitle2">
+                      {calcDate(item.created)} by ${item.author}
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} className={classes.time}>
-                  <Typography variant="subtitle2">
-                    {calcDate(item.created)}
-                  </Typography>
+                <Grid item xs={1}>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => {
+                      deleteNotification(item._id);
+                    }}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
                 </Grid>
               </Grid>
             </MenuItem>
