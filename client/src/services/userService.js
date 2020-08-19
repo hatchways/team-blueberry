@@ -1,4 +1,5 @@
 import axios from "axios";
+import socket from "./sockets";
 
 export const userGet = (body) => async (dispatch) => {
   dispatch({ type: "FETCH" });
@@ -8,6 +9,7 @@ export const userGet = (body) => async (dispatch) => {
     url: "/api/user/me",
   })
     .then((res) => {
+      socket.login(res.data.id);
       dispatch({ type: "FETCH_USER_SUCCESS", user: res.data });
     })
     .catch((error) => {

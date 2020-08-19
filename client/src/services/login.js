@@ -1,5 +1,4 @@
 import axios from "axios";
-import socket from "./sockets";
 
 export default async function userLogin(login, password, dispatch) {
   try {
@@ -12,7 +11,6 @@ export default async function userLogin(login, password, dispatch) {
       withCredentials: true,
       url: "/api/login",
     });
-    socket.login(result.data.user.id);
     dispatch({
       type: "LOGIN",
       user: result.data.user,
