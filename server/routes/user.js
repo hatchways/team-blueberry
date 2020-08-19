@@ -35,6 +35,12 @@ router.post("/review", Auth, async (req, res) => {
 
 router.post("/reviews", Auth, userController.getReviews);
 
+router.post(
+  "/reviews/rate-review",
+  Auth,
+  userController.updateReviewAndUserRating
+);
+
 router.post("/request/message", Auth, userController.sendReviewMessage);
 
 router.post("/request", Auth, userController.reviewRequest);

@@ -200,4 +200,53 @@ module.exports = {
       return res.status(500).send("Internal Server Error");
     }
   },
+  async updateReviewAndUserRating(req, res) {
+    const { userId } = req.user;
+    const { reviewId, rating } = req.body;
+
+    // Updates Target Review Rating
+    try {
+      const request = await Request.findOne({ "embeddedReview._id": reviewId });
+
+      if (rating >= 1 && rating <= 5) {
+        request.embeddedReview.rating = rating;
+      } else {
+        throw new Error(
+          "Rating provided is not either in an acceptable format or is not a value within 1 to 5."
+        );
+      }
+
+      await request.save();
+      return res.status(201).send(request.toObject());
+    } catch (e) {
+      res.status(406).send(e.message);
+    }
+
+    // Updates User Rating
+    try {
+      const user = await User.findOne({ userId });
+
+      const reviews = await Review.find({ userId: userId });
+
+      if (rating >= 1 && rating <= 5) {
+        averageRating = 0;
+
+        reviews.each((item) => {
+          averageRating += item.rating;
+        });
+
+        averageRating = (averageRating + user.rating) / (reviews.length + 1);
+
+        user.rating = averageRating;
+        await user.save();
+        return res.status(201).send(user.toObject());
+      } else {
+        throw new Error(
+          "Rating provided is not either in an acceptable format or is not a value within 1 to 5."
+        );
+      }
+    } catch (e) {
+      res.status(406).send(e.message);
+    }
+  },
 };
