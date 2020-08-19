@@ -33,7 +33,6 @@ const initState = {
   status: "",
   review: null,
   requestId: "",
-  statusChanged: false,
   selectedReviewer: null,
   loading: false,
   error: null,
@@ -61,23 +60,38 @@ const reducer = (state, action) => {
         error: action.error,
         loading: true,
       };
+    case "SEND_MESSAGE":
+      return {
+        ...state,
+        loading: true,
+      };
+    case "SEND_MESSAGE_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        review: action.review,
+        requestId: action.requestId,
+      };
+    case "SEND_MESSAGE_ERROR":
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+      };
     case "STATUS_ACCEPTED":
       return {
         ...state,
         status: action.status,
-        statusChanged: action.statusChanged,
       };
     case "STATUS_DECLINED":
       return {
         ...state,
         status: action.status,
         review: action.review,
-        statusChanged: action.statusChanged,
       };
     case "RESET_CHANGED_STATUS":
       return {
         ...state,
-        statusChanged: action.statusChanged,
         requestId: action.requestId,
       };
     default:
@@ -145,7 +159,6 @@ const Request = () => {
             reviewId={reviewId}
             dispatch={dispatch}
             status={state.status}
-            statusChanged={state.statusChanged}
             language={state.review.language}
           />
           <ActionButtons
