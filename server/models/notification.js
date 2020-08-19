@@ -14,8 +14,7 @@ const notificationSchema = new mongoose.Schema({
     type: String,
   },
   author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
   },
   seen: {
     type: Boolean,

@@ -154,7 +154,7 @@ const Notifications = () => {
                   </Grid>
                   <Grid item xs={12} className={classes.time}>
                     <Typography variant="subtitle2">
-                      {calcDate(item.createdAt)} by ${item.author}
+                      {calcDate(item.createdAt)} by {item.author}
                     </Typography>
                   </Grid>
                 </Grid>
