@@ -217,16 +217,12 @@ module.exports = {
       }
 
       await request.save();
-      return res.status(201).send(request.toObject());
-    } catch (e) {
-      res.status(406).send(e.message);
-    }
 
-    // Updates User Rating
-    try {
+      // Updates User Rating
       const user = await User.findOne({ userId });
 
       const reviews = await Review.find({ userId: userId });
+      let averageRating = 0;
 
       if (rating >= 1 && rating <= 5) {
         averageRating = 0;
@@ -237,9 +233,8 @@ module.exports = {
 
         averageRating = (averageRating + user.rating) / (reviews.length + 1);
 
-        user.rating = averageRating;
-        await user.save();
-        return res.status(201).send(user.toObject());
+        await User.findByIdAndUpdate({ userId }, { rating: averageRating });
+        return res.status(201).send("Message: Success");
       } else {
         throw new Error(
           "Rating provided is not either in an acceptable format or is not a value within 1 to 5."
