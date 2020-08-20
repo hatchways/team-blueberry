@@ -227,7 +227,7 @@ module.exports = {
       if (rating >= 1 && rating <= 5) {
         averageRating = 0;
 
-        reviews.each((item) => {
+        reviews.forEach((item) => {
           averageRating += item.rating;
         });
 
