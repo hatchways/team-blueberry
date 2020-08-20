@@ -53,6 +53,7 @@ const reducer = (state, action) => {
         requestId: action.requestId,
         loading: false,
         selectedReviewer: action.selectedReviewer,
+        userOwner: action.userOwner,
       };
     case "FETCH_REQUEST_ERROR":
       return {
@@ -160,6 +161,8 @@ const Request = () => {
             dispatch={dispatch}
             status={state.status}
             language={state.review.language}
+            userOwner={state.userOwner}
+            selectedReviewer={state.selectedReviewer}
           />
           <ActionButtons
             status={state.status}
@@ -168,7 +171,9 @@ const Request = () => {
             selectedReviewer={state.selectedReviewer}
           />
         </React.Fragment>
-      ) : null}
+      ) : (
+        state.error
+      )}
     </div>
   );
 };
