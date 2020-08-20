@@ -42,6 +42,7 @@ const getReview = async (reviewId, dispatch) => {
       review: data.embeddedReview,
       requestId: data._id,
       selectedReviewer: data.selectedReviewer,
+      userOwner: data.userOwner,
     });
   } catch (e) {
     dispatch({

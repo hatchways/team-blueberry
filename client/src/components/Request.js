@@ -53,12 +53,13 @@ const reducer = (state, action) => {
         requestId: action.requestId,
         loading: false,
         selectedReviewer: action.selectedReviewer,
+        userOwner: action.userOwner,
       };
     case "FETCH_REQUEST_ERROR":
       return {
         ...state,
         error: action.error,
-        loading: true,
+        loading: false,
       };
     case "SEND_MESSAGE":
       return {
@@ -78,6 +79,11 @@ const reducer = (state, action) => {
         loading: false,
         error: action.error,
       };
+    case "STATUS_SENT":
+      return {
+        ...state,
+        laoding: true,
+      };
     case "STATUS_ACCEPTED":
       return {
         ...state,
@@ -88,6 +94,13 @@ const reducer = (state, action) => {
         ...state,
         status: action.status,
         review: action.review,
+        selectedReviewer: action.selectedReviewer,
+      };
+    case "STATUS_ERROR":
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
       };
     case "RESET_CHANGED_STATUS":
       return {
@@ -160,6 +173,8 @@ const Request = () => {
             dispatch={dispatch}
             status={state.status}
             language={state.review.language}
+            userOwner={state.userOwner}
+            selectedReviewer={state.selectedReviewer}
           />
           <ActionButtons
             status={state.status}
@@ -168,7 +183,9 @@ const Request = () => {
             selectedReviewer={state.selectedReviewer}
           />
         </React.Fragment>
-      ) : null}
+      ) : (
+        state.error
+      )}
     </div>
   );
 };
