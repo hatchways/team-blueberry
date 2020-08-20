@@ -2,6 +2,8 @@ const Queue = require("bull");
 const checkStatusQueue = require("./checkStatus");
 const { enqueueTaskTime } = require("../constants");
 const { Request } = require("../models/review-request");
+const User = require("../models/user");
+const { createNotification } = require("../controllers/notifications");
 
 // find reviewer logic
 const { findReviewer } = require("../helper/helper");
@@ -30,9 +32,13 @@ findReviewerQueue.process("findReviewer", async (job) => {
       );
       return Promise.resolve();
     }
-    await Request.findByIdAndUpdate(requestId, {
-      selectedReviewer: foundReviewer._id,
-    });
+    const result = await Request.findByIdAndUpdate(
+      requestId,
+      {
+        selectedReviewer: foundReviewer.id,
+      },
+      { new: true }
+    );
     checkStatusQueue.add(
       "checkStatus",
       {
@@ -43,6 +49,14 @@ findReviewerQueue.process("findReviewer", async (job) => {
         jobId: requestId.toString(),
       }
     );
+    const author = await User.findById(result.userOwner);
+    await createNotification({
+      recipient: foundReviewer.id,
+      text: "You have new request",
+      author: author.name,
+      thread: result.embeddedReview._id,
+    });
+
     return Promise.resolve();
   } catch (err) {
     return Promise.reject(err);

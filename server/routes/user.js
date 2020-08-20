@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const findReviewerQueue = require("../queues/findReviewer");
 const userController = require("../controllers/user");
+const { createNotification } = require("../controllers/notifications");
 
 // import Auth middleware
 const Auth = require("../middleware/auth");

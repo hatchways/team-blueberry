@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles({
   menu: {
@@ -40,7 +41,7 @@ const reducer = (state, action) => {
       item.seen = true;
       return item;
     });
-    axios.put(`/notifications/update-read`, { notifications: unread });
+    axios.put(`api/notifications/update-read`, { notifications: unread });
     return unread;
   };
 
@@ -64,16 +65,22 @@ const Notifications = () => {
   const user = useContext(userContext);
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);
 
-  //Get notifications for USER
-  // useEffect(() => {
-  //   const getNotifications = async () => {
-  //     const { data } = await axios.get(`/notifications/${user._id}`);
-  //     dispatch({ type: "getNotifications", payload: data.reverse() });
-  //   };
-  //   getNotifications();
-  //   socket.subscribe("notifications", handleSocketNotification);
-  //   return () => socket.unsubscribe("notifications");
-  // }, [user]);
+  const getNotifications = async () => {
+    const { data } = await axios.get(`/api/notifications/${user.id}`);
+    dispatch({ type: "getNotifications", payload: data.reverse() });
+  };
+
+  useEffect(() => {
+    getNotifications();
+    socket.subscribe("notifications", handleSocketNotification);
+    return () => socket.unsubscribe("notifications");
+  }, []);
+
+  const deleteNotification = (notificationId) => {
+    axios.delete(`/api/notifications/${notificationId}`);
+    getNotifications();
+    state.notifications.length === 1 && setAnchorNotificaton(null);
+  };
 
   const handleSocketNotification = (notification) => {
     dispatch({ type: "newNotification", payload: notification });
@@ -140,14 +147,25 @@ const Notifications = () => {
               }`}
               key={item._id}
             >
-              <Grid container className={classes.wrapper}>
-                <Grid item xs={12} className={classes.message}>
-                  <Typography variant="h6">{`${item.text} by ${item.author}`}</Typography>
+              <Grid container direction="row">
+                <Grid item container className={classes.wrapper} xs={11}>
+                  <Grid item xs={12} className={classes.message}>
+                    <Typography variant="h6">{item.text}</Typography>
+                  </Grid>
+                  <Grid item xs={12} className={classes.time}>
+                    <Typography variant="subtitle2">
+                      {calcDate(item.createdAt)} by {item.author}
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} className={classes.time}>
-                  <Typography variant="subtitle2">
-                    {calcDate(item.created)}
-                  </Typography>
+                <Grid item xs={1}>
+                  <IconButton
+                    onClick={() => {
+                      deleteNotification(item._id);
+                    }}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
                 </Grid>
               </Grid>
             </MenuItem>

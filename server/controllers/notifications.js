@@ -23,6 +23,10 @@ const updateNotifications = async (notifications) => {
   });
 };
 
+const deleteNotification = async (notificationId) => {
+  await Notification.findOneAndDelete({ _id: notificationId });
+};
+
 const getUsersNotifications = async (recipient) => {
   const notifications = await Notification.find({ recipient });
   return notifications;
@@ -32,4 +36,5 @@ module.exports = {
   createNotification,
   getUsersNotifications,
   updateNotifications,
+  deleteNotification,
 };

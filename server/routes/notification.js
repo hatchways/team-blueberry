@@ -6,12 +6,23 @@ const {
   createNotification,
   getUsersNotifications,
   updateNotifications,
+  deleteNotification,
 } = require("../controllers/notifications");
 
 router.get("/:id", async (req, res) => {
   try {
     const notificationData = await getUsersNotifications(req.params.id);
     res.status(200).send(notificationData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    await deleteNotification(req.params.id);
+    res.status(200).send("Deleted notification");
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error });
