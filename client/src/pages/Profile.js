@@ -66,7 +66,7 @@ const Profile = ({ state, dispatch }) => {
     if (files.length) {
       createUserAvatar(files[0].bin)(dispatch);
     }
-    if (name != user.name) {
+    if (name) {
       editUser({ name, position, company })(dispatch);
     }
     handleEdit();
