@@ -8,22 +8,13 @@ import userContext from "../userContext";
 const ActionButtons = ({ status, dispatch, requestId, selectedReviewer }) => {
   // accept logic
   const user = useContext(userContext);
-  const handleAccept = () => {
-    sendRequest(true, requestId);
-    dispatch({
-      type: "STATUS_ACCEPTED",
-      status: "accepted",
-    });
+  const handleAccept = async () => {
+    await sendRequest(true, requestId, dispatch);
   };
 
   // // decline logic
-  const handleDecline = () => {
-    sendRequest(false, requestId);
-    dispatch({
-      type: "STATUS_DECLINED",
-      status: "declined",
-      review: null,
-    });
+  const handleDecline = async () => {
+    await sendRequest(false, requestId, dispatch);
   };
 
   if (status === "pending" && user.id === selectedReviewer) {

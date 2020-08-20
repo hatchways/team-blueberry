@@ -59,7 +59,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         error: action.error,
-        loading: true,
+        loading: false,
       };
     case "SEND_MESSAGE":
       return {
@@ -79,6 +79,11 @@ const reducer = (state, action) => {
         loading: false,
         error: action.error,
       };
+    case "STATUS_SENT":
+      return {
+        ...state,
+        laoding: true,
+      };
     case "STATUS_ACCEPTED":
       return {
         ...state,
@@ -89,6 +94,13 @@ const reducer = (state, action) => {
         ...state,
         status: action.status,
         review: action.review,
+        selectedReviewer: action.selectedReviewer,
+      };
+    case "STATUS_ERROR":
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
       };
     case "RESET_CHANGED_STATUS":
       return {
