@@ -57,7 +57,7 @@ module.exports = {
   // TODO need to recheck once set up s3
   async createUserAvatar(req, res) {
     try {
-      // TODO add additional middleware to enforce proper image type
+      // TODO add loading state to let image upload
       const signedURL = await persistAvatar(req);
       const user = await User.findByIdAndUpdate(
         req.user.id,

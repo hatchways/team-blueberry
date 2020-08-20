@@ -66,10 +66,10 @@ const Profile = ({ state, dispatch }) => {
     if (files.length) {
       createUserAvatar(files[0].bin)(dispatch);
     }
-    if (name) {
+    if (name != user.name) {
       editUser({ name, position, company })(dispatch);
-      handleEdit();
     }
+    handleEdit();
   };
   const editName = (event) => setName(event.target.value);
   const editPosition = (event) => setPosition(event.target.value);

@@ -10,8 +10,6 @@ aws.config.update({
 });
 
 const persistAvatar = async (req, res) => {
-  // set s3 params
-  // ? get file name from bin ?
   const fileName = req.user.id;
   const s3 = new aws.S3();
   const s3Params = {
@@ -23,7 +21,6 @@ const persistAvatar = async (req, res) => {
     ACL: "public-read",
   };
 
-  // Persist file in S3 Bucket
   const { url, ...data } = await s3.putObject(s3Params, (err, data) => {
     if (err) {
       console.log(err);
