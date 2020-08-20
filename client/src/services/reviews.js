@@ -38,11 +38,11 @@ const getReview = async (reviewId, dispatch) => {
     const { data } = await request.postToAPI(config);
     dispatch({
       type: "FETCH_REQUEST_SUCCESS",
-      status: data.status,
-      review: data.embeddedReview,
-      requestId: data._id,
-      selectedReviewer: data.selectedReviewer,
-      userOwner: data.userOwner,
+      status: data.request.status,
+      review: data.request.embeddedReview,
+      requestId: data.request._id,
+      selectedReviewer: data.reviewer,
+      userOwner: data.request.userOwner,
     });
   } catch (e) {
     dispatch({

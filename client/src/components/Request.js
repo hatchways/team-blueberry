@@ -4,10 +4,13 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
 import { useParams } from "react-router-dom";
-import { Divider } from "@material-ui/core";
+import { Divider, Typography } from "@material-ui/core";
 import userContext from "../userContext";
 import ActionButtons from "./AcceptRejectButton";
 import Message from "./Message";
+
+//import utilities
+import dateToYMD from "../utils/dateUtil";
 
 // API call
 import { getReview } from "../services/reviews";
@@ -26,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   message: {
     overflow: "scroll",
     maxHeight: "15em",
+  },
+  headerDate: {
+    paddingTop: 0,
   },
 }));
 
@@ -130,14 +136,29 @@ const Request = () => {
   };
 
   // reviewer header
-  const ReviewerHeader = ({ index }) => {
+  const ReviewerHeader = ({ index, selectedReviewer, messageOwner }) => {
     const user = useContext(userContext);
+    console.log(selectedReviewer);
     if (index) {
       return (
         <CardHeader
-          avatar={<Avatar>{user.name[0]}</Avatar>}
-          title={user.name}
-          subheader={user.job || `${user.name}'s Job`}
+          avatar={
+            <Avatar>
+              {messageOwner === user.id
+                ? user.name[0]
+                : selectedReviewer.name[0]}
+            </Avatar>
+          }
+          title={messageOwner === user.id ? user.name : selectedReviewer.name}
+          subheader={
+            messageOwner === user.id && user.position
+              ? user.position
+              : messageOwner === user.id
+              ? `Not specified`
+              : selectedReviewer.position
+              ? selectedReviewer.position
+              : `Not specified`
+          }
         />
       );
     } else return <></>;
@@ -153,10 +174,21 @@ const Request = () => {
       {state.review ? (
         <React.Fragment>
           <CardHeader title={state.review.title} />
+          <CardContent className={classes.headerDate}>
+            <Typography component="h5">
+              {dateToYMD(state.review.reviewCreatedDate)}
+            </Typography>
+          </CardContent>
           <Divider />
           {state.review.messages.map((item, index) => (
             <React.Fragment key={item._id}>
-              <ReviewerHeader index={index} />
+              <ReviewerHeader
+                index={index}
+                messageOwner={item.messagePostedBy}
+                selectedReviewer={
+                  state.selectedReviewer ? state.selectedReviewer : null
+                }
+              />
               <CardContent className={classes.message}>
                 {/* TODO edit readOnly style */}
                 <PrismEditor
