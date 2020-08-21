@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import userContext from "../userContext";
 import AvatarImage from "./Profile/img/avatar.png";
 import ProfileStats from "./Profile/ProfileStats";
+import digitalize from "../utils/digitalize";
 // import ProfileProjects from "./Profile/ProfileProjects";
 import Background from "../elements/Background";
 import ProfileSkills from "./Profile/ProfileSkills";
@@ -74,6 +75,10 @@ const Profile = ({ state, dispatch }) => {
   const editName = (event) => setName(event.target.value);
   const editPosition = (event) => setPosition(event.target.value);
   const editCompany = (event) => setCompany(event.target.value);
+  let years = user.languages.reduce((summ, item) => {
+    return summ + digitalize(item.level);
+  }, 0);
+
   return (
     <Background solid>
       <Box flexWrap="nowrap" width={"100%"}>
@@ -126,7 +131,7 @@ const Profile = ({ state, dispatch }) => {
                   <Grid item>
                     <Box mt={10} />
                   </Grid>
-                  <ProfileStats years="5" reviews="10" rating="4.7" />
+                  <ProfileStats years={years} reviews="10" rating="4.7" />
                   <Grid item>
                     <Box mt={10} />
                   </Grid>
