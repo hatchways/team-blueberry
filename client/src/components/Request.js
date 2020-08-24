@@ -95,6 +95,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         status: action.status,
+        selectedReviewer: action.selectedReviewer,
       };
     case "STATUS_DECLINED":
       return {

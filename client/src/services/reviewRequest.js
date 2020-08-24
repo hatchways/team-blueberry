@@ -3,7 +3,7 @@ import axios from "axios";
 export const sendRequest = async (isAccepted, requestId, dispatch) => {
   try {
     dispatch({ type: "STATUS_SENT" });
-    await axios({
+    const { data } = await axios({
       method: "POST",
       data: {
         isAccepted,
@@ -16,6 +16,7 @@ export const sendRequest = async (isAccepted, requestId, dispatch) => {
       dispatch({
         type: "STATUS_ACCEPTED",
         status: "accepted",
+        selectedReviewer: data,
       });
     else
       dispatch({
