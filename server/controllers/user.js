@@ -5,6 +5,7 @@ const findReviewerQueue = require("../queues/findReviewer");
 const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
 const persistAvatar = require("../middleware/s3Handler");
+const toDigit = require("../helper/digitalize");
 
 const handleError = (e, res) =>
   e.status && e.message
@@ -57,7 +58,7 @@ module.exports = {
   // TODO need to recheck once set up s3
   async createUserAvatar(req, res) {
     try {
-      // TODO add additional middleware to enforce proper image type
+      // TODO add loading state to let image upload
       const signedURL = await persistAvatar(req);
       const user = await User.findByIdAndUpdate(
         req.user.id,
@@ -75,7 +76,9 @@ module.exports = {
   async updateUserLanguages(req, res) {
     try {
       const userId = req.user.id,
-        skillList = req.body.languages;
+        skillList = req.body.languages.map((item) => {
+          return { language: item.language, level: toDigit(item.level) };
+        });
       const user = await User.findOneAndUpdate(
         { _id: userId },
         { languages: [...skillList] },

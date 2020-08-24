@@ -68,12 +68,16 @@ const Profile = ({ state, dispatch }) => {
     }
     if (name) {
       editUser({ name, position, company })(dispatch);
-      handleEdit();
     }
+    handleEdit();
   };
   const editName = (event) => setName(event.target.value);
   const editPosition = (event) => setPosition(event.target.value);
   const editCompany = (event) => setCompany(event.target.value);
+  let years = user.languages.reduce((summ, item) => {
+    return summ + item.level;
+  }, 0);
+
   return (
     <Background solid>
       <Box flexWrap="nowrap" width={"100%"}>
@@ -126,7 +130,7 @@ const Profile = ({ state, dispatch }) => {
                   <Grid item>
                     <Box mt={10} />
                   </Grid>
-                  <ProfileStats years="5" reviews="10" rating="4.7" />
+                  <ProfileStats years={years} reviews="10" rating="4.7" />
                   <Grid item>
                     <Box mt={10} />
                   </Grid>

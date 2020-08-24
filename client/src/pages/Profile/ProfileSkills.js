@@ -10,6 +10,7 @@ import PhpImg from "./img/php.svg";
 import GoImg from "./img/golang.svg";
 import CsharpImg from "./img/csharp.svg";
 import { makeStyles } from "@material-ui/core/styles";
+import unDigit from "../../utils/digitalize";
 
 const useStyles = makeStyles((theme) => ({
   logo: {
@@ -59,7 +60,7 @@ export default function ProfileSkills({ skills }) {
                 ></img>
               </Box>
               <Box fontSize="h6.fontSize" textAlign="center">
-                {item.level}
+                {unDigit(item.level)}
               </Box>
             </Grid>
           );
