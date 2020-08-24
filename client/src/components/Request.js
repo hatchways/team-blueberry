@@ -58,6 +58,7 @@ const reducer = (state, action) => {
         requestId: action.requestId,
         loading: false,
         selectedReviewer: action.selectedReviewer,
+        selectedReviewerId: action.selectedReviewerId,
         userOwner: action.userOwner,
         reviewOwner: action.reviewOwner,
       };
@@ -218,13 +219,13 @@ const Request = () => {
             status={state.status}
             language={state.review.language}
             userOwner={state.userOwner}
-            selectedReviewer={state.selectedReviewer}
+            selectedReviewer={state.selectedReviewerId}
           />
           <ActionButtons
             status={state.status}
             dispatch={dispatch}
             requestId={state.requestId}
-            selectedReviewer={state.selectedReviewer}
+            selectedReviewer={state.selectedReviewerId}
           />
         </React.Fragment>
       ) : (

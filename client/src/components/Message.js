@@ -41,7 +41,7 @@ const Message = ({
   if (
     status === "accepted" &&
     (user.id === userOwner ||
-      (selectedReviewer && user.id === selectedReviewer.id))
+      (selectedReviewer && user.id === selectedReviewer))
   ) {
     return (
       <React.Fragment>
