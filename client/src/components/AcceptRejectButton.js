@@ -16,8 +16,11 @@ const ActionButtons = ({ status, dispatch, requestId, selectedReviewer }) => {
   const handleDecline = async () => {
     await sendRequest(false, requestId, dispatch);
   };
-
-  if (status === "pending" && user.id === selectedReviewer) {
+  if (
+    status === "pending" &&
+    selectedReviewer &&
+    user.id === selectedReviewer
+  ) {
     return (
       <CardActions>
         <Button

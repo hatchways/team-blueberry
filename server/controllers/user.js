@@ -127,13 +127,26 @@ module.exports = {
   // gets all relevant reviews
   async getReviews(req, res) {
     try {
-      // ? what is this ?
       if (req.body.singleTarget) {
         const reviewId = req.body.reviewId;
         const request = await Request.findOne({
           "embeddedReview._id": reviewId,
         });
-        res.status(201).json(request.toObject());
+        // get userOwner and extract data
+        const reviewOwner = await User.findById(request.userOwner).select(
+          "_id name position avatar"
+        );
+        const foundReviewer = request.embeddedReview.messages.find(
+          (message) =>
+            JSON.stringify(message.messagePostedBy) ===
+            JSON.stringify(request.selectedReviewer)
+        );
+        if (foundReviewer) {
+          const reviewer = await User.findOne({
+            _id: foundReviewer.messagePostedBy,
+          }).select("_id name position avatar");
+          res.status(201).json({ request, reviewer, reviewOwner });
+        } else res.status(201).json({ request, reviewOwner, reviewer: {} });
       } else {
         const userId = req.user.id;
         const reviews = await Review.find({ userId: userId });
@@ -185,7 +198,6 @@ module.exports = {
     }
   },
   async sendReviewMessage(req, res) {
-    const { userId } = req.user;
     const { reviewId, message } = req.body;
     try {
       const request = await Request.findOne({
@@ -194,7 +206,7 @@ module.exports = {
 
       request.embeddedReview.messages.push({
         message: message,
-        messagePostedBy: userId,
+        messagePostedBy: req.user.id,
         messagePostDate: new Date(),
       });
       await request.save();

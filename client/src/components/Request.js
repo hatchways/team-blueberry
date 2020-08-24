@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useReducer, useContext } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
 import { useParams } from "react-router-dom";
-import { Divider } from "@material-ui/core";
-import userContext from "../userContext";
+import { Divider, Typography } from "@material-ui/core";
 import ActionButtons from "./AcceptRejectButton";
 import Message from "./Message";
+
+//import utilities
+import dateToYMD from "../utils/dateUtil";
 
 // API call
 import { getReview } from "../services/reviews";
@@ -26,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
   message: {
     overflow: "scroll",
     maxHeight: "15em",
+  },
+  headerDate: {
+    paddingTop: 0,
   },
 }));
 
@@ -53,7 +58,9 @@ const reducer = (state, action) => {
         requestId: action.requestId,
         loading: false,
         selectedReviewer: action.selectedReviewer,
+        selectedReviewerId: action.selectedReviewerId,
         userOwner: action.userOwner,
+        reviewOwner: action.reviewOwner,
       };
     case "FETCH_REQUEST_ERROR":
       return {
@@ -130,14 +137,40 @@ const Request = () => {
   };
 
   // reviewer header
-  const ReviewerHeader = ({ index }) => {
-    const user = useContext(userContext);
+  const ReviewerHeader = ({
+    index,
+    selectedReviewer,
+    messageOwner,
+    reviewOwner,
+  }) => {
     if (index) {
       return (
         <CardHeader
-          avatar={<Avatar>{user.name[0]}</Avatar>}
-          title={user.name}
-          subheader={user.job || `${user.name}'s Job`}
+          avatar={
+            <Avatar>
+              {messageOwner === reviewOwner._id && reviewOwner.avatar
+                ? reviewOwner.avatar
+                : messageOwner === reviewOwner._id
+                ? reviewOwner.name[0]
+                : selectedReviewer.avatar
+                ? selectedReviewer.avatar
+                : selectedReviewer.name[0]}
+            </Avatar>
+          }
+          title={
+            messageOwner === reviewOwner._id
+              ? reviewOwner.name
+              : selectedReviewer.name
+          }
+          subheader={
+            messageOwner === reviewOwner._id && reviewOwner.position
+              ? reviewOwner.position
+              : messageOwner === reviewOwner._id
+              ? `Not specified`
+              : selectedReviewer.position
+              ? selectedReviewer.position
+              : `Not specified`
+          }
         />
       );
     } else return <></>;
@@ -153,10 +186,22 @@ const Request = () => {
       {state.review ? (
         <React.Fragment>
           <CardHeader title={state.review.title} />
+          <CardContent className={classes.headerDate}>
+            <Typography component="h5">
+              {dateToYMD(state.review.reviewCreatedDate)}
+            </Typography>
+          </CardContent>
           <Divider />
           {state.review.messages.map((item, index) => (
             <React.Fragment key={item._id}>
-              <ReviewerHeader index={index} />
+              <ReviewerHeader
+                index={index}
+                messageOwner={item.messagePostedBy}
+                selectedReviewer={
+                  state.selectedReviewer ? state.selectedReviewer : null
+                }
+                reviewOwner={state.reviewOwner}
+              />
               <CardContent className={classes.message}>
                 {/* TODO edit readOnly style */}
                 <PrismEditor
@@ -174,13 +219,13 @@ const Request = () => {
             status={state.status}
             language={state.review.language}
             userOwner={state.userOwner}
-            selectedReviewer={state.selectedReviewer}
+            selectedReviewer={state.selectedReviewerId}
           />
           <ActionButtons
             status={state.status}
             dispatch={dispatch}
             requestId={state.requestId}
-            selectedReviewer={state.selectedReviewer}
+            selectedReviewer={state.selectedReviewerId}
           />
         </React.Fragment>
       ) : (
