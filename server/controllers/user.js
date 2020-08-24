@@ -182,19 +182,23 @@ module.exports = {
         await Request.findByIdAndUpdate(requestId, {
           status: "accepted",
         });
-        res.status(201).send("Reviewer Accepted");
+        const reviewer = await User.findOne({
+          _id: userId,
+        }).select("_id name position avatar");
+        return res.status(201).send(reviewer);
       } else {
         await Request.findByIdAndUpdate(requestId, {
           $push: { reviewersDeclined: userId },
+          status: "pending",
         });
         findReviewerQueue.add("findReviewer", {
           requestId,
           isDelayed: false,
         });
-        res.status(201).send("Reviewer Rejected");
+        return res.status(201).send("Reviewer Rejected");
       }
     } catch {
-      res.status(500).send("Internal Server Error");
+      return res.status(500).send("Internal Server Error");
     }
   },
   async sendReviewMessage(req, res) {
