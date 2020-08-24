@@ -82,7 +82,7 @@ function App() {
                   <Reviews state={state} dispatch={dispatch} />
                 </ProtectedRoute>
                 <ProtectedRoute condition={() => state.user.id} path="/balance">
-                  <Balance state={state} dispatch={dispatch} />
+                  <Balance globalState={state} dispatch={dispatch} />
                 </ProtectedRoute>
                 <ProtectedRoute
                   condition={() => state.user.id && state.cart?.length}

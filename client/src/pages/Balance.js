@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 import userContext from "../userContext";
 import Background from "../elements/Background";
@@ -30,9 +30,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BalancePage = ({ state, dispatch }) => {
+const BalancePage = ({ globalState, dispatch }) => {
   const classes = useStyles();
-  const priorTopUp = state?.cart?.find(
+
+  const priorTopUp = globalState?.cart?.find(
     (item) => item.name === reviewCredits.name
   )?.quantity;
   const user = useContext(userContext);
@@ -52,6 +53,7 @@ const BalancePage = ({ state, dispatch }) => {
       type: "ADD_ITEM_TO_CART",
       item: { ...reviewCredits, quantity: topUp },
     });
+
     history.push("/checkout");
   };
 
@@ -99,7 +101,7 @@ const BalancePage = ({ state, dispatch }) => {
                     id="decr"
                     variant="contained"
                     size="small"
-                    disabled={state.loading || !topUp}
+                    disabled={globalState.loading || !topUp}
                     aria-label="Subtract Credit"
                   >
                     <RemoveIcon />
@@ -120,7 +122,7 @@ const BalancePage = ({ state, dispatch }) => {
                     id="incr"
                     variant="contained"
                     size="small"
-                    disabled={state.loading}
+                    disabled={globalState.loading}
                     aria-label="Add Credit"
                   >
                     <AddIcon />
@@ -131,7 +133,7 @@ const BalancePage = ({ state, dispatch }) => {
             <SubmitButton
               variant="contained"
               color="primary"
-              disabled={state.loading}
+              disabled={globalState.loading}
               onClick={handleCheckout}
             >
               Checkout
