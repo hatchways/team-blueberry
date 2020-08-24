@@ -1,11 +1,11 @@
 export default function digitalize(item) {
   switch (item) {
-    case "Beginner":
-      return 1;
-    case "Advanced":
-      return 2;
-    case "Expert":
-      return 3;
+    case 1:
+      return "Beginner";
+    case 2:
+      return "Advanced";
+    case 3:
+      return "Expert";
     default:
       return 0;
   }

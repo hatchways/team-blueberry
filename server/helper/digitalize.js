@@ -1,4 +1,4 @@
-export default function digitalize(item) {
+function toDigit(item) {
   switch (item) {
     case "Beginner":
       return 1;
@@ -10,3 +10,5 @@ export default function digitalize(item) {
       return 0;
   }
 }
+
+module.exports = toDigit;
