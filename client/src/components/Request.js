@@ -147,8 +147,12 @@ const Request = () => {
         <CardHeader
           avatar={
             <Avatar>
-              {messageOwner === reviewOwner._id
+              {messageOwner === reviewOwner._id && reviewOwner.avatar
+                ? reviewOwner.avatar
+                : messageOwner === reviewOwner._id
                 ? reviewOwner.name[0]
+                : selectedReviewer.avatar
+                ? selectedReviewer.avatar
                 : selectedReviewer.name[0]}
             </Avatar>
           }
