@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useReducer, useContext } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
 import { useParams } from "react-router-dom";
 import { Divider, Typography } from "@material-ui/core";
-import userContext from "../userContext";
 import ActionButtons from "./AcceptRejectButton";
 import Message from "./Message";
 
@@ -60,6 +59,7 @@ const reducer = (state, action) => {
         loading: false,
         selectedReviewer: action.selectedReviewer,
         userOwner: action.userOwner,
+        reviewOwner: action.reviewOwner,
       };
     case "FETCH_REQUEST_ERROR":
       return {
@@ -136,24 +136,31 @@ const Request = () => {
   };
 
   // reviewer header
-  const ReviewerHeader = ({ index, selectedReviewer, messageOwner }) => {
-    const user = useContext(userContext);
-    console.log(selectedReviewer);
+  const ReviewerHeader = ({
+    index,
+    selectedReviewer,
+    messageOwner,
+    reviewOwner,
+  }) => {
     if (index) {
       return (
         <CardHeader
           avatar={
             <Avatar>
-              {messageOwner === user.id
-                ? user.name[0]
+              {messageOwner === reviewOwner._id
+                ? reviewOwner.name[0]
                 : selectedReviewer.name[0]}
             </Avatar>
           }
-          title={messageOwner === user.id ? user.name : selectedReviewer.name}
+          title={
+            messageOwner === reviewOwner._id
+              ? reviewOwner.name
+              : selectedReviewer.name
+          }
           subheader={
-            messageOwner === user.id && user.position
-              ? user.position
-              : messageOwner === user.id
+            messageOwner === reviewOwner._id && reviewOwner.position
+              ? reviewOwner.position
+              : messageOwner === reviewOwner._id
               ? `Not specified`
               : selectedReviewer.position
               ? selectedReviewer.position
@@ -188,6 +195,7 @@ const Request = () => {
                 selectedReviewer={
                   state.selectedReviewer ? state.selectedReviewer : null
                 }
+                reviewOwner={state.reviewOwner}
               />
               <CardContent className={classes.message}>
                 {/* TODO edit readOnly style */}

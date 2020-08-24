@@ -129,17 +129,21 @@ module.exports = {
         const request = await Request.findOne({
           "embeddedReview._id": reviewId,
         });
+        // get userOwner and extract data
+        const reviewOwner = await User.findById(request.userOwner).select(
+          "_id name position avatar"
+        );
         const foundReviewer = request.embeddedReview.messages.find(
           (message) =>
             JSON.stringify(message.messagePostedBy) ===
             JSON.stringify(request.selectedReviewer)
         );
         if (foundReviewer) {
-          const reviewer = await (
-            await User.findOne({ _id: foundReviewer.messagePostedBy })
-          ).toObject();
-          res.status(201).json({ request, reviewer });
-        } else res.status(201).json({ request, reviewer: {} });
+          const reviewer = await User.findOne({
+            _id: foundReviewer.messagePostedBy,
+          }).select("_id name position avatar");
+          res.status(201).json({ request, reviewer, reviewOwner });
+        } else res.status(201).json({ request, reviewOwner, reviewer: {} });
       } else {
         const userId = req.user.id;
         const reviews = await Review.find({ userId: userId });
