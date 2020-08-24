@@ -101,8 +101,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         status: action.status,
-        review: action.review,
-        selectedReviewer: action.selectedReviewer,
+        selectedReviewerId: action.selectedReviewerId,
       };
     case "STATUS_ERROR":
       return {

@@ -22,8 +22,7 @@ export const sendRequest = async (isAccepted, requestId, dispatch) => {
       dispatch({
         type: "STATUS_DECLINED",
         status: "declined",
-        review: null,
-        selectedReviewer: null,
+        selectedReviewerId: null,
       });
   } catch (error) {
     dispatch({ type: "STATUS_ERROR", error: error.message });
