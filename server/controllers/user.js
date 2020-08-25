@@ -98,9 +98,11 @@ module.exports = {
     const messagePostedBy = userId;
     const messagePostDate = new Date();
     const user = await User.findById(userId);
-    const userLanguageLevel = user.languages[language]
-      ? user.languages[language].level
-      : 0;
+    const languageIndex = user.languages.findIndex(
+      (item) => item.language === language
+    );
+    const userLanguageLevel =
+      languageIndex >= 0 ? user.languages[languageIndex].level : 0;
     const newReview = new Review({
       title,
       language,
