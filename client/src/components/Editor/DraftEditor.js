@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
   editor: {
     border: "1px solid #ddd",
     borderRadius: "4px",
+    minHeight: "320px",
   },
   controls: {
     borderBottom: "1px solid #ddd",

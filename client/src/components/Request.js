@@ -29,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
   message: {
     overflow: "scroll",
     maxHeight: "15em",
+    // padding: "10px",
+    // margin: "20px",
+    // border: "1px solid gray",
+    // borderRadius: "5px",
   },
   headerDate: {
     paddingTop: 0,
