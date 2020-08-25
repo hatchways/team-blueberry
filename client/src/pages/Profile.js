@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import userContext from "../userContext";
 import AvatarImage from "./Profile/img/avatar.png";
 import ProfileStats from "./Profile/ProfileStats";
@@ -56,9 +57,12 @@ const Profile = ({ state, dispatch }) => {
   const [position, setPosition] = useState(user.position);
   const [company, setCompany] = useState(user.company);
   const [files, setFiles] = useState([]);
+  let { userId } = useParams();
   const handleEdit = () => {
     setEdit(!edit);
   };
+
+  // useEffect fetch user id data if user id is present
 
   const submit = (event) => {
     event.preventDefault();
