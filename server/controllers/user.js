@@ -6,6 +6,7 @@ const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
 const persistAvatar = require("../middleware/s3Handler");
 const toDigit = require("../helper/digitalize");
+const io = require("../sockets");
 
 const handleError = (e, res) =>
   e.status && e.message
@@ -197,6 +198,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   async sendReviewMessage(req, res) {
     const { reviewId, message } = req.body;
     try {
@@ -209,12 +211,14 @@ module.exports = {
         messagePostedBy: req.user.id,
         messagePostDate: new Date(),
       });
-      await request.save();
+      const newMessage = await request.save();
+      io.sendMessage(reviewId, newMessage);
       return res.status(201).send(request);
     } catch {
       return res.status(500).send("Internal Server Error");
     }
   },
+
   async updateReviewAndUserRating(req, res) {
     const { userId } = req.user;
     const { reviewId, rating } = req.body;

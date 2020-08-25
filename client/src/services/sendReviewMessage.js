@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const sendMessage = async (reviewId, message, dispatch) => {
-  dispatch({ type: "SEND_MESSAGE" });
+  // dispatch({ type: "SEND_MESSAGE" });
   try {
     const res = await axios({
       method: "POST",

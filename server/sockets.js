@@ -22,13 +22,21 @@ class SocketConfig {
   sendNotification(room, data) {
     this.io.to(room).emit("notification", data);
   }
+
+  sendMessage(room, data) {
+    this.io.to(room).emit("message", data);
+  }
 }
 
 const socketListeners = (socket) => {
-  console.log("User connected via sockets");
+  console.log("Waiting for socket connections from client ...");
   socket.on("login", (userId) => {
-    console.log("User joined room " + userId);
+    console.log("User subscribed to notifications " + userId);
     socket.join(userId);
+  });
+  socket.on("thread", (reviewId) => {
+    console.log("User subscribed to thread " + reviewId);
+    socket.join(reviewId);
   });
 };
 

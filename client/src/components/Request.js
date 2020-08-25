@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { Divider, Typography } from "@material-ui/core";
 import ActionButtons from "./AcceptRejectButton";
 import Message from "./Message";
+import socket from "../services/sockets";
 
 //import utilities
 import dateToYMD from "../utils/dateUtil";
@@ -114,6 +115,11 @@ const reducer = (state, action) => {
         ...state,
         requestId: action.requestId,
       };
+    case "NEW_MESSAGE":
+      return {
+        ...state,
+        review: action.payload.embeddedReview,
+      };
     default:
       throw new Error("Something went wrong");
   }
@@ -128,8 +134,19 @@ const Request = () => {
 
   useEffect(() => {
     handleInitState();
+    socket.messages(reviewId); //Subscribe for messages
     // TODO remove request when unmounting
   }, [reviewId]);
+
+  const handleSocketMessage = (message) => {
+    // console.log("STATE: ", state);
+    dispatch({ type: "NEW_MESSAGE", payload: message });
+  };
+
+  useEffect(() => {
+    socket.subscribe("messages", handleSocketMessage);
+    return () => socket.unsubscribe("messages");
+  }, []);
 
   // set initial state at first render
   const handleInitState = async () => {
