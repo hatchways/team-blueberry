@@ -33,10 +33,12 @@ class SocketManager {
     this.socket.on("notification", (data) => {
       console.log("notification received");
       this.subscribers.forEach((subscriber) => {
-        try {
-          subscriber.function(data);
-        } catch (err) {
-          console.log(err);
+        if (subscriber.name === "notifications") {
+          try {
+            subscriber.function(data);
+          } catch (err) {
+            console.log(err);
+          }
         }
       });
     });

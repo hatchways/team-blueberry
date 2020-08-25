@@ -158,9 +158,7 @@ const Notifications = () => {
                     <Link
                       to={`/reviews/${item.thread}`}
                       className={classes.link}
-                      onClick={() => {
-                        setAnchorNotificaton(null);
-                      }}
+                      onClick={handleClose}
                     >
                       <Typography variant="h6">{item.text}</Typography>
                     </Link>
