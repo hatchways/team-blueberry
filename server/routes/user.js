@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const findReviewerQueue = require("../queues/findReviewer");
 const userController = require("../controllers/user");
-const { createNotification } = require("../controllers/notifications");
 
 // import Auth middleware
 const Auth = require("../middleware/auth");
@@ -10,6 +9,8 @@ const Auth = require("../middleware/auth");
 router.get("/me", Auth, userController.getMe);
 router.post("/me/avatar", Auth, userController.createUserAvatar);
 router.put("/me", Auth, userController.updateUser);
+
+router.post("/profile", Auth, userController.fetchProfile);
 
 router.put("/languages", Auth, userController.updateUserLanguages);
 
