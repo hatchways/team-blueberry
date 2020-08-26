@@ -5,7 +5,7 @@
   font-family: Roboto, "Georgia", serif;
   font-size: 14px;
   padding: 10px;
-  height: 250px;
+  max-height: 250px;
   overflow: auto;
 }
 
