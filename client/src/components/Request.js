@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
 import { useParams } from "react-router-dom";
 import { Divider, Typography } from "@material-ui/core";
 import ActionButtons from "./AcceptRejectButton";
 import Message from "./Message";
 import socket from "../services/sockets";
+import RatingDialog from "../components/RatingDialog";
+import userContext from "../userContext";
 
 //import utilities
 import dateToYMD from "../utils/dateUtil";
@@ -36,6 +39,8 @@ const useStyles = makeStyles((theme) => ({
   },
   headerDate: {
     paddingTop: 0,
+    display: "flex",
+    justifyContent: "space-between",
   },
 }));
 
@@ -135,6 +140,8 @@ const Request = () => {
   const [state, dispatch] = useReducer(reducer, initState);
   const [editorHasContent, setEditorHasContent] = useState(false);
   const { reviewId } = useParams();
+  const user = useContext(userContext);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     handleInitState();
@@ -200,10 +207,20 @@ const Request = () => {
   const handleHasContent = (value) => {
     setEditorHasContent(value);
   };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+  };
+
   return state.loading ? (
     <Loading />
   ) : (
     <div className={classes.request}>
+      <RatingDialog open={open} handleClose={handleClose} />
       {state.review ? (
         <React.Fragment>
           <CardHeader title={state.review.title} />
@@ -211,6 +228,17 @@ const Request = () => {
             <Typography component="h5">
               {dateToYMD(state.review.reviewCreatedDate)}
             </Typography>
+            {/* Only show if user.id is the same as review id */}
+            {state.userOwner === user.id ? (
+              <Button
+                size="small"
+                color="secondary"
+                variant="contained"
+                onClick={handleOpen}
+              >
+                Complete Review
+              </Button>
+            ) : null}
           </CardContent>
           <Divider />
           {state.review.messages.map((item, index) => (
