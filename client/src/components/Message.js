@@ -46,7 +46,7 @@ const Message = ({
     return (
       <React.Fragment>
         <CardContent>
-          <Typography>Write message</Typography>
+          <Typography>Write message: </Typography>
           <PrismEditor
             language={language}
             makeSubmit={makeSubmit}

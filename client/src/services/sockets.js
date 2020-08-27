@@ -5,9 +5,13 @@ class SocketManager {
     this.socket = io("/"); //constantly getting proxy error
     this.subscribers = [];
   }
-
+  //subscribe to notifications
   login(userId) {
     this.socket.emit("login", userId);
+  }
+  //subscribe to messages in a thread
+  messages(reviewId) {
+    this.socket.emit("thread", reviewId);
   }
 
   subscribe(component, func) {
@@ -29,10 +33,24 @@ class SocketManager {
     this.socket.on("notification", (data) => {
       console.log("notification received");
       this.subscribers.forEach((subscriber) => {
-        try {
-          subscriber.function(data);
-        } catch (err) {
-          console.log(err);
+        if (subscriber.name === "notifications") {
+          try {
+            subscriber.function(data);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      });
+    });
+    this.socket.on("message", (data) => {
+      console.log("message received");
+      this.subscribers.forEach((subscriber) => {
+        if (subscriber.name === "messages") {
+          try {
+            subscriber.function(data);
+          } catch (err) {
+            console.log(err);
+          }
         }
       });
     });

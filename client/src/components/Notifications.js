@@ -3,6 +3,7 @@ import socket from "../services/sockets";
 import axios from "axios";
 import userContext from "../userContext";
 import calcDate from "../utils/calcDate";
+import { Link } from "react-router-dom";
 //MaterialUI imports
 import { makeStyles } from "@material-ui/core";
 import Badge from "@material-ui/core/Badge";
@@ -28,6 +29,9 @@ const useStyles = makeStyles({
   },
   time: {
     color: "gray",
+  },
+  link: {
+    textDecoration: "none",
   },
 });
 
@@ -83,6 +87,7 @@ const Notifications = () => {
   };
 
   const handleSocketNotification = (notification) => {
+    console.log("New notification:", notification);
     dispatch({ type: "newNotification", payload: notification });
   };
 
@@ -150,7 +155,13 @@ const Notifications = () => {
               <Grid container direction="row">
                 <Grid item container className={classes.wrapper} xs={11}>
                   <Grid item xs={12} className={classes.message}>
-                    <Typography variant="h6">{item.text}</Typography>
+                    <Link
+                      to={`/reviews/${item.thread}`}
+                      className={classes.link}
+                      onClick={handleClose}
+                    >
+                      <Typography variant="h6">{item.text}</Typography>
+                    </Link>
                   </Grid>
                   <Grid item xs={12} className={classes.time}>
                     <Typography variant="subtitle2">
