@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { Divider, Typography } from "@material-ui/core";
 import ActionButtons from "./AcceptRejectButton";
 import Message from "./Message";
@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
   },
   headerDate: {
     paddingTop: 0,
+  },
+  header: {
+    cursor: "pointer",
   },
 }));
 
@@ -135,6 +138,7 @@ const Request = () => {
   const [state, dispatch] = useReducer(reducer, initState);
   const [editorHasContent, setEditorHasContent] = useState(false);
   const { reviewId } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     handleInitState();
@@ -164,6 +168,12 @@ const Request = () => {
     messageOwner,
     reviewOwner,
   }) => {
+    const handleProfile = () => {
+      if (messageOwner === reviewOwner._id)
+        history.push(`/profile/${reviewOwner._id}`);
+      else history.push(`/profile/${selectedReviewer._id}`);
+    };
+
     if (index) {
       return (
         <CardHeader
@@ -192,6 +202,8 @@ const Request = () => {
               ? selectedReviewer.position
               : `Not specified`
           }
+          onClick={handleProfile}
+          className={classes.header}
         />
       );
     } else return <></>;
