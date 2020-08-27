@@ -4,7 +4,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { Divider, Typography } from "@material-ui/core";
 import ActionButtons from "./AcceptRejectButton";
 import Message from "./Message";
@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 0,
     display: "flex",
     justifyContent: "space-between",
+  },
+  header: {
+    cursor: "pointer",
   },
 }));
 
@@ -142,10 +145,13 @@ const Request = () => {
   const { reviewId } = useParams();
   const user = useContext(userContext);
   const [open, setOpen] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
-    handleInitState();
-    socket.messages(reviewId); //Subscribe for messages
+    if (reviewId) {
+      handleInitState();
+      socket.messages(reviewId); //Subscribe for messages
+    }
     // TODO remove request when unmounting
   }, [reviewId]);
 
@@ -171,6 +177,12 @@ const Request = () => {
     messageOwner,
     reviewOwner,
   }) => {
+    const handleProfile = () => {
+      if (messageOwner === reviewOwner._id)
+        history.push(`/profile/${reviewOwner._id}`);
+      else history.push(`/profile/${selectedReviewer._id}`);
+    };
+
     if (index) {
       return (
         <CardHeader
@@ -199,6 +211,8 @@ const Request = () => {
               ? selectedReviewer.position
               : `Not specified`
           }
+          onClick={handleProfile}
+          className={classes.header}
         />
       );
     } else return <></>;

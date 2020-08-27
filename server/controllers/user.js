@@ -269,4 +269,14 @@ module.exports = {
       res.status(406).send(e.message);
     }
   },
+  async fetchProfile(req, res) {
+    const { userId } = req.body;
+    try {
+      const foundUser = await User.findById(userId);
+      // simplify foundUser object to only fetch necessary data
+      return res.status(200).send(foundUser.toObject());
+    } catch (error) {
+      return res.status(500).send("Internal Server Error");
+    }
+  },
 };

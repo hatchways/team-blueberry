@@ -178,7 +178,10 @@ const Navbar = ({ state, dispatch }) => {
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
               >
                 <MenuItem onClick={() => handleCloseMenu()}>
-                  <Link to="/profile" className={classes.menuLink}>
+                  <Link
+                    to={`/profile/${state.user.id}`}
+                    className={classes.menuLink}
+                  >
                     Profile
                   </Link>
                 </MenuItem>

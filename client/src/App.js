@@ -66,19 +66,25 @@ function App() {
                     state.user.id && state.user.languages.length === 0
                   }
                   path="/onboard"
-                  redirect="/profile"
+                  redirect={`/profile/${state.user.id}`}
                 >
                   <OnBoard state={state} dispatch={dispatch} />
                 </ProtectedRoute>
 
                 {/* <Route path="/" exact component={SignUp} /> */}
                 <Route exact path="/">
-                  <Redirect to="/profile" />
+                  <Redirect to={`/profile/${state.user.id}`} />
                 </Route>
-                <ProtectedRoute condition={() => state.user.id} path="/profile">
+                <ProtectedRoute
+                  condition={() => state.user.id}
+                  path="/profile/:userId"
+                >
                   <Profile state={state} dispatch={dispatch} />
                 </ProtectedRoute>
-                <ProtectedRoute condition={() => state.user.id} path="/reviews">
+                <ProtectedRoute
+                  condition={() => state.user.id}
+                  path="/reviews/:reviewId?"
+                >
                   <Reviews state={state} dispatch={dispatch} />
                 </ProtectedRoute>
                 <ProtectedRoute condition={() => state.user.id} path="/balance">

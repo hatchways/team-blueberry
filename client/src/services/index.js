@@ -97,7 +97,7 @@ export const editUser = (body) => async (dispatch) => {
   dispatch({ type: "FETCH" });
   try {
     const { data } = await axios({
-      url: `api/user/me`,
+      url: `/api/user/me`,
       method: "PUT",
       data: body,
       headers: { "Content-Type": "application/json" },
@@ -121,4 +121,26 @@ export const createCode = (body) => async (dispatch) => {
   } catch (e) {
     dispatch({ type: "CREATE_CODE_ERROR", error: { ...e } });
   }
+};
+
+export const fetchProfile = async (userId) => {
+  // TODO clean up here, might be better to use GET
+  // set loading state
+  //   dispatch({ type: "FETCH" });
+  try {
+    const result = await axios({
+      method: "POST",
+      url: "/api/user/profile",
+      data: { userId },
+    });
+    // throw if server returns an error message
+    if (result.error) throw result.error;
+
+    // dispatch({ type: "FETCH_USER_SUCCESS" });
+    return result.data;
+  } catch (e) {
+    // dispatch({ type: "FETCH_USER_ERROR", error: { ...e } });
+    console.error(e);
+  }
+  // on exception
 };

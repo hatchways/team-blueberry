@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import userContext from "../userContext";
 import AvatarImage from "./Profile/img/avatar.png";
 import ProfileStats from "./Profile/ProfileStats";
@@ -15,7 +16,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import { createUserAvatar, editUser } from "../services";
+import { createUserAvatar, editUser, fetchProfile } from "../services";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,13 +52,36 @@ const useStyles = makeStyles((theme) => ({
 const Profile = ({ state, dispatch }) => {
   const { ...user } = useContext(userContext);
   const classes = useStyles();
+  // TODO Consider using reducer to simplify this
   const [edit, setEdit] = useState(false);
-  const [name, setName] = useState(user.name);
-  const [position, setPosition] = useState(user.position);
-  const [company, setCompany] = useState(user.company);
+  const [name, setName] = useState(null);
+  const [position, setPosition] = useState(null);
+  const [company, setCompany] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+  const [languages, setLanguage] = useState([]);
   const [files, setFiles] = useState([]);
+  let { userId } = useParams();
   const handleEdit = () => {
     setEdit(!edit);
+  };
+
+  useEffect(() => {
+    handleInitState(userId);
+  }, [userId]);
+
+  const handleInitState = async (userId) => {
+    if (userId !== user.id) {
+      const userProfile = await fetchProfile(userId);
+      setName(userProfile.name);
+      setPosition(userProfile.position);
+      setCompany(userProfile.company);
+      setAvatar(userProfile.avatar);
+      setLanguage(userProfile.languages);
+    } else {
+      setName(user.name);
+      setPosition(user.position);
+      setCompany(user.company);
+    }
   };
 
   const submit = (event) => {
@@ -74,9 +98,17 @@ const Profile = ({ state, dispatch }) => {
   const editName = (event) => setName(event.target.value);
   const editPosition = (event) => setPosition(event.target.value);
   const editCompany = (event) => setCompany(event.target.value);
-  let years = user.languages.reduce((summ, item) => {
-    return summ + item.level;
-  }, 0);
+  let years = null;
+  // TODO check if user or viewed profile
+  if (userId === user.id) {
+    years = user.languages.reduce((summ, item) => {
+      return summ + item.level;
+    }, 0);
+  } else {
+    years = languages.reduce((summ, item) => {
+      return summ + item.level;
+    }, 0);
+  }
 
   return (
     <Background solid>
@@ -84,11 +116,21 @@ const Profile = ({ state, dispatch }) => {
         <Grid container direction="column">
           <Grid item>
             <Container component="main" maxWidth="md" className={classes.root}>
-              <Avatar
-                alt="Profile image"
-                src={user.avatar || AvatarImage}
-                className={classes.avatar}
-              />
+              {/* TODO check if it is user or viewed profile */}
+              {userId === user.id ? (
+                <Avatar
+                  alt="Profile image"
+                  src={user.avatar || AvatarImage}
+                  className={classes.avatar}
+                />
+              ) : (
+                <Avatar
+                  alt="Profile image"
+                  src={avatar || AvatarImage}
+                  className={classes.avatar}
+                />
+              )}
+
               <Paper className={classes.paper}>
                 <Grid
                   item
@@ -108,25 +150,27 @@ const Profile = ({ state, dispatch }) => {
                     files={files}
                     setFiles={setFiles}
                   />
-                  <Grid item xs={1}>
-                    {!edit && (
-                      <EditIcon
-                        fontSize="large"
-                        className={classes.iconEdit}
-                        onClick={handleEdit}
-                      />
-                    )}
-                    {edit && (
-                      <Button
-                        variant="contained"
-                        size="small"
-                        className={classes.button}
-                        onClick={submit}
-                      >
-                        Save
-                      </Button>
-                    )}
-                  </Grid>
+                  {userId === user.id ? (
+                    <Grid item xs={1}>
+                      {!edit && (
+                        <EditIcon
+                          fontSize="large"
+                          className={classes.iconEdit}
+                          onClick={handleEdit}
+                        />
+                      )}
+                      {edit && (
+                        <Button
+                          variant="contained"
+                          size="small"
+                          className={classes.button}
+                          onClick={submit}
+                        >
+                          Save
+                        </Button>
+                      )}
+                    </Grid>
+                  ) : null}
                   <Grid item>
                     <Box mt={10} />
                   </Grid>
@@ -134,7 +178,9 @@ const Profile = ({ state, dispatch }) => {
                   <Grid item>
                     <Box mt={10} />
                   </Grid>
-                  <ProfileSkills skills={user.languages} />
+                  <ProfileSkills
+                    skills={userId === user.id ? user.languages : languages}
+                  />
                   {/* <ProfileProjects projects={projects} /> */}
                 </Grid>
               </Paper>
