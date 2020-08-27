@@ -1,10 +1,5 @@
 import React, { useEffect, useState, useReducer } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  useRouteMatch,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 // Import reviews service
 import { getReviews } from "../services/reviews";
 
@@ -129,79 +124,73 @@ const Reviews = () => {
       </div>
     );
   };
-
-  let { path } = useRouteMatch();
   return (
     <Grid container direction="column">
-      <Router>
-        <Grid item container>
-          <Grid item xs={4} className={classes.reviewsHeight}>
-            {state.loading ? (
-              <Loading />
-            ) : (
-              <React.Fragment>
-                <div className={classes.reviewTitles}>
-                  <Typography
-                    color="textPrimary"
-                    component="h1"
-                    variant="h4"
-                    display="inline"
-                    className={classes.reviewMainTitle}
-                  >
-                    Reviews
-                  </Typography>
-                  <Typography
-                    component="h1"
-                    variant="h5"
-                    display="inline"
-                    color="secondary"
-                  >
-                    ({state.reviews ? state.reviews.length : 0})
-                  </Typography>
-                </div>
-                {Array.isArray(state.reviews)
-                  ? state.reviews.map((item, idx) => {
-                      return (
-                        <Link
-                          to={`${path}/${item._id}`}
-                          key={idx}
-                          className={classes.link}
+      <Grid item container>
+        <Grid item xs={4} className={classes.reviewsHeight}>
+          {state.loading ? (
+            <Loading />
+          ) : (
+            <React.Fragment>
+              <div className={classes.reviewTitles}>
+                <Typography
+                  color="textPrimary"
+                  component="h1"
+                  variant="h4"
+                  display="inline"
+                  className={classes.reviewMainTitle}
+                >
+                  Reviews
+                </Typography>
+                <Typography
+                  component="h1"
+                  variant="h5"
+                  display="inline"
+                  color="secondary"
+                >
+                  ({state.reviews ? state.reviews.length : 0})
+                </Typography>
+              </div>
+              {Array.isArray(state.reviews)
+                ? state.reviews.map((item, idx) => {
+                    return (
+                      <Link
+                        to={`/reviews/${item._id}`}
+                        key={idx}
+                        className={classes.link}
+                      >
+                        <Paper
+                          variant="outlined"
+                          className={
+                            selectedIndex == idx
+                              ? [
+                                  classes.selectedReviewPaper,
+                                  classes.reviews,
+                                ].join(" ")
+                              : classes.reviews
+                          }
+                          onClick={(event) => handleListItemClick(event, idx)}
                         >
-                          <Paper
-                            variant="outlined"
-                            className={
-                              selectedIndex == idx
-                                ? [
-                                    classes.selectedReviewPaper,
-                                    classes.reviews,
-                                  ].join(" ")
-                                : classes.reviews
-                            }
-                            onClick={(event) => handleListItemClick(event, idx)}
-                          >
-                            <ReviewCard
-                              index={idx}
-                              reviewId={item._id}
-                              reviewTitle={item.title}
-                              date={item.reviewCreatedDate}
-                            ></ReviewCard>
-                          </Paper>
-                        </Link>
-                      );
-                    })
-                  : state.error}
-              </React.Fragment>
-            )}
-          </Grid>
-          <Grid item xs={8} className={classes.background}>
-            <Paper className={classes.reviewPanel}>
-              <Route path={`${path}/:reviewId`}>
-                <Request />
-              </Route>
-            </Paper>
-          </Grid>
+                          <ReviewCard
+                            index={idx}
+                            reviewId={item._id}
+                            reviewTitle={item.title}
+                            date={item.reviewCreatedDate}
+                          ></ReviewCard>
+                        </Paper>
+                      </Link>
+                    );
+                  })
+                : state.error}
+            </React.Fragment>
+          )}
         </Grid>
-      </Router>
+        <Grid item xs={8} className={classes.background}>
+          <Paper className={classes.reviewPanel}>
+            <Request />
+          </Paper>
+        </Grid>
+      </Grid>
     </Grid>
   );
 };
