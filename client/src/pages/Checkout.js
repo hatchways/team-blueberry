@@ -1,10 +1,9 @@
-import React, { useEffect, useContext, useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import { usePageLoaded } from "../hooks";
 import Background from "../elements/Background";
 import StyledPaper from "../elements/StyledPaper";
 import PageHeader from "../elements/PageHeader";
-import SubmitButton from "../elements/SubmitButton";
 import {
   Container,
   CssBaseline,
