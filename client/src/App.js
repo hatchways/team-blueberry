@@ -81,7 +81,10 @@ function App() {
                 >
                   <Profile state={state} dispatch={dispatch} />
                 </ProtectedRoute>
-                <ProtectedRoute condition={() => state.user.id} path="/reviews">
+                <ProtectedRoute
+                  condition={() => state.user.id}
+                  path="/reviews/:reviewId?"
+                >
                   <Reviews state={state} dispatch={dispatch} />
                 </ProtectedRoute>
                 <ProtectedRoute condition={() => state.user.id} path="/balance">

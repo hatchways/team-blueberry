@@ -141,8 +141,10 @@ const Request = () => {
   const history = useHistory();
 
   useEffect(() => {
-    handleInitState();
-    socket.messages(reviewId); //Subscribe for messages
+    if (reviewId) {
+      handleInitState();
+      socket.messages(reviewId); //Subscribe for messages
+    }
     // TODO remove request when unmounting
   }, [reviewId]);
 
