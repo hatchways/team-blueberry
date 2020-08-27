@@ -1,6 +1,8 @@
 require("dotenv").config();
-const PUBLIC_STRIPE_API_KEY = process.env.PUBLIC_STRIPE_API_KEY;
-const SECRET_STRIPE_API_KEY = process.env.SECRET_STRIPE_API_KEY;
+const PUBLIC_STRIPE_API_KEY =
+  "pk_test_51HKme9FHPZChBCCstiGNkJ98SlG0jSuo1xPJpe895mp5eLkAiBEvjL4CgkjVw9wazUPUODqNWpL0iFXPGV3CyFxS00ah2pylSn";
+const SECRET_STRIPE_API_KEY =
+  "sk_test_51HKme9FHPZChBCCsc3xFLFmzx4libtEpk6iTchjdAiedrURRegxACq8pbQNmb5VdGmMVTzKuFL91FwRpelf7K2k800Vwf6AJ9j";
 const stripe = require("stripe")(SECRET_STRIPE_API_KEY);
 const Payment = require("../models/payment");
 const User = require("../models/user");
@@ -13,6 +15,7 @@ const handleError = (e, res) =>
 
 const getKey = (req, res, next) => {
   try {
+    console.log("GET STRIPE KEY");
     return res.status(200).send({ STRIPE_API_KEY: PUBLIC_STRIPE_API_KEY });
   } catch (e) {
     return handleError(e, res);
@@ -20,6 +23,7 @@ const getKey = (req, res, next) => {
 };
 
 const prepareCart = (cart) => {
+  console.log("PREPARE CART");
   const verificationError = new Error({ status: 400, message: "Invalid cart" });
   const badItem = cart.find(
     ({ name, unitCost }) =>
@@ -36,6 +40,7 @@ const prepareCart = (cart) => {
 };
 
 const createPayment = async (req, res, next) => {
+  console.log("CREATE PAYMENT");
   try {
     const { cart } = req.body;
     const total = prepareCart(cart);
