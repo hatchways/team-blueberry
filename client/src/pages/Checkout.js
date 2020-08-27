@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import loadingContext from "../loadingContext";
+// import loadingContext from "../loadingContext";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutForm from "./Checkout/checkoutForm";
@@ -97,20 +97,5 @@ const Checkout = ({ state, dispatch }) => {
     </Background>
   );
 };
-
-// const CARD_OPTIONS = {
-//   iconStyle: "solid",
-//   style: {
-//     base: {
-//       fontWeight: 500,
-//       fontSize: "16px",
-//       fontSmoothing: "antialiased",
-//     },
-//     invalid: {
-//       iconColor: "#ffc7ee",
-//       color: "#ffc7ee",
-//     },
-//   },
-// };
 
 export default Checkout;

@@ -53,36 +53,24 @@ const CheckoutForm = ({ price, onSuccessfulCheckout }) => {
     }
   };
 
-  const iframeStyles = {
-    base: {
-      color: "#000",
-      fontSize: "16px",
-      iconColor: "#fff",
-      "::placeholder": {
-        color: "#87bbfd",
+  const CARD_OPTIONS = {
+    iconStyle: "solid",
+    style: {
+      base: {
+        fontWeight: 500,
+        fontSize: "16px",
+        fontSmoothing: "antialiased",
+      },
+      invalid: {
+        iconColor: "#ffc7ee",
+        color: "#ffc7ee",
       },
     },
-    invalid: {
-      iconColor: "#FFC7EE",
-      color: "#FFC7EE",
-    },
-    complete: {
-      iconColor: "#cbf4c9",
-    },
-  };
-
-  const cardElementOpts = {
-    iconStyle: "solid",
-    style: iframeStyles,
-    hidePostalCode: true,
   };
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <CardElement
-        options={cardElementOpts}
-        onChange={handleCardDetailsChange}
-      />
+      <CardElement options={CARD_OPTIONS} onChange={handleCardDetailsChange} />
       {checkoutError && <p>{checkoutError}</p>}
       <SubmitButton disabled={isProcessing || !stripe}>
         {isProcessing ? "Processing..." : `Pay $${price}`}
