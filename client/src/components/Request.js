@@ -130,7 +130,10 @@ const reducer = (state, action) => {
     case "NEW_MESSAGE":
       return {
         ...state,
-        review: action.payload.embeddedReview,
+        review: action.review,
+        selectedReviewer: action.selectedReviewer,
+        reviewOwner: action.reviewOwner,
+        status: action.status,
       };
     default:
       throw new Error("Something went wrong");
@@ -157,7 +160,14 @@ const Request = () => {
 
   const handleSocketMessage = (message) => {
     // console.log("STATE: ", state);
-    dispatch({ type: "NEW_MESSAGE", payload: message });
+    const { newMessage, reviewOwner, selectedReviewer } = message;
+    dispatch({
+      type: "NEW_MESSAGE",
+      review: newMessage.embeddedReview,
+      selectedReviewer: selectedReviewer,
+      reviewOwner: reviewOwner,
+      status: newMessage.status,
+    });
   };
 
   useEffect(() => {
