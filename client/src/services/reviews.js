@@ -1,5 +1,6 @@
 //Request handler import
 const request = require("../utils/requestHandlers");
+const axios = require("axios");
 
 const getReviews = async (dispatch) => {
   dispatch({ type: "FETCH_REVIEWS" });
@@ -54,4 +55,21 @@ const getReview = async (reviewId, dispatch) => {
   }
 };
 
-module.exports = { getReviews, getReview };
+const completeReview = async (reviewId, rating, dispatch) => {
+  dispatch({ type: "COMPLETE_REVIEW" });
+  try {
+    const { status } = await axios({
+      method: "POST",
+      url: "/api/user//reviews/rate-review",
+      data: {
+        reviewId,
+        rating,
+      },
+    });
+    dispatch({ type: "COMPLETE_REVIEW_SUCCESS", status: status });
+  } catch (error) {
+    dispatch({ type: "COMPLETE_REVIEW_ERROR", error: error.message });
+  }
+};
+
+module.exports = { getReviews, getReview, completeReview };

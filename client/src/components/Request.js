@@ -132,6 +132,23 @@ const reducer = (state, action) => {
         ...state,
         review: action.payload.embeddedReview,
       };
+    case "COMPLETE_REVIEW":
+      return {
+        ...state,
+        loading: true,
+      };
+    case "COMPLETE_REVIEW_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        status: action.status,
+      };
+    case "COMPLETE_REVIEW_ERROR":
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+      };
     default:
       throw new Error("Something went wrong");
   }
@@ -234,7 +251,12 @@ const Request = () => {
     <Loading />
   ) : (
     <div className={classes.request}>
-      <RatingDialog open={open} handleClose={handleClose} />
+      <RatingDialog
+        open={open}
+        handleClose={handleClose}
+        reviewId={reviewId}
+        dispatch={dispatch}
+      />
       {state.review ? (
         <React.Fragment>
           <CardHeader title={state.review.title} />
@@ -242,7 +264,6 @@ const Request = () => {
             <Typography component="h5">
               {dateToYMD(state.review.reviewCreatedDate)}
             </Typography>
-            {/* Only show if user.id is the same as review id */}
             {state.userOwner === user.id ? (
               <Button
                 size="small"

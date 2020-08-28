@@ -67,6 +67,7 @@ const Profile = ({ state, dispatch }) => {
   const [company, setCompany] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const [languages, setLanguage] = useState([]);
+  const [rating, setRating] = useState(null);
   const [files, setFiles] = useState([]);
   let { userId } = useParams();
   const handleEdit = () => {
@@ -85,10 +86,12 @@ const Profile = ({ state, dispatch }) => {
       setCompany(userProfile.company);
       setAvatar(userProfile.avatar);
       setLanguage(userProfile.languages);
+      setRating(userProfile.rating);
     } else {
       setName(user.name);
       setPosition(user.position);
       setCompany(user.company);
+      setRating(user.rating);
     }
   };
 
@@ -180,7 +183,7 @@ const Profile = ({ state, dispatch }) => {
                     </Grid>
                   ) : null}
                   <Divider className={classes.divider} light />
-                  <ProfileStats years={years} reviews="10" rating="4.7" />
+                  <ProfileStats years={years} reviews="10" rating={rating} />
                   <Divider className={classes.divider} light />
                   <ProfileSkills
                     skills={userId === user.id ? user.languages : languages}
