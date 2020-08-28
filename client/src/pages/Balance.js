@@ -37,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
     padding: theme.spacing(1),
   },
+  divider: {
+    marginRight: theme.spacing(-5),
+    marginLeft: theme.spacing(-5),
+    alignSelf: "stretch",
+  },
   button: {
     maxWidth: "30px",
     maxHeight: "30px",
@@ -91,8 +96,7 @@ const BalancePage = ({ state, dispatch }) => {
           >
             {user.balance} credits
           </Typography>
-          <Divider style={{ alignSelf: "stretch" }} variant="fullWidth" />
-          {/* Page Form */}
+          <Divider className={classes.divider} light />
           <form className={classes.form}>
             <Typography
               className={classes.formTypography}
@@ -101,7 +105,7 @@ const BalancePage = ({ state, dispatch }) => {
             >
               Top Up:
             </Typography>
-            <Typography component="h3" variant="h6">
+            <Typography variant="body1">
               ${reviewCredits.unitCost} per Credit
             </Typography>
             <Grid
