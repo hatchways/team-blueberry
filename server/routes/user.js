@@ -11,6 +11,7 @@ router.post("/me/avatar", Auth, userController.createUserAvatar);
 router.put("/me", Auth, userController.updateUser);
 
 router.post("/profile", Auth, userController.fetchProfile);
+router.post("/profile/reviews", Auth, userController.fetchProfileReviews);
 
 router.put("/languages", Auth, userController.updateUserLanguages);
 

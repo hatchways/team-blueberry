@@ -358,4 +358,13 @@ module.exports = {
       return res.status(500).send("Internal Server Error");
     }
   },
+  async fetchProfileReviews(req, res) {
+    const { userId } = req.body;
+    try {
+      const foundReviews = await Request.find({ userOwner: userId });
+      return res.status(200).send({ reviewsCount: foundReviews.length });
+    } catch (error) {
+      return res.status(500).send("Internal Server Error");
+    }
+  },
 };
