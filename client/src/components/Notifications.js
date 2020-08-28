@@ -13,7 +13,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
-import DeleteIcon from "@material-ui/icons/Delete";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles({
   menu: {
@@ -175,7 +175,7 @@ const Notifications = () => {
                       deleteNotification(item._id);
                     }}
                   >
-                    <DeleteIcon fontSize="small" />
+                    <CloseIcon fontSize="small" />
                   </IconButton>
                 </Grid>
               </Grid>

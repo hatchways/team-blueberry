@@ -7,6 +7,7 @@ const requestHandler = require("../mongoose-handlers/request");
 const persistAvatar = require("../middleware/s3Handler");
 const toDigit = require("../helper/digitalize");
 const io = require("../sockets");
+const { createNotification } = require("../controllers/notifications");
 
 const handleError = (e, res) =>
   e.status && e.message
@@ -198,12 +199,20 @@ module.exports = {
       const job = await checkStatusQueue.getJob(requestId.toString());
       job.remove();
       if (isAccepted) {
-        await Request.findByIdAndUpdate(requestId, {
+        const requestDoc = await Request.findByIdAndUpdate(requestId, {
           status: "accepted",
         });
         const reviewer = await User.findOne({
           _id: userId,
         }).select("_id name position avatar");
+
+        await createNotification({
+          recipient: requestDoc.userOwner,
+          text: `${reviewer.name} accepted to review "${requestDoc.embeddedReview.title}"`,
+          author: reviewer.name,
+          thread: requestDoc.embeddedReview._id,
+        });
+
         return res.status(201).send(reviewer);
       } else {
         await Request.findByIdAndUpdate(requestId, {
@@ -241,6 +250,19 @@ module.exports = {
         request.selectedReviewer
       ).select("_id avatar name position");
       const messageData = { newMessage, reviewOwner, selectedReviewer };
+
+      const notificationRecipient =
+        req.user.id === selectedReviewer.id
+          ? request.userOwner
+          : selectedReviewer.id;
+      const author = await User.findById(req.user.id).select("name");
+      await createNotification({
+        recipient: notificationRecipient,
+        text: `${author.name} left a message in "${request.embeddedReview.title}"`,
+        author: author.name,
+        thread: reviewId,
+      });
+
       io.sendMessage(reviewId, messageData);
       return res.status(201).send(request);
     } catch {
