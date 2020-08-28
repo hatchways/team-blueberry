@@ -11,6 +11,8 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 // component imports
 import Request from "../components/Request";
@@ -19,6 +21,9 @@ import Request from "../components/Request";
 import Loading from "../elements/Loading";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
   // do we need this?
   card: {
     minWidth: "100%",
@@ -40,6 +45,13 @@ const useStyles = makeStyles((theme) => ({
   },
   selectedReviewPaper: {
     border: `solid ${theme.palette.primary.main} 1px`,
+  },
+  selectedTab: {
+    backgroundColor: "gray",
+    padding: theme.spacing(6),
+  },
+  unselectedTab: {
+    padding: theme.spacing(6),
   },
   reviewPanel: {
     margin: theme.spacing(6),
@@ -70,6 +82,7 @@ const reducer = (state, action) => {
         ...state,
         loading: false,
         reviews: action.reviews,
+        requests: action.requests,
       };
     case "FETCH_REVIEWS_ERROR":
       return {
@@ -86,6 +99,11 @@ const Reviews = () => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initState);
   const [selectedIndex, setSelectedIndex] = useState(false);
+  const [selectedTab, setSelectedTab] = useState({
+    reviews: true,
+    requests: false,
+  });
+  const [value, setValue] = React.useState(0);
 
   useEffect(() => {
     fetchData();
@@ -95,8 +113,52 @@ const Reviews = () => {
     await getReviews(dispatch);
   };
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    const updatedTab = { ...selectedTab };
+
+    if (newValue == 0) {
+      updatedTab.reviews = true;
+      updatedTab.requests = false;
+    } else {
+      updatedTab.reviews = false;
+      updatedTab.requests = true;
+    }
+    setSelectedTab(updatedTab);
+  };
+
   const handleListItemClick = (event, index, props) => {
     setSelectedIndex(index);
+  };
+
+  const renderItems = (target) => {
+    const tabName = target.reviews ? "reviews" : "requests";
+    if (Array.isArray(state[tabName])) {
+      return state[tabName].map((item, idx) => {
+        return (
+          <Link to={`/reviews/${item._id}`} key={idx} className={classes.link}>
+            <Paper
+              variant="outlined"
+              className={
+                selectedIndex == idx
+                  ? [classes.selectedReviewPaper, classes.reviews].join(" ")
+                  : classes.reviews
+              }
+              onClick={(event) => handleListItemClick(event, idx)}
+            >
+              <ReviewCard
+                index={idx}
+                reviewId={item._id}
+                reviewTitle={item.title}
+                date={item.reviewCreatedDate}
+              ></ReviewCard>
+            </Paper>
+          </Link>
+        );
+      });
+    } else {
+      return state.error;
+    }
   };
 
   const ReviewCard = (props) => {
@@ -124,6 +186,7 @@ const Reviews = () => {
       </div>
     );
   };
+
   return (
     <Grid container direction="column">
       <Grid item container>
@@ -132,56 +195,27 @@ const Reviews = () => {
             <Loading />
           ) : (
             <React.Fragment>
-              <div className={classes.reviewTitles}>
-                <Typography
-                  color="textPrimary"
-                  component="h1"
-                  variant="h4"
-                  display="inline"
-                  className={classes.reviewMainTitle}
+              <Paper className={classes.root}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  centered
                 >
-                  Reviews
-                </Typography>
-                <Typography
-                  component="h1"
-                  variant="h5"
-                  display="inline"
-                  color="secondary"
-                >
-                  ({state.reviews ? state.reviews.length : 0})
-                </Typography>
-              </div>
-              {Array.isArray(state.reviews)
-                ? state.reviews.map((item, idx) => {
-                    return (
-                      <Link
-                        to={`/reviews/${item._id}`}
-                        key={idx}
-                        className={classes.link}
-                      >
-                        <Paper
-                          variant="outlined"
-                          className={
-                            selectedIndex == idx
-                              ? [
-                                  classes.selectedReviewPaper,
-                                  classes.reviews,
-                                ].join(" ")
-                              : classes.reviews
-                          }
-                          onClick={(event) => handleListItemClick(event, idx)}
-                        >
-                          <ReviewCard
-                            index={idx}
-                            reviewId={item._id}
-                            reviewTitle={item.title}
-                            date={item.reviewCreatedDate}
-                          ></ReviewCard>
-                        </Paper>
-                      </Link>
-                    );
-                  })
-                : state.error}
+                  <Tab
+                    label={`Reviews(${
+                      state.reviews ? state.reviews.length : 0
+                    })`}
+                  />
+                  <Tab
+                    label={`Requests(${
+                      state.requests ? state.requests.length : 0
+                    })`}
+                  />
+                </Tabs>
+              </Paper>
+              {renderItems(selectedTab)}
             </React.Fragment>
           )}
         </Grid>

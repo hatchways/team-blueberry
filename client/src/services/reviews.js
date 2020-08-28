@@ -11,9 +11,11 @@ const getReviews = async (dispatch) => {
   };
   try {
     const { data } = await request.postToAPI(config);
+
     dispatch({
       type: "FETCH_REVIEWS_SUCCESS",
       reviews: data.reviews,
+      requests: data.embeddedReviewArray,
     });
   } catch (e) {
     dispatch({
