@@ -234,7 +234,14 @@ module.exports = {
         messagePostDate: new Date(),
       });
       const newMessage = await request.save();
-      io.sendMessage(reviewId, newMessage);
+      const reviewOwner = await User.findById(request.userOwner).select(
+        "_id avatar name position"
+      );
+      const selectedReviewer = await User.findById(
+        request.selectedReviewer
+      ).select("_id avatar name position");
+      const messageData = { newMessage, reviewOwner, selectedReviewer };
+      io.sendMessage(reviewId, messageData);
       return res.status(201).send(request);
     } catch {
       return res.status(500).send("Internal Server Error");
