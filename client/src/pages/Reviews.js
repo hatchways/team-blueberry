@@ -254,8 +254,7 @@ const Reviews = () => {
                     display="inline"
                     color="secondary"
                   >
-                    {/* Change this to be requests.length */}(
-                    {state.reviews ? state.reviews.length : 0})
+                    ({state.requests ? state.requests.length : 0})
                   </Typography>
                 </div>
               </div>
