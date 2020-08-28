@@ -71,7 +71,7 @@ const CheckoutForm = ({ price, onSuccessfulCheckout }) => {
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <Grid container justify="center">
+      <Grid container direction="column">
         <Grid item>
           <CardElement
             options={CARD_OPTIONS}
@@ -79,7 +79,7 @@ const CheckoutForm = ({ price, onSuccessfulCheckout }) => {
           />
           {checkoutError && <p>{checkoutError}</p>}
         </Grid>
-        <Grid item>
+        <Grid item container justify="center">
           <SubmitButton disabled={isProcessing || !stripe}>
             {isProcessing ? "Processing..." : `Pay $${price}`}
           </SubmitButton>
