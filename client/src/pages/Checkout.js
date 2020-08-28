@@ -1,12 +1,9 @@
-import React, { useEffect, useContext, useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import { usePageLoaded } from "../hooks";
-
 import Background from "../elements/Background";
 import StyledPaper from "../elements/StyledPaper";
 import PageHeader from "../elements/PageHeader";
-import SubmitButton from "../elements/SubmitButton";
-
 import {
   Container,
   CssBaseline,
@@ -18,19 +15,15 @@ import {
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  CardElement,
-  Elements,
-  Stripe,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
+// import loadingContext from "../loadingContext";
+import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import CheckoutForm from "./Checkout/checkoutForm";
 
-import { createPaymentIntent, confirmPaymentIntent } from "../services";
-import loadingContext from "../loadingContext";
-const STRIPE_API_KEY =
-  "pk_test_51H9aiQHBjJBD671jjlNd2YSaGTgUaRtAfrSOlF1271z4ftGZwKSP2UVI0XWHuQqzA5NAY7pv5FvuQj1LT47nokHG00DZWM1eoW";
+const PUBLISHABLE_KEY =
+  "pk_test_51HKme9FHPZChBCCstiGNkJ98SlG0jSuo1xPJpe895mp5eLkAiBEvjL4CgkjVw9wazUPUODqNWpL0iFXPGV3CyFxS00ah2pylSn";
+
+const stripePromise = loadStripe(PUBLISHABLE_KEY);
 
 const useStyles = makeStyles((theme) => ({
   total: {
@@ -70,10 +63,11 @@ const showCart = (cart) => {
   );
 };
 
-const stripePromise = loadStripe(STRIPE_API_KEY);
 const Checkout = ({ state, dispatch }) => {
   const classes = useStyles();
+  const history = useHistory();
   usePageLoaded(dispatch);
+  const price = state.cart[0].unitCost * state.cart[0].quantity;
   return (
     <Background solid>
       <Container component="main" maxWidth="sm">
@@ -91,10 +85,9 @@ const Checkout = ({ state, dispatch }) => {
           </Typography>
           <Container className={classes.stripeForm}>
             <Elements stripe={stripePromise}>
-              <StripeForm
-                cart={state.cart}
-                secret={state.secret}
-                dispatch={dispatch}
+              <CheckoutForm
+                price={price}
+                onSuccessfulCheckout={() => history.push("/")}
               />
             </Elements>
           </Container>
@@ -104,76 +97,4 @@ const Checkout = ({ state, dispatch }) => {
   );
 };
 
-const CARD_OPTIONS = {
-  iconStyle: "solid",
-  style: {
-    base: {
-      fontWeight: 500,
-      fontSize: "16px",
-      fontSmoothing: "antialiased",
-    },
-    invalid: {
-      iconColor: "#ffc7ee",
-      color: "#ffc7ee",
-    },
-  },
-};
-
-const StripeForm = ({ cart, secret, dispatch }) => {
-  const history = useHistory();
-  const loading = useContext(loadingContext);
-  const stripe = useStripe(STRIPE_API_KEY);
-  const elements = useElements();
-  const [paymentMethod, setPaymentMethod] = useState();
-
-  const handleConfirm = async (paymentMethod) => {
-    try {
-      const { paymentIntent } = await stripe.confirmCardPayment(
-        secret.clientSecret,
-        {
-          payment_method: {
-            card: elements.getElement(CardElement),
-          },
-        }
-      );
-      await confirmPaymentIntent(paymentIntent.id)(dispatch);
-      history.push("/profile");
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    if (paymentMethod) handleConfirm(paymentMethod);
-  }, [paymentMethod]);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      console.log(
-        "Stripe.js has not loaded yet. Make sure to disable form submission until Stripe.js has loaded."
-      );
-      return;
-    }
-
-    await createPaymentIntent({ cart })(dispatch);
-    const cardElement = elements.getElement(CardElement);
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-    });
-    if (error) {
-      return dispatch({ type: "CREATE_PAYMENT_INTENT_ERROR", error });
-    }
-    setPaymentMethod(paymentMethod);
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <CardElement options={CARD_OPTIONS} />
-      <SubmitButton disabled={!stripe || loading}>Pay</SubmitButton>
-    </form>
-  );
-};
 export default Checkout;

@@ -45,7 +45,7 @@ const reducer = (state, action) => {
       item.seen = true;
       return item;
     });
-    axios.put(`api/notifications/update-read`, { notifications: unread });
+    axios.put(`/api/notifications/update-read`, { notifications: unread });
     return unread;
   };
 

@@ -11,6 +11,7 @@ import ProfileName from "./Profile/ProfileName";
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 import Container from "@material-ui/core/Container";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
@@ -46,6 +47,13 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(1),
+  },
+  divider: {
+    marginRight: "-5vh",
+    marginLeft: "-5vh",
+    marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(5),
+    alignSelf: "stretch",
   },
 }));
 
@@ -171,17 +179,14 @@ const Profile = ({ state, dispatch }) => {
                       )}
                     </Grid>
                   ) : null}
-                  <Grid item>
-                    <Box mt={10} />
-                  </Grid>
+                  <Divider className={classes.divider} light />
                   <ProfileStats years={years} reviews="10" rating="4.7" />
-                  <Grid item>
-                    <Box mt={10} />
-                  </Grid>
+                  <Divider className={classes.divider} light />
                   <ProfileSkills
                     skills={userId === user.id ? user.languages : languages}
                   />
-                  {/* <ProfileProjects projects={projects} /> */}
+                  {/* <Divider className={classes.divider} light />
+                  <ProfileProjects projects={projects} /> */}
                 </Grid>
               </Paper>
             </Container>

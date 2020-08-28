@@ -13,6 +13,7 @@ import {
   Divider,
   Grid,
   Typography,
+  Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -26,7 +27,32 @@ const useStyles = makeStyles((theme) => ({
   },
   formChild: {
     margin: theme.spacing(2),
+    padding: "12px",
+    maxWidth: "220px",
+    minWidth: "160px",
+    border: "1px solid #D3D3D3",
+    borderRadius: "20px",
+  },
+  formTypography: {
+    margin: theme.spacing(2),
     padding: theme.spacing(1),
+  },
+  divider: {
+    marginRight: theme.spacing(-5),
+    marginLeft: theme.spacing(-5),
+    alignSelf: "stretch",
+  },
+  button: {
+    maxWidth: "30px",
+    maxHeight: "30px",
+    minWidth: "30px",
+    minHeight: "30px",
+    backgroundColor: "#e4ebfd",
+    color: theme.palette.secondary.main,
+    "&:hover": {
+      backgroundColor: theme.palette.secondary.main,
+      color: "#FFF",
+    },
   },
 }));
 
@@ -70,64 +96,73 @@ const BalancePage = ({ state, dispatch }) => {
           >
             {user.balance} credits
           </Typography>
-          <Divider style={{ alignSelf: "stretch" }} variant="fullWidth" />
-          {/* Page Form */}
+          <Divider className={classes.divider} light />
           <form className={classes.form}>
             <Typography
-              className={classes.formChild}
+              className={classes.formTypography}
               component="h2"
               variant="h5"
             >
               Top Up:
             </Typography>
-            <Typography component="h3" variant="h6">
+            <Typography variant="body1">
               ${reviewCredits.unitCost} per Credit
             </Typography>
-            <Card className={classes.formChild} variant="outlined" style={{}}>
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                alignContent="center"
-                justify="space-between"
-                style={{ display: "flex" }}
-                wrap="nowrap"
-              >
-                <Grid item>
-                  <Button
-                    onClick={handleClick}
-                    id="decr"
-                    variant="contained"
-                    size="small"
-                    disabled={state.loading || !topUp}
-                    aria-label="Subtract Credit"
-                  >
-                    <RemoveIcon />
-                  </Button>
+            <Grid
+              container
+              spacing={0}
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <Box className={classes.formChild}>
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  alignContent="center"
+                  justify="space-between"
+                  style={{ display: "flex" }}
+                  wrap="nowrap"
+                >
+                  <Grid item>
+                    <Button
+                      onClick={handleClick}
+                      id="decr"
+                      variant="contained"
+                      size="small"
+                      disabled={state.loading || !topUp}
+                      aria-label="Subtract Credit"
+                      className={classes.button}
+                    >
+                      <RemoveIcon />
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      aria-label="Credits to Purchase"
+                      component="h2"
+                      variant="h6"
+                    >
+                      {topUp}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={handleClick}
+                      id="incr"
+                      variant="contained"
+                      size="small"
+                      disabled={state.loading}
+                      aria-label="Add Credit"
+                      className={classes.button}
+                    >
+                      <AddIcon />
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Typography
-                    aria-label="Credits to Purchase"
-                    component="h2"
-                    variant="h6"
-                  >
-                    {topUp}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Button
-                    onClick={handleClick}
-                    id="incr"
-                    variant="contained"
-                    size="small"
-                    disabled={state.loading}
-                    aria-label="Add Credit"
-                  >
-                    <AddIcon />
-                  </Button>
-                </Grid>
-              </Grid>
-            </Card>
+              </Box>
+            </Grid>
             <SubmitButton
               variant="contained"
               color="primary"

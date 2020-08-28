@@ -26,7 +26,7 @@ export default (state, action) => {
     }
     case "ADD_ITEM_TO_CART": {
       // TODO handle duplicates?
-      return { ...state, loading: true, cart: [action.item] };
+      return { ...state, cart: [action.item] };
     }
     case "CREATE_PAYMENT_INTENT_SUCCESS": {
       console.log(action);
