@@ -271,11 +271,11 @@ module.exports = {
   },
 
   async updateReviewAndUserRating(req, res) {
-    const { userId } = req.user;
     const { reviewId, rating } = req.body;
 
     // Updates Target Review Rating
     try {
+      // need to extract status
       const request = await Request.findOne({ "embeddedReview._id": reviewId });
 
       if (rating >= 1 && rating <= 5) {
@@ -285,26 +285,29 @@ module.exports = {
           "Rating provided is not either in an acceptable format or is not a value within 1 to 5."
         );
       }
-
+      request.status = "closed";
       await request.save();
 
-      // Updates User Rating
-      const user = await User.findOne({ userId });
+      // Updates User Rating - using selected reviewer
+      const user = await User.findById(request.selectedReviewer);
 
-      const reviews = await Review.find({ userId: userId });
+      const reviews = await Request.find({
+        selectedReviewer: request.selectedReviewer,
+        status: "closed",
+      }).select("embeddedReview");
       let averageRating = 0;
 
       if (rating >= 1 && rating <= 5) {
-        averageRating = 0;
-
         reviews.forEach((item) => {
-          averageRating += item.rating;
+          averageRating += item.embeddedReview.rating;
         });
 
         averageRating = (averageRating + user.rating) / (reviews.length + 1);
 
-        await User.findByIdAndUpdate({ userId }, { rating: averageRating });
-        return res.status(201).send("Message: Success");
+        await User.findByIdAndUpdate(request.selectedReviewer, {
+          rating: averageRating,
+        });
+        return res.status(201).send({ status: request.status });
       } else {
         throw new Error(
           "Rating provided is not either in an acceptable format or is not a value within 1 to 5."

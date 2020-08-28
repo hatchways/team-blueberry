@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import RatingCircle from "@material-ui/icons/RadioButtonUncheckedOutlined";
 import { Box, makeStyles, Typography } from "@material-ui/core";
+import { completeReview } from "../services/reviews";
 
 const useStyles = makeStyles((theme) => ({
   submit: {
@@ -16,11 +17,12 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   icon: {
-    color: "#000000",
-    borderColor: theme.palette.primary.main,
+    color: theme.palette.primary.main,
     borderRadius: "50%",
     cursor: "pointer",
     marginRight: theme.spacing(1),
+    maxHeight: "27px",
+    maxWidth: "27px",
   },
   text: {
     marginBottom: theme.spacing(2),
@@ -30,16 +32,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RatingDialog = ({ open, handleClose }) => {
+const RatingDialog = ({ open, handleClose, reviewId, dispatch }) => {
   const classes = useStyles();
   const icon = {
-    color: "#000000",
-    borderColor: "#43DDC1",
+    color: "#43DDC1",
     borderRadius: "50%",
     cursor: "pointer",
   };
   const iconHovered = {
-    color: "#43DDC1",
     background: "#43DDC1",
   };
   const [rating1, setRating1] = useState(icon);
@@ -50,6 +50,7 @@ const RatingDialog = ({ open, handleClose }) => {
   const [hoverText, setHoverText] = useState("");
   const [clickedText, setClickedText] = useState("");
   const [clicked, setClicked] = useState(false);
+  const [rating, setRating] = useState(1);
 
   // hover, click set to false
   const handleHoverEnter = (num) => {
@@ -149,6 +150,13 @@ const RatingDialog = ({ open, handleClose }) => {
       setRating5(iconHovered);
       setClickedText("Outstanding!!! :)");
     }
+    setRating(num);
+  };
+
+  const handleSubmit = async () => {
+    await completeReview(reviewId, rating, dispatch);
+    // TODO need sockets to do realtime update when review is completed
+    handleClose();
   };
 
   return (
@@ -234,6 +242,7 @@ const RatingDialog = ({ open, handleClose }) => {
                 color="primary"
                 variant="contained"
                 className={classes.submit}
+                onClick={handleSubmit}
               >
                 Submit
               </Button>
