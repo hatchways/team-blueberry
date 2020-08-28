@@ -90,7 +90,7 @@ const BalancePage = ({ state, dispatch }) => {
           <PageHeader>Your Balance:</PageHeader>
           <Typography
             component="p"
-            variant="h6"
+            variant="h5"
             color="secondary"
             paragraph={true}
           >
