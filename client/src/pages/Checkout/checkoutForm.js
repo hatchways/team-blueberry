@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import SubmitButton from "../../elements/SubmitButton";
+import Grid from "@material-ui/core/Grid";
 
 const CheckoutForm = ({ price, onSuccessfulCheckout }) => {
   const [isProcessing, setProcessingTo] = useState(false);
@@ -70,11 +71,20 @@ const CheckoutForm = ({ price, onSuccessfulCheckout }) => {
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <CardElement options={CARD_OPTIONS} onChange={handleCardDetailsChange} />
-      {checkoutError && <p>{checkoutError}</p>}
-      <SubmitButton disabled={isProcessing || !stripe}>
-        {isProcessing ? "Processing..." : `Pay $${price}`}
-      </SubmitButton>
+      <Grid container justify="center">
+        <Grid item>
+          <CardElement
+            options={CARD_OPTIONS}
+            onChange={handleCardDetailsChange}
+          />
+          {checkoutError && <p>{checkoutError}</p>}
+        </Grid>
+        <Grid item>
+          <SubmitButton disabled={isProcessing || !stripe}>
+            {isProcessing ? "Processing..." : `Pay $${price}`}
+          </SubmitButton>
+        </Grid>
+      </Grid>
     </form>
   );
 };
