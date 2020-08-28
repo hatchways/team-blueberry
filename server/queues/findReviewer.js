@@ -52,7 +52,7 @@ findReviewerQueue.process("findReviewer", async (job) => {
     const author = await User.findById(result.userOwner);
     await createNotification({
       recipient: foundReviewer.id,
-      text: "You have new request",
+      text: `${author.name} asks you to review "${result.embeddedReview.title}"`,
       author: author.name,
       thread: result.embeddedReview._id,
     });

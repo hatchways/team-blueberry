@@ -194,18 +194,23 @@ const Request = () => {
     };
 
     if (index) {
+      const avatarImage =
+        messageOwner === reviewOwner._id && reviewOwner.avatar
+          ? reviewOwner.avatar
+          : messageOwner === reviewOwner._id
+          ? reviewOwner.name[0]
+          : selectedReviewer.avatar
+          ? selectedReviewer.avatar
+          : selectedReviewer.name[0];
+
       return (
         <CardHeader
           avatar={
-            <Avatar>
-              {messageOwner === reviewOwner._id && reviewOwner.avatar
-                ? reviewOwner.avatar
-                : messageOwner === reviewOwner._id
-                ? reviewOwner.name[0]
-                : selectedReviewer.avatar
-                ? selectedReviewer.avatar
-                : selectedReviewer.name[0]}
-            </Avatar>
+            avatarImage.length === 1 ? (
+              <Avatar>{avatarImage}</Avatar>
+            ) : (
+              <Avatar src={avatarImage} />
+            )
           }
           title={
             messageOwner === reviewOwner._id
