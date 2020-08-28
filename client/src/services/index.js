@@ -140,7 +140,20 @@ export const fetchProfile = async (userId) => {
     return result.data;
   } catch (e) {
     // dispatch({ type: "FETCH_USER_ERROR", error: { ...e } });
-    console.error(e);
+    console.error(e.message);
   }
   // on exception
+};
+
+export const fetchReviewsCount = async (userId) => {
+  try {
+    const { data } = await axios({
+      method: "POST",
+      url: "/api/user/profile/reviews",
+      data: { userId },
+    });
+    return data.reviewsCount;
+  } catch (e) {
+    console.error(e.message);
+  }
 };

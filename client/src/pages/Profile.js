@@ -17,7 +17,12 @@ import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import { createUserAvatar, editUser, fetchProfile } from "../services";
+import {
+  createUserAvatar,
+  editUser,
+  fetchProfile,
+  fetchReviewsCount,
+} from "../services";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,6 +74,7 @@ const Profile = ({ state, dispatch }) => {
   const [languages, setLanguage] = useState([]);
   const [rating, setRating] = useState(null);
   const [files, setFiles] = useState([]);
+  const [reviewsNum, setReviewsNum] = useState(null);
   let { userId } = useParams();
   const handleEdit = () => {
     setEdit(!edit);
@@ -87,11 +93,13 @@ const Profile = ({ state, dispatch }) => {
       setAvatar(userProfile.avatar);
       setLanguage(userProfile.languages);
       setRating(userProfile.rating);
+      setReviewsNum(await fetchReviewsCount(userId));
     } else {
       setName(user.name);
       setPosition(user.position);
       setCompany(user.company);
       setRating(user.rating);
+      setReviewsNum(await fetchReviewsCount(user.id));
     }
   };
 
@@ -183,7 +191,11 @@ const Profile = ({ state, dispatch }) => {
                   ) : null}
                   <Divider className={classes.divider} light />
                   {/* TODO need to get reviews for profile */}
-                  <ProfileStats years={years} reviews="10" rating={rating} />
+                  <ProfileStats
+                    years={years}
+                    reviews={reviewsNum}
+                    rating={rating}
+                  />
                   <Divider className={classes.divider} light />
                   <ProfileSkills
                     skills={userId === user.id ? user.languages : languages}
