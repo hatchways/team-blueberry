@@ -113,6 +113,7 @@ const Navbar = ({ state, dispatch }) => {
     <div className={classes.root}>
       <AddCodeDialog
         open={open}
+        state={state}
         dispatch={dispatch}
         handleClose={handleClose}
       />

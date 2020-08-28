@@ -91,6 +91,22 @@ module.exports = {
     }
   },
 
+  async updateBalance(req, res) {
+    try {
+      const userId = req.body.userId,
+        credits = req.body.credits;
+      const user = await User.findById(userId);
+      const newUser = await User.findOneAndUpdate(
+        { _id: userId },
+        { balance: user.balance + credits },
+        { new: true }
+      );
+      return res.status(201).send(newUser.toObject());
+    } catch (e) {
+      return res.status(500).send("Error updating user balance");
+    }
+  },
+
   async createReview(userId, data, cb) {
     // create const variables from data
     const language = data.language,

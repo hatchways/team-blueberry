@@ -14,6 +14,8 @@ router.post("/profile", Auth, userController.fetchProfile);
 
 router.put("/languages", Auth, userController.updateUserLanguages);
 
+router.put("/balance", Auth, userController.updateBalance);
+
 router.post("/review", Auth, async (req, res) => {
   try {
     const userId = req.user.id;

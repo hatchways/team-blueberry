@@ -11,13 +11,14 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Box } from "@material-ui/core";
 import Alert from "../elements/SnackBar";
 import { createCode } from "../services";
+import { updateBalance } from "../services/balance";
 
-export default function AddCodeDialog({ dispatch, open, handleClose }) {
+export default function AddCodeDialog({ state, dispatch, open, handleClose }) {
   const [title, setTitle] = useState("");
   const [language, setLanguage] = useState("");
   const [makeSubmit, setMakeSubmit] = useState(false);
   const [editorHasContent, setEditorHasContent] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState({ state: false, message: "" });
   const languages = [
     "Python",
     "JavaScript",
@@ -37,6 +38,7 @@ export default function AddCodeDialog({ dispatch, open, handleClose }) {
     };
 
     //SEND REQUEST AND close dialog
+    updateBalance(state.user.id, -codeReviewPrice, dispatch);
     createCode(request)(dispatch);
     setTitle("");
     setLanguage("");
@@ -48,9 +50,13 @@ export default function AddCodeDialog({ dispatch, open, handleClose }) {
     setEditorHasContent(value);
   };
 
+  const codeReviewPrice = 1; //Code review price
+
   const startSubmit = () => {
     if (!language || !title || !editorHasContent) {
-      setError(true);
+      setError({ state: true, message: "Fill in all the fields" });
+    } else if (state.user.balance < codeReviewPrice) {
+      setError({ state: true, message: "You don't have enough credits!" });
     } else {
       setMakeSubmit(true);
     }
@@ -107,10 +113,10 @@ export default function AddCodeDialog({ dispatch, open, handleClose }) {
                 <SubmitButton onClick={startSubmit}>Submit</SubmitButton>
               </Grid>
               <Alert
-                open={error ? true : false}
-                onClick={() => setError(false)}
+                open={error.state ? true : false}
+                onClick={() => setError({ state: false, message: "" })}
               >
-                Fill in all the fields
+                {error.message}
               </Alert>
             </Grid>
           </Box>
