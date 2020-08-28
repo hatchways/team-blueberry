@@ -60,7 +60,7 @@ const completeReview = async (reviewId, rating, dispatch) => {
   try {
     const { status } = await axios({
       method: "POST",
-      url: "/api/user//reviews/rate-review",
+      url: "/api/user/reviews/rate-review",
       data: {
         reviewId,
         rating,

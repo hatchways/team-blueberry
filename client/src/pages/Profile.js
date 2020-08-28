@@ -127,7 +127,6 @@ const Profile = ({ state, dispatch }) => {
         <Grid container direction="column">
           <Grid item>
             <Container component="main" maxWidth="md" className={classes.root}>
-              {/* TODO check if it is user or viewed profile */}
               {userId === user.id ? (
                 <Avatar
                   alt="Profile image"
@@ -183,6 +182,7 @@ const Profile = ({ state, dispatch }) => {
                     </Grid>
                   ) : null}
                   <Divider className={classes.divider} light />
+                  {/* TODO need to get reviews for profile */}
                   <ProfileStats years={years} reviews="10" rating={rating} />
                   <Divider className={classes.divider} light />
                   <ProfileSkills

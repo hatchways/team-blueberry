@@ -264,7 +264,7 @@ const Request = () => {
             <Typography component="h5">
               {dateToYMD(state.review.reviewCreatedDate)}
             </Typography>
-            {state.userOwner === user.id ? (
+            {state.userOwner === user.id && state.status === "accepted" ? (
               <Button
                 size="small"
                 color="secondary"
