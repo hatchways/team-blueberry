@@ -254,7 +254,7 @@ const Request = () => {
               </Button>
             ) : null}
           </CardContent>
-          <Divider />
+          <Divider light />
           {state.review.messages.map((item, index) => (
             <React.Fragment key={item._id}>
               <ReviewerHeader

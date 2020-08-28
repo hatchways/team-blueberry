@@ -19,6 +19,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutForm from "./Checkout/checkoutForm";
+import { updateBalance } from "../services/balance";
 
 const PUBLISHABLE_KEY =
   "pk_test_51HKme9FHPZChBCCstiGNkJ98SlG0jSuo1xPJpe895mp5eLkAiBEvjL4CgkjVw9wazUPUODqNWpL0iFXPGV3CyFxS00ah2pylSn";
@@ -65,7 +66,15 @@ const showCart = (cart) => {
 
 const Checkout = ({ state, dispatch }) => {
   const classes = useStyles();
+
   const history = useHistory();
+
+  const successfulCheckout = () => {
+    const credits = state.cart[0].quantity;
+    updateBalance(state.user.id, credits, dispatch);
+    history.push("/balance");
+  };
+
   usePageLoaded(dispatch);
   const price = state.cart[0].unitCost * state.cart[0].quantity;
   return (
@@ -87,7 +96,7 @@ const Checkout = ({ state, dispatch }) => {
             <Elements stripe={stripePromise}>
               <CheckoutForm
                 price={price}
-                onSuccessfulCheckout={() => history.push("/")}
+                onSuccessfulCheckout={successfulCheckout}
               />
             </Elements>
           </Container>
