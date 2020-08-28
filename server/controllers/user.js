@@ -96,11 +96,11 @@ module.exports = {
       const userId = req.body.userId,
         credits = req.body.credits;
       const user = await User.findById(userId);
-      await User.findOneAndUpdate(
+      const newUser = await User.findOneAndUpdate(
         { _id: userId },
-        { balance: user.balance + credits }
+        { balance: user.balance + credits },
+        { new: true }
       );
-      const newUser = await User.findById(userId);
       return res.status(201).send(newUser.toObject());
     } catch (e) {
       return res.status(500).send("Error updating user balance");
