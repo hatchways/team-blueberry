@@ -132,7 +132,6 @@ const Reviews = () => {
   };
 
   const renderItems = (target) => {
-    console.log(state);
     const tabName = target.reviews ? "reviews" : "requests";
     if (Array.isArray(state[tabName])) {
       return state[tabName].map((item, idx) => {
