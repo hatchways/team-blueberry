@@ -27,11 +27,11 @@ const useStyles = makeStyles((theme) => ({
   },
   formChild: {
     margin: theme.spacing(2),
-    padding: theme.spacing(1),
+    padding: "12px",
     maxWidth: "220px",
     minWidth: "160px",
     border: "1px solid #D3D3D3",
-    borderRadius: "8px",
+    borderRadius: "20px",
   },
   formTypography: {
     margin: theme.spacing(2),
@@ -42,6 +42,8 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "30px",
     minWidth: "30px",
     minHeight: "30px",
+    backgroundColor: "#e4ebfd",
+    color: theme.palette.secondary.main,
     "&:hover": {
       backgroundColor: theme.palette.secondary.main,
       color: "#FFF",
