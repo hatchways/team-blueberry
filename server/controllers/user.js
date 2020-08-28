@@ -153,7 +153,16 @@ module.exports = {
       } else {
         const userId = req.user.id;
         const reviews = await Review.find({ userId: userId });
-        return res.status(201).json({ reviews });
+        const requests = await Request.find({
+          selectedReviewer: userId,
+        });
+        const embeddedReviewArray = [];
+
+        for (let i = 0; i < requests.length; i++) {
+          embeddedReviewArray.push(requests[i].embeddedReview);
+        }
+
+        return res.status(201).json({ reviews, embeddedReviewArray });
       }
     } catch (error) {
       console.error(error.message);

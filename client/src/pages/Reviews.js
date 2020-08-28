@@ -11,6 +11,8 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 // component imports
 import Request from "../components/Request";
@@ -19,6 +21,9 @@ import Request from "../components/Request";
 import Loading from "../elements/Loading";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
   // do we need this?
   card: {
     minWidth: "100%",
@@ -77,6 +82,7 @@ const reducer = (state, action) => {
         ...state,
         loading: false,
         reviews: action.reviews,
+        requests: action.requests,
       };
     case "FETCH_REVIEWS_ERROR":
       return {
@@ -97,6 +103,7 @@ const Reviews = () => {
     reviews: true,
     requests: false,
   });
+  const [value, setValue] = React.useState(0);
 
   useEffect(() => {
     fetchData();
@@ -104,17 +111,19 @@ const Reviews = () => {
   }, []);
   const fetchData = async () => {
     await getReviews(dispatch);
-
-    //Need to implement getRequests similar to getReviews()
-    // await getRequests(dispatch);
   };
 
-  const handleTabItemClick = (event, item) => {
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
     const updatedTab = { ...selectedTab };
 
-    updatedTab.reviews = !updatedTab.reviews;
-    updatedTab.requests = !updatedTab.requests;
-
+    if (newValue == 0) {
+      updatedTab.reviews = true;
+      updatedTab.requests = false;
+    } else {
+      updatedTab.reviews = false;
+      updatedTab.requests = true;
+    }
     setSelectedTab(updatedTab);
   };
 
@@ -123,15 +132,12 @@ const Reviews = () => {
   };
 
   const renderItems = (target) => {
+    console.log(state);
     const tabName = target.reviews ? "reviews" : "requests";
     if (Array.isArray(state[tabName])) {
       return state[tabName].map((item, idx) => {
         return (
-          <Link
-            to={`/${tabName}/${item._id}`}
-            key={idx}
-            className={classes.link}
-          >
+          <Link to={`/reviews/${item._id}`} key={idx} className={classes.link}>
             <Paper
               variant="outlined"
               className={
@@ -190,74 +196,26 @@ const Reviews = () => {
             <Loading />
           ) : (
             <React.Fragment>
-              <div
-                className={classes.reviewTitles}
-                style={{
-                  display: "flex",
-                }}
-              >
-                <div
-                  className={
-                    selectedTab.reviews
-                      ? classes.selectedTab
-                      : classes.unselectedTab
-                  }
-                  onClick={(event) =>
-                    !selectedTab.reviews
-                      ? handleTabItemClick(event, "reviews")
-                      : ""
-                  }
+              <Paper className={classes.root}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  centered
                 >
-                  <Typography
-                    color="textPrimary"
-                    component="h1"
-                    variant="h4"
-                    display="inline"
-                    className={classes.reviewMainTitle}
-                  >
-                    Reviews
-                  </Typography>
-                  <Typography
-                    component="h1"
-                    variant="h5"
-                    display="inline"
-                    color="secondary"
-                  >
-                    ({state.reviews ? state.reviews.length : 0})
-                  </Typography>
-                </div>
-                <div
-                  className={
-                    selectedTab.requests
-                      ? classes.selectedTab
-                      : classes.unselectedTab
-                  }
-                  onClick={(event) =>
-                    !selectedTab.requests
-                      ? handleTabItemClick(event, "requests")
-                      : ""
-                  }
-                >
-                  <Typography
-                    color="textPrimary"
-                    component="h1"
-                    variant="h4"
-                    display="inline"
-                    className={classes.reviewMainTitle}
-                  >
-                    Requests
-                  </Typography>
-
-                  <Typography
-                    component="h1"
-                    variant="h5"
-                    display="inline"
-                    color="secondary"
-                  >
-                    ({state.requests ? state.requests.length : 0})
-                  </Typography>
-                </div>
-              </div>
+                  <Tab
+                    label={`Reviews(${
+                      state.reviews ? state.reviews.length : 0
+                    })`}
+                  />
+                  <Tab
+                    label={`Requests(${
+                      state.requests ? state.requests.length : 0
+                    })`}
+                  />
+                </Tabs>
+              </Paper>
               {renderItems(selectedTab)}
             </React.Fragment>
           )}
