@@ -41,6 +41,13 @@ const useStyles = makeStyles((theme) => ({
   selectedReviewPaper: {
     border: `solid ${theme.palette.primary.main} 1px`,
   },
+  selectedTab: {
+    backgroundColor: "gray",
+    padding: theme.spacing(6),
+  },
+  unselectedTab: {
+    padding: theme.spacing(6),
+  },
   reviewPanel: {
     margin: theme.spacing(6),
   },
@@ -86,6 +93,10 @@ const Reviews = () => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initState);
   const [selectedIndex, setSelectedIndex] = useState(false);
+  const [selectedTab, setSelectedTab] = useState({
+    reviews: true,
+    requests: false,
+  });
 
   useEffect(() => {
     fetchData();
@@ -93,10 +104,56 @@ const Reviews = () => {
   }, []);
   const fetchData = async () => {
     await getReviews(dispatch);
+
+    //Need to implement getRequests similar to getReviews()
+    // await getRequests(dispatch);
+  };
+
+  const handleTabItemClick = (event, item) => {
+    const updatedTab = { ...selectedTab };
+
+    updatedTab.reviews = !updatedTab.reviews;
+    updatedTab.requests = !updatedTab.requests;
+
+    setSelectedTab(updatedTab);
   };
 
   const handleListItemClick = (event, index, props) => {
     setSelectedIndex(index);
+  };
+
+  const renderItems = (target) => {
+    const tabName = target.reviews ? "reviews" : "requests";
+    if (Array.isArray(state[tabName])) {
+      return state[tabName].map((item, idx) => {
+        return (
+          <Link
+            to={`/${tabName}/${item._id}`}
+            key={idx}
+            className={classes.link}
+          >
+            <Paper
+              variant="outlined"
+              className={
+                selectedIndex == idx
+                  ? [classes.selectedReviewPaper, classes.reviews].join(" ")
+                  : classes.reviews
+              }
+              onClick={(event) => handleListItemClick(event, idx)}
+            >
+              <ReviewCard
+                index={idx}
+                reviewId={item._id}
+                reviewTitle={item.title}
+                date={item.reviewCreatedDate}
+              ></ReviewCard>
+            </Paper>
+          </Link>
+        );
+      });
+    } else {
+      return state.error;
+    }
   };
 
   const ReviewCard = (props) => {
@@ -124,6 +181,7 @@ const Reviews = () => {
       </div>
     );
   };
+
   return (
     <Grid container direction="column">
       <Grid item container>
@@ -132,56 +190,76 @@ const Reviews = () => {
             <Loading />
           ) : (
             <React.Fragment>
-              <div className={classes.reviewTitles}>
-                <Typography
-                  color="textPrimary"
-                  component="h1"
-                  variant="h4"
-                  display="inline"
-                  className={classes.reviewMainTitle}
+              <div
+                className={classes.reviewTitles}
+                style={{
+                  display: "flex",
+                }}
+              >
+                <div
+                  className={
+                    selectedTab.reviews
+                      ? classes.selectedTab
+                      : classes.unselectedTab
+                  }
+                  onClick={(event) =>
+                    !selectedTab.reviews
+                      ? handleTabItemClick(event, "reviews")
+                      : ""
+                  }
                 >
-                  Reviews
-                </Typography>
-                <Typography
-                  component="h1"
-                  variant="h5"
-                  display="inline"
-                  color="secondary"
+                  <Typography
+                    color="textPrimary"
+                    component="h1"
+                    variant="h4"
+                    display="inline"
+                    className={classes.reviewMainTitle}
+                  >
+                    Reviews
+                  </Typography>
+                  <Typography
+                    component="h1"
+                    variant="h5"
+                    display="inline"
+                    color="secondary"
+                  >
+                    ({state.reviews ? state.reviews.length : 0})
+                  </Typography>
+                </div>
+                <div
+                  className={
+                    selectedTab.requests
+                      ? classes.selectedTab
+                      : classes.unselectedTab
+                  }
+                  onClick={(event) =>
+                    !selectedTab.requests
+                      ? handleTabItemClick(event, "requests")
+                      : ""
+                  }
                 >
-                  ({state.reviews ? state.reviews.length : 0})
-                </Typography>
+                  <Typography
+                    color="textPrimary"
+                    component="h1"
+                    variant="h4"
+                    display="inline"
+                    className={classes.reviewMainTitle}
+                  >
+                    Requests
+                  </Typography>
+
+                  <Typography
+                    component="h1"
+                    variant="h5"
+                    display="inline"
+                    color="secondary"
+                  >
+                    {/* Change this to be requests.length */}(
+                    {state.reviews ? state.reviews.length : 0})
+                  </Typography>
+                </div>
               </div>
-              {Array.isArray(state.reviews)
-                ? state.reviews.map((item, idx) => {
-                    return (
-                      <Link
-                        to={`/reviews/${item._id}`}
-                        key={idx}
-                        className={classes.link}
-                      >
-                        <Paper
-                          variant="outlined"
-                          className={
-                            selectedIndex == idx
-                              ? [
-                                  classes.selectedReviewPaper,
-                                  classes.reviews,
-                                ].join(" ")
-                              : classes.reviews
-                          }
-                          onClick={(event) => handleListItemClick(event, idx)}
-                        >
-                          <ReviewCard
-                            index={idx}
-                            reviewId={item._id}
-                            reviewTitle={item.title}
-                            date={item.reviewCreatedDate}
-                          ></ReviewCard>
-                        </Paper>
-                      </Link>
-                    );
-                  })
-                : state.error}
+              {renderItems(selectedTab)}
             </React.Fragment>
           )}
         </Grid>
