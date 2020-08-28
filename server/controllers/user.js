@@ -14,6 +14,16 @@ const handleError = (e, res) =>
     ? res.status(e.status).send(e.message)
     : res.status(400).send(e);
 
+const updateBalanceBe = async (userId, credits) => {
+  const user = await User.findById(userId);
+  const newUser = await User.findOneAndUpdate(
+    { _id: userId },
+    { balance: user.balance + credits },
+    { new: true }
+  );
+  return newUser;
+};
+
 module.exports = {
   // for logged in user
   async getMe(req, res, next) {
@@ -91,6 +101,16 @@ module.exports = {
       return res.status(500).send("Error updating user profile");
     }
   },
+
+  // async updateBalanceBe(userId, credits) {
+  //   const user = await User.findById(userId);
+  //   const newUser = await User.findOneAndUpdate(
+  //     { _id: userId },
+  //     { balance: user.balance + credits },
+  //     { new: true }
+  //   );
+  //   return newUser;
+  // },
 
   async updateBalance(req, res) {
     try {
@@ -290,6 +310,7 @@ module.exports = {
 
       // Updates User Rating - using selected reviewer
       const user = await User.findById(request.selectedReviewer);
+      const author = await User.findById(request.userOwner);
 
       const reviews = await Request.find({
         selectedReviewer: request.selectedReviewer,
@@ -307,6 +328,16 @@ module.exports = {
         await User.findByIdAndUpdate(request.selectedReviewer, {
           rating: averageRating,
         });
+
+        await updateBalanceBe(request.selectedReviewer, 1);
+
+        await createNotification({
+          recipient: request.selectedReviewer,
+          text: `${author.name} rated your review "${request.embeddedReview.title}" (you get +1CR)`,
+          author: author.name,
+          thread: reviewId,
+        });
+
         return res.status(201).send({ status: request.status });
       } else {
         throw new Error(
