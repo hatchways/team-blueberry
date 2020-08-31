@@ -80,6 +80,12 @@ const requestSchema = new mongoose.Schema({
     enum: ["pending", "declined", "accepted", "closed"],
     default: "pending",
   },
+
+  // comment for selected reviewer
+  comment: {
+    type: String,
+    default: "",
+  },
   // References review owner
   embeddedReview: reviewSchema,
 });

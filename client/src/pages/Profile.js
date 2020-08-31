@@ -22,6 +22,7 @@ import {
   editUser,
   fetchProfile,
   fetchReviewsCount,
+  fetchProfileComments,
 } from "../services";
 
 const useStyles = makeStyles((theme) => ({
@@ -75,6 +76,7 @@ const Profile = ({ state, dispatch }) => {
   const [rating, setRating] = useState(null);
   const [files, setFiles] = useState([]);
   const [reviewsNum, setReviewsNum] = useState(null);
+  const [comments, setComments] = useState([]);
   let { userId } = useParams();
   const handleEdit = () => {
     setEdit(!edit);
@@ -94,12 +96,14 @@ const Profile = ({ state, dispatch }) => {
       setLanguage(userProfile.languages);
       setRating(userProfile.rating);
       setReviewsNum(await fetchReviewsCount(userId));
+      setComments(await fetchProfileComments(userId));
     } else {
       setName(user.name);
       setPosition(user.position);
       setCompany(user.company);
       setRating(user.rating);
       setReviewsNum(await fetchReviewsCount(user.id));
+      setComments(await fetchProfileComments(user.id));
     }
   };
 
@@ -194,12 +198,19 @@ const Profile = ({ state, dispatch }) => {
                   <ProfileStats
                     years={years}
                     reviews={reviewsNum}
-                    rating={rating}
+                    rating={rating ? rating.toFixed(1) : null}
                   />
                   <Divider className={classes.divider} light />
                   <ProfileSkills
                     skills={userId === user.id ? user.languages : languages}
                   />
+                  <Divider className={classes.divider} light />
+                  {comments ? (
+                    <React.Fragment>
+                      {/* TODO need to show comments on the FE */}
+                      {comments.map((comment, index) => comment.name)}
+                    </React.Fragment>
+                  ) : null}
                   {/* <Divider className={classes.divider} light />
                   <ProfileProjects projects={projects} /> */}
                 </Grid>

@@ -42,6 +42,7 @@ const RatingDialog = ({ open, handleClose, reviewId, dispatch }) => {
   const iconHovered = {
     background: "#43DDC1",
   };
+  // TODO clean up useState
   const [rating1, setRating1] = useState(icon);
   const [rating2, setRating2] = useState(icon);
   const [rating3, setRating3] = useState(icon);
@@ -51,6 +52,7 @@ const RatingDialog = ({ open, handleClose, reviewId, dispatch }) => {
   const [clickedText, setClickedText] = useState("");
   const [clicked, setClicked] = useState(false);
   const [rating, setRating] = useState(1);
+  const [comment, setComment] = useState("");
 
   // hover, click set to false
   const handleHoverEnter = (num) => {
@@ -154,8 +156,8 @@ const RatingDialog = ({ open, handleClose, reviewId, dispatch }) => {
   };
 
   const handleSubmit = async () => {
-    await completeReview(reviewId, rating, dispatch);
-    // TODO need sockets to do realtime update when review is completed
+    await completeReview(reviewId, rating, comment, dispatch);
+    // TODO clear all values when submit
     handleClose();
   };
 
@@ -235,6 +237,7 @@ const RatingDialog = ({ open, handleClose, reviewId, dispatch }) => {
                 rows={6}
                 placeholder="Write your comment here..."
                 variant="outlined"
+                onChange={(e) => setComment(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} container justify="center">

@@ -57,7 +57,7 @@ const getReview = async (reviewId, dispatch) => {
   }
 };
 
-const completeReview = async (reviewId, rating, dispatch) => {
+const completeReview = async (reviewId, rating, comment, dispatch) => {
   dispatch({ type: "COMPLETE_REVIEW" });
   try {
     const { status } = await axios({
@@ -66,6 +66,7 @@ const completeReview = async (reviewId, rating, dispatch) => {
       data: {
         reviewId,
         rating,
+        comment,
       },
     });
     dispatch({ type: "COMPLETE_REVIEW_SUCCESS", status: status });
