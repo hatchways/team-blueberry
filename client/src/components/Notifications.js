@@ -64,7 +64,6 @@ const reducer = (state, action) => {
 const Notifications = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const classes = useStyles();
-  const [seen, setSeen] = useState(false);
 
   const user = useContext(userContext);
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);
@@ -91,13 +90,8 @@ const Notifications = () => {
     dispatch({ type: "newNotification", payload: notification });
   };
 
-  useEffect(() => {
-    setSeen(state.notifications.every((item) => item.seen === true));
-  }, [anchorNotificaton]);
-
   const handleMenu = (event) => {
     setAnchorNotificaton(event.currentTarget);
-    setSeen(true);
   };
 
   const handleClose = () => {

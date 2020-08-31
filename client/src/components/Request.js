@@ -161,7 +161,7 @@ const reducer = (state, action) => {
 const Request = () => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initState);
-  const [editorHasContent, setEditorHasContent] = useState(false);
+  const [, setEditorHasContent] = useState(false);
   const { reviewId } = useParams();
   const user = useContext(userContext);
   const [open, setOpen] = useState(false);
@@ -170,13 +170,13 @@ const Request = () => {
   useEffect(() => {
     if (reviewId) {
       handleInitState();
-      socket.messages(reviewId); //Subscribe for messages
+      socket.messages(reviewId);
+      console.log(reviewId);
     }
     // TODO remove request when unmounting
   }, [reviewId]);
 
   const handleSocketMessage = (message) => {
-    // console.log("STATE: ", state);
     const { newMessage, reviewOwner, selectedReviewer } = message;
     dispatch({
       type: "NEW_MESSAGE",

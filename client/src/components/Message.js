@@ -24,7 +24,7 @@ const Message = ({
 }) => {
   const classes = useStyles();
   const [makeSubmit, setMakeSubmit] = useState(false);
-  const [editorHasContent, setEditorHasContent] = useState(false);
+  const [, setEditorHasContent] = useState(false);
   const user = useContext(userContext);
   const handleSubmit = async (text) => {
     setMakeSubmit(false);

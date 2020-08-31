@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 
 export default function SnackbarAlert(props) {
-  const [open, setOpen] = React.useState(false);
+  const [, setOpen] = React.useState(false);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {

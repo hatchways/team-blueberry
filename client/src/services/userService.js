@@ -3,7 +3,7 @@ import socket from "./sockets";
 
 export const userGet = (body) => async (dispatch) => {
   dispatch({ type: "FETCH" });
-  const userDoc = await axios({
+  await axios({
     method: "GET",
     withCredentials: true,
     url: "/api/user/me",
