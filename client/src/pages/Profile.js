@@ -7,6 +7,7 @@ import ProfileStats from "./Profile/ProfileStats";
 import Background from "../elements/Background";
 import ProfileSkills from "./Profile/ProfileSkills";
 import ProfileName from "./Profile/ProfileName";
+import ProfileComments from "./Profile/ProfileComments";
 //Material UI imports
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
@@ -208,7 +209,7 @@ const Profile = ({ state, dispatch }) => {
                   {comments ? (
                     <React.Fragment>
                       {/* TODO need to show comments on the FE */}
-                      {comments.map((comment, index) => comment.name)}
+                      <ProfileComments comments={comments} />
                     </React.Fragment>
                   ) : null}
                   {/* <Divider className={classes.divider} light />
