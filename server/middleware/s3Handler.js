@@ -1,5 +1,6 @@
 const aws = require("aws-sdk/");
 const S3_BUCKET = process.env.S3_BUCKET;
+
 const S3_URI = (fileName) =>
   `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`;
 
@@ -31,4 +32,27 @@ const persistAvatar = async (req, res) => {
   return S3_URI(fileName);
 };
 
-module.exports = persistAvatar;
+const persistProjectImg = async (req) => {
+  console.log("Body: ", req.body);
+  const fileName = `${req.user.id}-${Date.now()}`;
+  const s3 = new aws.S3();
+  const s3Params = {
+    Body: req.body.image,
+    Bucket: S3_BUCKET,
+    Key: fileName,
+    Expires: 500,
+    ContentType: "image/jpg",
+    ACL: "public-read",
+  };
+
+  const { url, ...data } = await s3.putObject(s3Params, (err, data) => {
+    if (err) {
+      console.log(err);
+      throw new Error({ status: 424, message: err });
+    }
+    return data;
+  });
+  return S3_URI(fileName);
+};
+
+module.exports = { persistAvatar, persistProjectImg };

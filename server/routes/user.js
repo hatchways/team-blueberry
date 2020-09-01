@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const findReviewerQueue = require("../queues/findReviewer");
 const userController = require("../controllers/user");
+const projectsController = require("../controllers/projects");
 
 // import Auth middleware
 const Auth = require("../middleware/auth");
@@ -11,11 +12,11 @@ router.post("/me/avatar", Auth, userController.createUserAvatar);
 router.put("/me", Auth, userController.updateUser);
 
 router.post("/profile", Auth, userController.fetchProfile);
-// both routes can be GET
 router.post("/profile/reviews", Auth, userController.fetchProfileReviews);
-router.post("/profile/comments", Auth, userController.fetchProfileComments);
 
 router.put("/languages", Auth, userController.updateUserLanguages);
+router.post("/projects", Auth, projectsController.createProject);
+router.delete("/projects", Auth, projectsController.deleteProject);
 
 router.put("/balance", Auth, userController.updateBalance);
 
