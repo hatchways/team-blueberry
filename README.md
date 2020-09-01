@@ -1,4 +1,4 @@
-# Peer Review
+# Peer Code Review App
 A SPA paid and credit based peer review platform.
 ## Running MongoDB locally
 1. Go to [MongoDB](https://docs.mongodb.com/manual/installation/)
