@@ -4,12 +4,20 @@ const axios = require("axios");
 const newProject = async (project, dispatch) => {
   dispatch({ type: "UPDATE_USER_PROJECTS" });
   try {
+    // const { data } = await axios({
+    await axios({
+      url: `/api/user/projects`,
+      method: "POST",
+      data: project.image,
+      headers: { "Content-Type": "image/jpg" },
+    });
     const { data } = await axios({
       method: "POST",
       url: "/api/user/projects",
       data: project,
+      headers: { "Content-Type": "application/json" },
     });
-    console.log("Data: ", data);
+    // console.log("Data: ", data);
     dispatch({
       type: "UPDATE_USER_PROJECTS_SUCCESS",
       user: data,

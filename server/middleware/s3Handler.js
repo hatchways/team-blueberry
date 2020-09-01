@@ -33,11 +33,10 @@ const persistAvatar = async (req, res) => {
 };
 
 const persistProjectImg = async (req) => {
-  console.log("Body: ", req.body);
   const fileName = `${req.user.id}-${Date.now()}`;
   const s3 = new aws.S3();
   const s3Params = {
-    Body: req.body.image,
+    Body: req.body,
     Bucket: S3_BUCKET,
     Key: fileName,
     Expires: 500,

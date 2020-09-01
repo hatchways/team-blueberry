@@ -10,6 +10,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { Typography, TextField, Button, IconButton } from "@material-ui/core";
 import DropZone from "./Dropzone";
 import { newProject, deleteProject } from "../../services/projects";
+import Alert from "../../elements/SnackBar";
 
 const useStyles = makeStyles((theme) => ({
   project: {
@@ -52,7 +53,9 @@ export default function ProfileProjects({ projects, dispatch }) {
   const [error, setError] = useState(false);
 
   const submit = () => {
-    if (title === "" || link === "") {
+    if (files.length === 0) {
+      setError(true);
+    } else if (title === "" || link === "") {
       setError(true);
     } else {
       let image = "";
@@ -171,7 +174,11 @@ export default function ProfileProjects({ projects, dispatch }) {
               onMouseLeave={() => setHover(false)}
             >
               <Box>
-                <img alt="Code" src={CodeImg} className={classes.project}></img>
+                <img
+                  alt="Code"
+                  src={item.image}
+                  className={classes.project}
+                ></img>
               </Box>
               <Grid container direction="row" justify="space-between">
                 <Grid item>
@@ -222,6 +229,12 @@ export default function ProfileProjects({ projects, dispatch }) {
         )}
       </Grid>
       {editMode && editProject}
+      <Alert
+        open={error && files.length === 0 ? true : false}
+        onClick={() => setError(false)}
+      >
+        Upload image is mandatory
+      </Alert>
     </React.Fragment>
   );
 }
