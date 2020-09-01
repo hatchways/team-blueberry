@@ -45,16 +45,6 @@ const createProject = async (req, res) => {
       return res.status(500).send(e);
     }
   }
-  // if (req.body.project.image !== "") {
-  //   image = await persistProjectImg(req);
-  // }
-
-  // const newProject = {
-  //   title: req.body.title,
-  //   link: req.body.link,
-  //   image: image,
-  // };
-  // console.log("NewProj: ", newProject);
 };
 
 const deleteProject = async (req, res) => {
@@ -73,7 +63,20 @@ const deleteProject = async (req, res) => {
   }
 };
 
+const fetchProjects = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const foundUser = await User.findById(userId).select(
+      "name position company avatar languages rating projects"
+    );
+    return res.status(200).send(foundUser);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
+};
+
 module.exports = {
   createProject,
   deleteProject,
+  fetchProjects,
 };

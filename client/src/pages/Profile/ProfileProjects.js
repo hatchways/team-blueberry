@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProfileProjects({ projects, dispatch }) {
+export default function ProfileProjects({ projects, dispatch, showEdit }) {
   const classes = useStyles();
   const preventDefault = (event) => event.preventDefault();
   const [files, setFiles] = useState([]);

@@ -25,6 +25,7 @@ import {
   fetchReviewsCount,
   fetchProfileComments,
 } from "../services";
+import { fetchProjects } from "../services/projects";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -96,6 +97,7 @@ const Profile = ({ state, dispatch }) => {
       setCompany(userProfile.company);
       setAvatar(userProfile.avatar);
       setLanguage(userProfile.languages);
+      // setProjects(await fetchProjects(userId));
       setProjects(userProfile.projects);
       setRating(userProfile.rating);
       setReviewsNum(await fetchReviewsCount(userId));
@@ -106,6 +108,7 @@ const Profile = ({ state, dispatch }) => {
       setCompany(user.company);
       setRating(user.rating);
       setComments(await fetchProfileComments(user.id));
+      // setProjects(await fetchProjects(user.id));
       setProjects(user.projects);
       setReviewsNum(await fetchReviewsCount(user.id));
     }
@@ -209,7 +212,11 @@ const Profile = ({ state, dispatch }) => {
                     skills={userId === user.id ? user.languages : languages}
                   />
                   <Divider className={classes.divider} light />
-                  <ProfileProjects projects={projects} dispatch={dispatch} />
+                  <ProfileProjects
+                    projects={projects}
+                    dispatch={dispatch}
+                    showEdit={userId !== user.id}
+                  />
                   <Divider className={classes.divider} light />
 
                   {comments ? (

@@ -45,4 +45,18 @@ const deleteProject = async (projectId, dispatch) => {
     console.log(e);
   }
 };
-module.exports = { newProject, deleteProject };
+
+const fetchProjects = async (userId) => {
+  try {
+    const { data } = await axios({
+      method: "GET",
+      url: "/api/user/projects",
+      data: { userId },
+    });
+    return data.projects;
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
+module.exports = { newProject, deleteProject, fetchProjects };

@@ -17,8 +17,10 @@ router.post("/profile/reviews", Auth, userController.fetchProfileReviews);
 router.post("/profile/comments", Auth, userController.fetchProfileComments);
 
 router.put("/languages", Auth, userController.updateUserLanguages);
+
 router.post("/projects", Auth, projectsController.createProject);
 router.delete("/projects", Auth, projectsController.deleteProject);
+router.get("/projects", Auth, projectsController.fetchProjects);
 
 router.put("/balance", Auth, userController.updateBalance);
 
