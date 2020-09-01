@@ -11,7 +11,9 @@ router.post("/me/avatar", Auth, userController.createUserAvatar);
 router.put("/me", Auth, userController.updateUser);
 
 router.post("/profile", Auth, userController.fetchProfile);
+// both routes can be GET
 router.post("/profile/reviews", Auth, userController.fetchProfileReviews);
+router.post("/profile/comments", Auth, userController.fetchProfileComments);
 
 router.put("/languages", Auth, userController.updateUserLanguages);
 

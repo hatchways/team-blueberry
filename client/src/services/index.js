@@ -124,9 +124,7 @@ export const createCode = (body) => async (dispatch) => {
 };
 
 export const fetchProfile = async (userId) => {
-  // TODO clean up here, might be better to use GET
-  // set loading state
-  //   dispatch({ type: "FETCH" });
+  // TODO clean up here, might be better to use GET, might need dispatch
   try {
     const result = await axios({
       method: "POST",
@@ -135,14 +133,10 @@ export const fetchProfile = async (userId) => {
     });
     // throw if server returns an error message
     if (result.error) throw result.error;
-
-    // dispatch({ type: "FETCH_USER_SUCCESS" });
     return result.data;
   } catch (e) {
-    // dispatch({ type: "FETCH_USER_ERROR", error: { ...e } });
     console.error(e.message);
   }
-  // on exception
 };
 
 export const fetchReviewsCount = async (userId) => {
@@ -153,6 +147,19 @@ export const fetchReviewsCount = async (userId) => {
       data: { userId },
     });
     return data.reviewsCount;
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
+export const fetchProfileComments = async (userId) => {
+  try {
+    const { data } = await axios({
+      method: "POST",
+      url: `/api/user/profile/comments`,
+      data: { userId },
+    });
+    return data;
   } catch (e) {
     console.error(e.message);
   }

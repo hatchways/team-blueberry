@@ -300,7 +300,7 @@ module.exports = {
   },
 
   async updateReviewAndUserRating(req, res) {
-    const { reviewId, rating } = req.body;
+    const { reviewId, rating, comment } = req.body;
 
     // Updates Target Review Rating
     try {
@@ -315,6 +315,7 @@ module.exports = {
         );
       }
       request.status = "closed";
+      request.comment = comment;
       await request.save();
 
       // Updates User Rating - using selected reviewer
@@ -360,9 +361,10 @@ module.exports = {
   async fetchProfile(req, res) {
     const { userId } = req.body;
     try {
-      const foundUser = await User.findById(userId);
-      // simplify foundUser object to only fetch necessary data
-      return res.status(200).send(foundUser.toObject());
+      const foundUser = await User.findById(userId).select(
+        "name position company avatar languages rating"
+      );
+      return res.status(200).send(foundUser);
     } catch (error) {
       return res.status(500).send("Internal Server Error");
     }
@@ -372,6 +374,46 @@ module.exports = {
     try {
       const foundReviews = await Request.find({ userOwner: userId });
       return res.status(200).send({ reviewsCount: foundReviews.length });
+    } catch (error) {
+      return res.status(500).send("Internal Server Error");
+    }
+  },
+  async fetchProfileComments(req, res) {
+    const { userId } = req.body;
+    try {
+      // extract only userOwner, comment and rating and convert to js object
+      const foundComments = await Request.find(
+        {
+          selectedReviewer: userId,
+          status: "closed",
+        },
+        { _id: 0, userOwner: 1, comment: 1, "embeddedReview.rating": 1 }
+      ).lean();
+      // extracting only user owner from foundComments
+      const userOwnerArr = foundComments.map((comment) => comment.userOwner);
+      // extract name, position, avatar of user owners
+      const foundUsers = await User.find(
+        { _id: { $in: userOwnerArr } },
+        { name: 1, position: 1, avatar: 1 }
+      );
+      // creating user dictionary
+      const foundUsersDict = Object.assign(
+        {},
+        ...foundUsers.map((user) => ({
+          [user._id]: {
+            name: user.name,
+            position: user.position,
+            avatar: user.avatar,
+          },
+        }))
+      );
+      // adding property to foundComments
+      foundComments.map((comment) => {
+        comment.name = foundUsersDict[comment.userOwner].name;
+        comment.position = foundUsersDict[comment.userOwner].position;
+        comment.avatar = foundUsersDict[comment.userOwner].avatar;
+      });
+      return res.status(200).send(foundComments);
     } catch (error) {
       return res.status(500).send("Internal Server Error");
     }
