@@ -210,10 +210,10 @@ const Profile = ({ state, dispatch }) => {
                   />
                   <Divider className={classes.divider} light />
                   <ProfileProjects projects={projects} dispatch={dispatch} />
+                  <Divider className={classes.divider} light />
 
                   {comments ? (
                     <React.Fragment>
-                      {/* TODO need to show comments on the FE */}
                       {comments.map((comment, index) => comment.name)}
                     </React.Fragment>
                   ) : null}

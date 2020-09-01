@@ -53,9 +53,7 @@ export default function ProfileProjects({ projects, dispatch }) {
   const [error, setError] = useState(false);
 
   const submit = () => {
-    if (files.length === 0) {
-      setError(true);
-    } else if (title === "" || link === "") {
+    if (title === "" || link === "") {
       setError(true);
     } else {
       let image = "";
@@ -176,7 +174,7 @@ export default function ProfileProjects({ projects, dispatch }) {
               <Box>
                 <img
                   alt="Code"
-                  src={item.image}
+                  src={item.image || CodeImg}
                   className={classes.project}
                 ></img>
               </Box>
@@ -187,7 +185,7 @@ export default function ProfileProjects({ projects, dispatch }) {
                   </Box>
                   <Box textAlign="left">
                     <Link
-                      href="#"
+                      href={item.link}
                       onClick={preventDefault}
                       variant="body1"
                       color="inherit"
