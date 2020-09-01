@@ -23,6 +23,7 @@ import {
   editUser,
   fetchProfile,
   fetchReviewsCount,
+  fetchProfileComments,
 } from "../services";
 
 const useStyles = makeStyles((theme) => ({
@@ -77,6 +78,7 @@ const Profile = ({ state, dispatch }) => {
   const [rating, setRating] = useState(null);
   const [files, setFiles] = useState([]);
   const [reviewsNum, setReviewsNum] = useState(null);
+  const [comments, setComments] = useState([]);
   let { userId } = useParams();
   const handleEdit = () => {
     setEdit(!edit);
@@ -87,7 +89,6 @@ const Profile = ({ state, dispatch }) => {
   }, [userId]);
 
   const handleInitState = async (userId) => {
-    //could do better and remove 'else' - just userProfile = ...user
     if (userId !== user.id) {
       const userProfile = await fetchProfile(userId);
       setName(userProfile.name);
@@ -98,11 +99,13 @@ const Profile = ({ state, dispatch }) => {
       setProjects(userProfile.projects);
       setRating(userProfile.rating);
       setReviewsNum(await fetchReviewsCount(userId));
+      setComments(await fetchProfileComments(userId));
     } else {
       setName(user.name);
       setPosition(user.position);
       setCompany(user.company);
       setRating(user.rating);
+      setComments(await fetchProfileComments(user.id));
       setProjects(user.projects);
       setReviewsNum(await fetchReviewsCount(user.id));
     }
@@ -199,7 +202,7 @@ const Profile = ({ state, dispatch }) => {
                   <ProfileStats
                     years={years}
                     reviews={reviewsNum}
-                    rating={rating}
+                    rating={rating ? rating.toFixed(1) : null}
                   />
                   <Divider className={classes.divider} light />
                   <ProfileSkills
@@ -207,6 +210,13 @@ const Profile = ({ state, dispatch }) => {
                   />
                   <Divider className={classes.divider} light />
                   <ProfileProjects projects={projects} dispatch={dispatch} />
+
+                  {comments ? (
+                    <React.Fragment>
+                      {/* TODO need to show comments on the FE */}
+                      {comments.map((comment, index) => comment.name)}
+                    </React.Fragment>
+                  ) : null}
                 </Grid>
               </Paper>
             </Container>
