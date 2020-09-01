@@ -381,20 +381,17 @@ module.exports = {
   async fetchProfileComments(req, res) {
     const { userId } = req.body;
     try {
-      // extract only selectedReviewer, comment and rating
+      // extract only userOwner, comment and rating and convert to js object
       const foundComments = await Request.find(
         {
           selectedReviewer: userId,
           status: "closed",
         },
         { _id: 0, userOwner: 1, comment: 1, "embeddedReview.rating": 1 }
-      );
-      // pushing reviewers into an array - not the best solution
-      let userOwnerArr = [];
-      for (comment of foundComments) {
-        userOwnerArr.push(comment.userOwner);
-      }
-      // extract name, position, avatar
+      ).lean();
+      // extracting only user owner from foundComments
+      const userOwnerArr = foundComments.map((comment) => comment.userOwner);
+      // extract name, position, avatar of user owners
       const foundUsers = await User.find(
         { _id: { $in: userOwnerArr } },
         { name: 1, position: 1, avatar: 1 }
@@ -410,18 +407,13 @@ module.exports = {
           },
         }))
       );
-      // is there a better solution?
-      let comments = [];
-      for (comment of foundComments) {
-        comments.push({
-          name: foundUsersDict[comment.userOwner].name,
-          position: foundUsersDict[comment.userOwner].position,
-          avatar: foundUsersDict[comment.userOwner].avatar,
-          comment: comment.comment,
-          rating: comment.embeddedReview.rating,
-        });
-      }
-      return res.status(200).send(comments);
+      // adding property to foundComments
+      foundComments.map((comment) => {
+        comment.name = foundUsersDict[comment.userOwner].name;
+        comment.position = foundUsersDict[comment.userOwner].position;
+        comment.avatar = foundUsersDict[comment.userOwner].avatar;
+      });
+      return res.status(200).send(foundComments);
     } catch (error) {
       return res.status(500).send("Internal Server Error");
     }
