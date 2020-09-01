@@ -1,5 +1,5 @@
-# EXPRESS-STARTER
-
+# Peer Review
+A SPA paid and credit based peer review platform.
 ## Running MongoDB locally
 1. Go to [MongoDB](https://docs.mongodb.com/manual/installation/)
 2. Follow instructions on installing MongoDB Community
