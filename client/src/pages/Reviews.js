@@ -117,7 +117,7 @@ const Reviews = () => {
     setValue(newValue);
     const updatedTab = { ...selectedTab };
 
-    if (newValue == 0) {
+    if (newValue === 0) {
       updatedTab.reviews = true;
       updatedTab.requests = false;
     } else {
@@ -140,7 +140,7 @@ const Reviews = () => {
             <Paper
               variant="outlined"
               className={
-                selectedIndex == idx
+                selectedIndex === idx
                   ? [classes.selectedReviewPaper, classes.reviews].join(" ")
                   : classes.reviews
               }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 // Draftjs editor imports
 import Draft, {
   Editor,
@@ -6,6 +6,7 @@ import Draft, {
   RichUtils,
   convertToRaw,
   convertFromRaw,
+  getDefaultKeyBinding,
 } from "draft-js";
 import CodeUtils from "draft-js-code";
 import PrismDecorator from "draft-js-prism";
@@ -110,14 +111,6 @@ const MyEditor = ({
     );
   }, [editorState, mappedLanguage]);
 
-  const editor = useRef(null);
-  const focusEditor = () => {
-    editor.current.focus();
-  };
-  useEffect(() => {
-    focusEditor();
-  }, []);
-
   //Change handler
   const onChange = (newEditorState) => {
     if (newEditorState.getCurrentContent().hasText()) {
@@ -163,14 +156,15 @@ const MyEditor = ({
     return "handled";
   };
 
-  const onTab = (evt) => {
-    if (!CodeUtils.hasSelectionInBlock(editorState)) return "not-handled";
-
-    setEditorState(CodeUtils.onTab(evt, editorState));
-    return "handled";
+  const onKeyPressed = (event) => {
+    if (event.key === "Tab") {
+      setEditorState(CodeUtils.onTab(event, editorState));
+      event.preventDefault();
+      return "myeditor-save";
+    }
+    return getDefaultKeyBinding(event);
   };
 
-  //Transfer text to make request
   useEffect(() => {
     if (makeSubmit) {
       const rawText = convertToRaw(editorState.getCurrentContent());
@@ -189,17 +183,17 @@ const MyEditor = ({
           setEditorState={setEditorState}
         />
       )}
-      <Editor
-        editorState={editorState}
-        onChange={onChange}
-        keyBindingFn={keyBindingFn}
-        handleKeyCommand={handleKeyCommand}
-        handleReturn={handleReturn}
-        blockStyleFn={getBlockStyle}
-        onTab={onTab}
-        ref={editor}
-        readOnly={readOnly}
-      />
+      <div onKeyDown={onKeyPressed}>
+        <Editor
+          editorState={editorState}
+          onChange={onChange}
+          keyBindingFn={keyBindingFn}
+          handleKeyCommand={handleKeyCommand}
+          handleReturn={handleReturn}
+          blockStyleFn={getBlockStyle}
+          readOnly={readOnly}
+        />
+      </div>
     </div>
   );
 };
