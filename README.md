@@ -20,7 +20,7 @@ I begin with 3 credits (1 credit = 1 code review)
 
 I upload a snippet of my code with context around what I’m writing to submit for review.
 
-In 3 days I get a notification that someone has reviewed my code and I can review their notes!
+In some time I get a notification that someone has reviewed my code and I can review their notes!
 
 ---
 
@@ -96,6 +96,7 @@ Here may be some documentation
 - Express.js
 - Redis
 - Sockets.io
+- Material-UI
 
 ## Team
 
