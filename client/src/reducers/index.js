@@ -69,6 +69,15 @@ export default (state, action) => {
     case "UPDATE_USER_LANGUAGES_SUCCESS": {
       return { ...state, user: action.user, loading: false, error: null };
     }
+    case "UPDATE_USER_PROJECTS": {
+      return { ...state, loading: true };
+    }
+    case "UPDATE_USER_PROJECTS_ERROR": {
+      return { ...state, error: action.error, loading: false };
+    }
+    case "UPDATE_USER_PROJECTS_SUCCESS": {
+      return { ...state, user: action.user, loading: false, error: null };
+    }
     case "UPDATE_USER_BALANCE": {
       return { ...state, loading: true };
     }

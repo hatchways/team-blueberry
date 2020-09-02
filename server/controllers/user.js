@@ -4,7 +4,7 @@ const { Review, Request } = require("../models/review-request");
 const findReviewerQueue = require("../queues/findReviewer");
 const checkStatusQueue = require("../queues/checkStatus");
 const requestHandler = require("../mongoose-handlers/request");
-const persistAvatar = require("../middleware/s3Handler");
+const { persistAvatar } = require("../middleware/s3Handler");
 const toDigit = require("../helper/digitalize");
 const io = require("../sockets");
 const { createNotification } = require("../controllers/notifications");
@@ -362,7 +362,7 @@ module.exports = {
     const { userId } = req.body;
     try {
       const foundUser = await User.findById(userId).select(
-        "name position company avatar languages rating"
+        "name position company avatar languages rating projects"
       );
       return res.status(200).send(foundUser);
     } catch (error) {

@@ -7,6 +7,7 @@ import ProfileStats from "./Profile/ProfileStats";
 import Background from "../elements/Background";
 import ProfileSkills from "./Profile/ProfileSkills";
 import ProfileName from "./Profile/ProfileName";
+import ProfileProjects from "./Profile/ProfileProjects";
 //Material UI imports
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
@@ -73,6 +74,7 @@ const Profile = ({ state, dispatch }) => {
   const [company, setCompany] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const [languages, setLanguage] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [rating, setRating] = useState(null);
   const [files, setFiles] = useState([]);
   const [reviewsNum, setReviewsNum] = useState(null);
@@ -94,6 +96,8 @@ const Profile = ({ state, dispatch }) => {
       setCompany(userProfile.company);
       setAvatar(userProfile.avatar);
       setLanguage(userProfile.languages);
+      // setProjects(await fetchProjects(userId));
+      setProjects(userProfile.projects);
       setRating(userProfile.rating);
       setReviewsNum(await fetchReviewsCount(userId));
       setComments(await fetchProfileComments(userId));
@@ -102,8 +106,10 @@ const Profile = ({ state, dispatch }) => {
       setPosition(user.position);
       setCompany(user.company);
       setRating(user.rating);
-      setReviewsNum(await fetchReviewsCount(user.id));
       setComments(await fetchProfileComments(user.id));
+      // setProjects(await fetchProjects(user.id));
+      setProjects(user.projects);
+      setReviewsNum(await fetchReviewsCount(user.id));
     }
   };
 
@@ -205,14 +211,18 @@ const Profile = ({ state, dispatch }) => {
                     skills={userId === user.id ? user.languages : languages}
                   />
                   <Divider className={classes.divider} light />
+                  <ProfileProjects
+                    projects={projects}
+                    dispatch={dispatch}
+                    showEdit={userId !== user.id}
+                  />
+                  <Divider className={classes.divider} light />
+
                   {comments ? (
                     <React.Fragment>
-                      {/* TODO need to show comments on the FE */}
                       {comments.map((comment, index) => comment.name)}
                     </React.Fragment>
                   ) : null}
-                  {/* <Divider className={classes.divider} light />
-                  <ProfileProjects projects={projects} /> */}
                 </Grid>
               </Paper>
             </Container>
