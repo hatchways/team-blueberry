@@ -1,6 +1,20 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
+const Projects = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  link: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+  },
+});
+
 // basic user model
 const userSchema = new mongoose.Schema({
   email: {
@@ -42,6 +56,7 @@ const userSchema = new mongoose.Schema({
     max: 5,
     default: 1,
   },
+  projects: [Projects],
 });
 
 // hash and store password before user is saved
