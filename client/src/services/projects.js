@@ -4,7 +4,6 @@ const axios = require("axios");
 const newProject = async (project, dispatch) => {
   dispatch({ type: "UPDATE_USER_PROJECTS" });
   try {
-    // const { data } = await axios({
     await axios({
       url: `/api/user/projects`,
       method: "POST",
@@ -17,14 +16,12 @@ const newProject = async (project, dispatch) => {
       data: project,
       headers: { "Content-Type": "application/json" },
     });
-    // console.log("Data: ", data);
     dispatch({
       type: "UPDATE_USER_PROJECTS_SUCCESS",
       user: data,
     });
   } catch (e) {
     dispatch({ type: "UPDATE_USER_PROJECTS_ERROR", error: { ...e } });
-    console.log(e);
   }
 };
 
@@ -42,7 +39,6 @@ const deleteProject = async (projectId, dispatch) => {
     });
   } catch (e) {
     dispatch({ type: "UPDATE_USER_PROJECTS_ERROR", error: { ...e } });
-    console.log(e);
   }
 };
 
