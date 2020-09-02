@@ -177,9 +177,8 @@ const Request = () => {
 
   const handleSocketMessage = (message) => {
     const { newMessage, reviewOwner, selectedReviewer } = message;
-    const currentReview = window.location.href.slice(-24);
 
-    if (newMessage.embeddedReview._id == currentReview) {
+    if (newMessage.embeddedReview._id == reviewId) {
       dispatch({
         type: "NEW_MESSAGE",
         review: newMessage.embeddedReview,
