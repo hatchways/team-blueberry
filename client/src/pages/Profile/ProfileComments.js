@@ -46,6 +46,124 @@ const ProfileComments = ({ comments }) => {
   const currentComments = comments.slice(indexOfFirstPost, indexOfLastPost);
   const totalPages = Math.ceil(comments.length / commentsPerPage);
 
+  const CommentsRatings = ({ rating }) => {
+    if (rating < 2) {
+      return (
+        <React.Fragment>
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+        </React.Fragment>
+      );
+    } else if (rating < 3) {
+      return (
+        <React.Fragment>
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+        </React.Fragment>
+      );
+    } else if (rating < 4) {
+      return (
+        <React.Fragment>
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+        </React.Fragment>
+      );
+    } else if (rating < 5) {
+      return (
+        <React.Fragment>
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+          <Rating className={classes.ratingColor} />
+        </React.Fragment>
+      );
+    }
+  };
+
+  const Pagination = ({ totalPages, currentPage, handlePage }) => {
+    if (totalPages >= 3) {
+      if (currentPage == 1) {
+        return (
+          <React.Fragment>
+            <IconButton disabled={true}>{currentPage}</IconButton>
+            <IconButton onClick={() => handlePage(currentPage + 1)}>
+              {currentPage + 1}
+            </IconButton>
+            <IconButton onClick={() => handlePage(currentPage + 2)}>
+              {currentPage + 2}
+            </IconButton>
+          </React.Fragment>
+        );
+      } else if (currentPage === totalPages) {
+        return (
+          <React.Fragment>
+            <IconButton onClick={() => handlePage(currentPage - 2)}>
+              {currentPage - 2}
+            </IconButton>
+            <IconButton onClick={() => handlePage(currentPage - 1)}>
+              {currentPage - 1}
+            </IconButton>
+            <IconButton disabled={true}>{currentPage}</IconButton>
+          </React.Fragment>
+        );
+      } else {
+        return (
+          <React.Fragment>
+            <IconButton onClick={() => handlePage(currentPage - 1)}>
+              {currentPage - 1}
+            </IconButton>
+            <IconButton disabled={true}>{currentPage}</IconButton>
+            <IconButton onClick={() => handlePage(currentPage + 1)}>
+              {currentPage + 1}
+            </IconButton>
+          </React.Fragment>
+        );
+      }
+    } else if (totalPages === 2) {
+      if (currentPage === 1) {
+        return (
+          <React.Fragment>
+            <IconButton disabled={true}>{currentPage}</IconButton>
+            <IconButton onClick={() => handlePage(currentPage + 1)}>
+              {currentPage + 1}
+            </IconButton>
+          </React.Fragment>
+        );
+      } else {
+        return (
+          <React.Fragment>
+            <IconButton onClick={() => handlePage(currentPage - 1)}>
+              {currentPage - 1}
+            </IconButton>
+            <IconButton disabled={true}>{currentPage}</IconButton>
+          </React.Fragment>
+        );
+      }
+    } else {
+      return <IconButton disabled={true}>{currentPage}</IconButton>;
+    }
+  };
+
   const handleBack = () => {
     setCurrentPage(currentPage - 1);
   };
@@ -79,48 +197,7 @@ const ProfileComments = ({ comments }) => {
                 className={classes.cardHeader}
               />
               <CardContent>
-                {comment.embeddedReview.rating < 2 ? (
-                  <React.Fragment>
-                    <Rating className={classes.ratingColor} />
-                    <RatingOutlined className={classes.ratingColor} />
-                    <RatingOutlined className={classes.ratingColor} />
-                    <RatingOutlined className={classes.ratingColor} />
-                    <RatingOutlined className={classes.ratingColor} />
-                  </React.Fragment>
-                ) : comment.embeddedReview.rating < 3 ? (
-                  <React.Fragment>
-                    <Rating className={classes.ratingColor} />
-                    <Rating className={classes.ratingColor} />
-                    <RatingOutlined className={classes.ratingColor} />
-                    <RatingOutlined className={classes.ratingColor} />
-                    <RatingOutlined className={classes.ratingColor} />
-                  </React.Fragment>
-                ) : comment.embeddedReview.rating < 4 ? (
-                  <React.Fragment>
-                    <Rating className={classes.ratingColor} />
-                    <Rating className={classes.ratingColor} />
-                    <Rating className={classes.ratingColor} />
-                    <RatingOutlined className={classes.ratingColor} />
-                    <RatingOutlined className={classes.ratingColor} />
-                  </React.Fragment>
-                ) : comment.embeddedReview.rating < 5 ? (
-                  <React.Fragment>
-                    <Rating className={classes.ratingColor} />
-                    <Rating className={classes.ratingColor} />
-                    <Rating className={classes.ratingColor} />
-                    <Rating className={classes.ratingColor} />
-                    <RatingOutlined className={classes.ratingColor} />
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>
-                    <Rating className={classes.ratingColor} />
-                    <Rating className={classes.ratingColor} />
-                    <Rating className={classes.ratingColor} />
-                    <Rating className={classes.ratingColor} />
-                    <Rating className={classes.ratingColor} />
-                  </React.Fragment>
-                )}
-
+                <CommentsRatings rating={comment.embeddedReview.rating} />
                 <Typography className={classes.comment}>
                   {comment.comment ? comment.comment : "Not Specified"}
                 </Typography>
@@ -134,63 +211,11 @@ const ProfileComments = ({ comments }) => {
             <IconButton disabled={currentPage === 1} onClick={handleBack}>
               <ArrowBackward />
             </IconButton>
-            {totalPages >= 3 ? (
-              <React.Fragment>
-                {currentPage === 1 ? (
-                  <React.Fragment>
-                    <IconButton disabled={true}>{currentPage}</IconButton>
-                    <IconButton onClick={() => handlePage(currentPage + 1)}>
-                      {currentPage + 1}
-                    </IconButton>
-                    <IconButton onClick={() => handlePage(currentPage + 2)}>
-                      {currentPage + 2}
-                    </IconButton>
-                  </React.Fragment>
-                ) : currentPage === totalPages ? (
-                  <React.Fragment>
-                    <IconButton onClick={() => handlePage(currentPage - 2)}>
-                      {currentPage - 2}
-                    </IconButton>
-                    <IconButton onClick={() => handlePage(currentPage - 1)}>
-                      {currentPage - 1}
-                    </IconButton>
-                    <IconButton disabled={true}>{currentPage}</IconButton>
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>
-                    <IconButton onClick={() => handlePage(currentPage - 1)}>
-                      {currentPage - 1}
-                    </IconButton>
-                    <IconButton disabled={true}>{currentPage}</IconButton>
-                    <IconButton onClick={() => handlePage(currentPage + 1)}>
-                      {currentPage + 1}
-                    </IconButton>
-                  </React.Fragment>
-                )}
-              </React.Fragment>
-            ) : totalPages === 2 ? (
-              <React.Fragment>
-                <React.Fragment>
-                  {currentPage === 1 ? (
-                    <React.Fragment>
-                      <IconButton disabled={true}>{currentPage}</IconButton>
-                      <IconButton onClick={() => handlePage(currentPage + 1)}>
-                        {currentPage + 1}
-                      </IconButton>
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <IconButton onClick={() => handlePage(currentPage - 1)}>
-                        {currentPage - 1}
-                      </IconButton>
-                      <IconButton disabled={true}>{currentPage}</IconButton>
-                    </React.Fragment>
-                  )}
-                </React.Fragment>
-              </React.Fragment>
-            ) : (
-              <IconButton disabled={true}>{currentPage}</IconButton>
-            )}
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              handlePage={handlePage}
+            />
             <IconButton
               disabled={currentPage === totalPages}
               onClick={handleForward}
