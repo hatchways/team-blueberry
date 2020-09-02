@@ -10,7 +10,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { Typography, TextField, Button, IconButton } from "@material-ui/core";
 import DropZone from "./Dropzone";
 import { newProject, deleteProject } from "../../services/projects";
-import Alert from "../../elements/SnackBar";
 
 const useStyles = makeStyles((theme) => ({
   project: {
@@ -60,7 +59,6 @@ export default function ProfileProjects({ projects, dispatch, showEdit }) {
       if (files.length !== 0) {
         image = files[0].bin;
       }
-      console.log("NewProject: ", image);
       newProject(
         {
           title,
@@ -73,14 +71,31 @@ export default function ProfileProjects({ projects, dispatch, showEdit }) {
   };
 
   const delProject = (projectId) => {
-    console.log(projectId);
     deleteProject(projectId, dispatch);
   };
+
+  const addProjectButton = (
+    <Grid item>
+      <Box
+        className={classes.addProject}
+        onClick={() => {
+          setEditMode(true);
+        }}
+      >
+        <span>
+          <AddCircleIcon style={{ fontSize: 50 }} />
+          <Typography variant="h5" display="block">
+            Add new project
+          </Typography>
+        </span>
+      </Box>
+    </Grid>
+  );
 
   const editProject = (
     <React.Fragment>
       <Grid item>
-        <Box mt={2} mb={1} fontSize="h4.fontSize">
+        <Box mt={2} mb={1} fontSize="h5.fontSize">
           Add new project here:
         </Box>
       </Grid>
@@ -208,31 +223,9 @@ export default function ProfileProjects({ projects, dispatch, showEdit }) {
             </Grid>
           );
         })}
-        {!editMode && (
-          <Grid item>
-            <Box
-              className={classes.addProject}
-              onClick={() => {
-                setEditMode(true);
-              }}
-            >
-              <span>
-                <AddCircleIcon style={{ fontSize: 50 }} />
-                <Typography variant="h5" display="block">
-                  Add new project
-                </Typography>
-              </span>
-            </Box>
-          </Grid>
-        )}
+        {!editMode && !showEdit ? addProjectButton : null}
       </Grid>
       {editMode && editProject}
-      <Alert
-        open={error && files.length === 0 ? true : false}
-        onClick={() => setError(false)}
-      >
-        Upload image is mandatory
-      </Alert>
     </React.Fragment>
   );
 }

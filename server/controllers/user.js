@@ -362,7 +362,7 @@ module.exports = {
     const { userId } = req.body;
     try {
       const foundUser = await User.findById(userId).select(
-        "name position company avatar languages rating"
+        "name position company avatar languages rating projects"
       );
       return res.status(200).send(foundUser);
     } catch (error) {

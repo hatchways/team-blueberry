@@ -25,7 +25,6 @@ import {
   fetchReviewsCount,
   fetchProfileComments,
 } from "../services";
-import { fetchProjects } from "../services/projects";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,6 +91,7 @@ const Profile = ({ state, dispatch }) => {
   const handleInitState = async (userId) => {
     if (userId !== user.id) {
       const userProfile = await fetchProfile(userId);
+      console.log("PROJECTS", userProfile);
       setName(userProfile.name);
       setPosition(userProfile.position);
       setCompany(userProfile.company);

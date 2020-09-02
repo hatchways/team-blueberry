@@ -2,8 +2,6 @@ const User = require("../models/user");
 const { persistProjectImg } = require("../middleware/s3Handler");
 
 const createProject = async (req, res) => {
-  console.log("Project: ", req.body);
-  console.log("TYPE: ", !req.body.title);
   const userId = req.user.id;
   if (!req.body.title) {
     const signedURL = await persistProjectImg(req);
@@ -63,20 +61,7 @@ const deleteProject = async (req, res) => {
   }
 };
 
-const fetchProjects = async (req, res) => {
-  const { userId } = req.body;
-  try {
-    const foundUser = await User.findById(userId).select(
-      "name position company avatar languages rating projects"
-    );
-    return res.status(200).send(foundUser);
-  } catch (error) {
-    return res.status(500).send("Internal Server Error");
-  }
-};
-
 module.exports = {
   createProject,
   deleteProject,
-  fetchProjects,
 };
