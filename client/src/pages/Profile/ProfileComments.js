@@ -47,7 +47,17 @@ const ProfileComments = ({ comments }) => {
   const totalPages = Math.ceil(comments.length / commentsPerPage);
 
   const CommentsRatings = ({ rating }) => {
-    if (rating < 2) {
+    if (rating === 1) {
+      return (
+        <React.Fragment>
+          <Rating className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+          <RatingOutlined className={classes.ratingColor} />
+        </React.Fragment>
+      );
+    } else if (rating === 2) {
       return (
         <React.Fragment>
           <Rating className={classes.ratingColor} />
@@ -57,17 +67,7 @@ const ProfileComments = ({ comments }) => {
           <RatingOutlined className={classes.ratingColor} />
         </React.Fragment>
       );
-    } else if (rating < 3) {
-      return (
-        <React.Fragment>
-          <Rating className={classes.ratingColor} />
-          <Rating className={classes.ratingColor} />
-          <RatingOutlined className={classes.ratingColor} />
-          <RatingOutlined className={classes.ratingColor} />
-          <RatingOutlined className={classes.ratingColor} />
-        </React.Fragment>
-      );
-    } else if (rating < 4) {
+    } else if (rating === 3) {
       return (
         <React.Fragment>
           <Rating className={classes.ratingColor} />
@@ -77,7 +77,7 @@ const ProfileComments = ({ comments }) => {
           <RatingOutlined className={classes.ratingColor} />
         </React.Fragment>
       );
-    } else if (rating < 5) {
+    } else if (rating === 4) {
       return (
         <React.Fragment>
           <Rating className={classes.ratingColor} />
