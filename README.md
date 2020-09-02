@@ -43,8 +43,6 @@ In 3 days I get a notification that someone has reviewed my code and I can revie
   - [FAQ](#faq)
   - [Support](#support)
 
----
-
 ## Installation
 
 ### Running MongoDB locally
@@ -68,8 +66,6 @@ In 3 days I get a notification that someone has reviewed my code and I can revie
 
 We can use <a href="http://recordit.co/" target="_blank">**Recordit**</a> to create quicks screencasts and export them as `GIF`s.
 
----
-
 ## Features
 
 - Login/sign up flow with e-mail address
@@ -83,19 +79,13 @@ We can use <a href="http://recordit.co/" target="_blank">**Recordit**</a> to cre
 - Send code review
 - Upload projects to show
 
----
-
 ## Usage
 
 I propose here we walk through the app and add Gifs and Screenshots.
 
----
-
 ## Documentation
 
 Here may be some documentation
-
----
 
 ## Technologies (STACK)
 
@@ -107,8 +97,6 @@ Here may be some documentation
 - Redis
 - Sockets.io
 
----
-
 ## Team
 
 > Team of developers worked on the Peer Code Review App
@@ -118,14 +106,10 @@ Here may be some documentation
 | [![Vitalii Sidorok](https://avatars0.githubusercontent.com/u/22850021?s=200)](http://github.com/svitaly) | [![Affeeq Ismail](https://avatars1.githubusercontent.com/u/48659449?s=200)](https://github.com/Affeeq) | [![Tyler Poor](https://avatars1.githubusercontent.com/u/43526510?s=200)](http://github.com/LiveBacteria) |
 |               <a href="http://github.com/svitaly" target="_blank">`github.com/svitaly`</a>               |              <a href="https://github.com/Affeeq" target="_blank">`github.com/affeeq`</a>               |          <a href="http://github.com/LiveBacteria" target="_blank">`github.com/LiveBacteria`</a>          |
 
----
-
 ## FAQ
 
 - **Do we need a FAQ section?**
   - I included all sections I could come with. Feel free to delete or modify any of them.
-
----
 
 ## Support
 
@@ -137,4 +121,4 @@ Reach to any of the team members at one of the following places:
 
 ---
 
-- Copyright 2020 © <a href="https://github.com/hatchways/team-blueberry" target="_blank">Team Blueberry</a>.
+Copyright 2020 © <a href="https://github.com/hatchways/team-blueberry" target="_blank">Team Blueberry</a>.
