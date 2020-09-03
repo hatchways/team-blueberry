@@ -171,20 +171,22 @@ const Request = () => {
     if (reviewId) {
       handleInitState();
       socket.messages(reviewId);
-      console.log(reviewId);
     }
     // TODO remove request when unmounting
   }, [reviewId]);
 
   const handleSocketMessage = (message) => {
     const { newMessage, reviewOwner, selectedReviewer } = message;
-    dispatch({
-      type: "NEW_MESSAGE",
-      review: newMessage.embeddedReview,
-      selectedReviewer: selectedReviewer,
-      reviewOwner: reviewOwner,
-      status: newMessage.status,
-    });
+
+    if (newMessage.embeddedReview._id == reviewId) {
+      dispatch({
+        type: "NEW_MESSAGE",
+        review: newMessage.embeddedReview,
+        selectedReviewer: selectedReviewer,
+        reviewOwner: reviewOwner,
+        status: newMessage.status,
+      });
+    }
   };
 
   useEffect(() => {
@@ -219,7 +221,6 @@ const Request = () => {
           : selectedReviewer.avatar
           ? selectedReviewer.avatar
           : selectedReviewer.name[0];
-
       return (
         <CardHeader
           avatar={
