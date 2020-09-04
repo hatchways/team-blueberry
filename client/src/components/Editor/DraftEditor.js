@@ -18,31 +18,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "./Toolbar";
 
 // Prism language support:
-import {
-  go,
-  clike,
-  ruby,
-  php,
-  python,
-  c,
-  cpp,
-  csharp,
-  java,
-  languagesGrammar,
-} from "./languages";
+import { languagesGrammar } from "./languages";
 
-console.log(
-  "Prism langs imported: ",
-  go,
-  clike,
-  ruby,
-  php,
-  python,
-  c,
-  cpp,
-  csharp,
-  java
-);
 const useStyles = makeStyles((theme) => ({
   editor: {
     border: "1px solid #ddd",

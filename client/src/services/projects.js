@@ -1,4 +1,3 @@
-const request = require("../utils/requestHandlers");
 const axios = require("axios");
 
 const newProject = async (project, dispatch) => {
