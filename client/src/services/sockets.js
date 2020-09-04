@@ -31,7 +31,6 @@ class SocketManager {
 
   initializeEvents() {
     this.socket.on("notification", (data) => {
-      console.log("notification received");
       this.subscribers.forEach((subscriber) => {
         if (subscriber.name === "notifications") {
           try {
@@ -43,9 +42,8 @@ class SocketManager {
       });
     });
     this.socket.on("message", (data) => {
-      console.log("message received");
       this.subscribers.forEach((subscriber) => {
-        if (subscriber.name == "messages") {
+        if (subscriber.name === "messages") {
           try {
             subscriber.function(data);
           } catch (err) {

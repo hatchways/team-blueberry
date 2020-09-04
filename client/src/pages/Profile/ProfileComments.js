@@ -102,7 +102,7 @@ const ProfileComments = ({ comments }) => {
 
   const Pagination = ({ totalPages, currentPage, handlePage }) => {
     if (totalPages >= 3) {
-      if (currentPage == 1) {
+      if (currentPage === 1) {
         return (
           <React.Fragment>
             <IconButton disabled={true}>{currentPage}</IconButton>

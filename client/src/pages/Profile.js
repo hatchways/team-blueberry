@@ -97,7 +97,6 @@ const Profile = ({ state, dispatch }) => {
       setCompany(userProfile.company);
       setAvatar(userProfile.avatar);
       setLanguage(userProfile.languages);
-      // setProjects(await fetchProjects(userId));
       setProjects(userProfile.projects);
       setRating(userProfile.rating);
       setReviewsNum(await fetchReviewsCount(userId));
@@ -108,7 +107,6 @@ const Profile = ({ state, dispatch }) => {
       setCompany(user.company);
       setRating(user.rating);
       setComments(await fetchProfileComments(user.id));
-      // setProjects(await fetchProjects(user.id));
       setProjects(user.projects);
       setReviewsNum(await fetchReviewsCount(user.id));
     }
@@ -116,7 +114,6 @@ const Profile = ({ state, dispatch }) => {
 
   const submit = (event) => {
     event.preventDefault();
-    // TODO set up s3 for images
     if (files.length) {
       createUserAvatar(files[0].bin)(dispatch);
     }
@@ -129,7 +126,6 @@ const Profile = ({ state, dispatch }) => {
   const editPosition = (event) => setPosition(event.target.value);
   const editCompany = (event) => setCompany(event.target.value);
   let years = null;
-  // TODO check if user or viewed profile
   if (userId === user.id) {
     years = user.languages.reduce((summ, item) => {
       return summ + item.level;
@@ -201,7 +197,6 @@ const Profile = ({ state, dispatch }) => {
                     </Grid>
                   ) : null}
                   <Divider className={classes.divider} light />
-                  {/* TODO need to get reviews for profile */}
                   <ProfileStats
                     years={years}
                     reviews={reviewsNum}
@@ -221,7 +216,6 @@ const Profile = ({ state, dispatch }) => {
 
                   {comments.length ? (
                     <React.Fragment>
-                      {/* TODO need to show comments on the FE */}
                       <ProfileComments comments={comments} />
                     </React.Fragment>
                   ) : null}

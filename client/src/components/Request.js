@@ -169,36 +169,32 @@ const Request = () => {
 
   useEffect(() => {
     if (reviewId) {
+      const handleInitState = async () => {
+        await getReview(reviewId, dispatch);
+      };
       handleInitState();
       socket.messages(reviewId);
     }
     // TODO remove request when unmounting
   }, [reviewId]);
 
-  const handleSocketMessage = (message) => {
-    const { newMessage, reviewOwner, selectedReviewer } = message;
-    if (newMessage.embeddedReview._id == reviewId) {
-      dispatch({
-        type: "NEW_MESSAGE",
-        review: newMessage.embeddedReview,
-        selectedReviewer: selectedReviewer,
-        reviewOwner: reviewOwner,
-        status: newMessage.status,
-      });
-    }
-  };
-
   useEffect(() => {
+    const handleSocketMessage = (message) => {
+      const { newMessage, reviewOwner, selectedReviewer } = message;
+      if (newMessage.embeddedReview._id === reviewId) {
+        dispatch({
+          type: "NEW_MESSAGE",
+          review: newMessage.embeddedReview,
+          selectedReviewer: selectedReviewer,
+          reviewOwner: reviewOwner,
+          status: newMessage.status,
+        });
+      }
+    };
     socket.subscribe("messages", handleSocketMessage);
     return () => socket.unsubscribe("messages");
   }, [reviewId]);
 
-  // set initial state at first render
-  const handleInitState = async () => {
-    await getReview(reviewId, dispatch);
-  };
-
-  // reviewer header
   const ReviewerHeader = ({
     index,
     selectedReviewer,
@@ -302,7 +298,6 @@ const Request = () => {
                 reviewOwner={state.reviewOwner}
               />
               <CardContent className={classes.message}>
-                {/* TODO edit readOnly style */}
                 <PrismEditor
                   language={state.review.language}
                   hasContent={handleHasContent}
