@@ -219,7 +219,7 @@ const Profile = ({ state, dispatch }) => {
                   />
                   <Divider className={classes.divider} light />
 
-                  {comments ? (
+                  {comments.length ? (
                     <React.Fragment>
                       {/* TODO need to show comments on the FE */}
                       <ProfileComments comments={comments} />

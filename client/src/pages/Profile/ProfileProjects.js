@@ -39,11 +39,15 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.secondary.main,
     },
   },
+  link: {
+    "&:hover": {
+      color: theme.palette.primary.main,
+    },
+  },
 }));
 
 export default function ProfileProjects({ projects, dispatch, showEdit }) {
   const classes = useStyles();
-  const preventDefault = (event) => event.preventDefault();
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
@@ -52,7 +56,8 @@ export default function ProfileProjects({ projects, dispatch, showEdit }) {
   const [error, setError] = useState(false);
 
   const submit = () => {
-    if (title === "" || link === "") {
+    const regex = "^(http|https)://";
+    if (!title || !link.match(regex)) {
       setError(true);
     } else {
       let image = "";
@@ -138,8 +143,9 @@ export default function ProfileProjects({ projects, dispatch, showEdit }) {
               variant="outlined"
               label="Link"
               xs={6}
-              error={error && !link}
-              helperText={error && !link ? "Field cannot be blank!" : null}
+              error={error}
+              helperText={error ? "Incorrect url: start with http(s)://" : null}
+              placeholder="http(s)://"
             />
           </Grid>
         </Grid>
@@ -201,9 +207,10 @@ export default function ProfileProjects({ projects, dispatch, showEdit }) {
                   <Box textAlign="left">
                     <Link
                       href={item.link}
-                      onClick={preventDefault}
                       variant="body1"
+                      underline="none"
                       color="inherit"
+                      className={classes.link}
                     >
                       {item.link}
                     </Link>
