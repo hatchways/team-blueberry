@@ -177,7 +177,6 @@ const Request = () => {
 
   const handleSocketMessage = (message) => {
     const { newMessage, reviewOwner, selectedReviewer } = message;
-    console.log(newMessage.embeddedReview._id == reviewId);
     if (newMessage.embeddedReview._id == reviewId) {
       dispatch({
         type: "NEW_MESSAGE",

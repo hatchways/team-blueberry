@@ -27,7 +27,6 @@ class SocketManager {
       }),
       1
     );
-    console.log(this.subscribers);
   }
 
   initializeEvents() {
@@ -46,7 +45,6 @@ class SocketManager {
     this.socket.on("message", (data) => {
       console.log("message received");
       this.subscribers.forEach((subscriber) => {
-        console.log(subscriber.name);
         if (subscriber.name == "messages") {
           try {
             subscriber.function(data);
