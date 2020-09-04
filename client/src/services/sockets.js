@@ -19,14 +19,15 @@ class SocketManager {
   }
 
   unsubscribe(component) {
-    const findSubscriber = () => {
-      this.subscribers.forEach((subscriber, index) => {
-        if (subscriber.name === component) {
+    this.subscribers.splice(
+      this.subscribers.findIndex((item, index) => {
+        if (item.name === component) {
           return index;
         }
-      });
-    };
-    this.subscribers.splice(findSubscriber(), 1);
+      }),
+      1
+    );
+    console.log(this.subscribers);
   }
 
   initializeEvents() {
@@ -45,7 +46,8 @@ class SocketManager {
     this.socket.on("message", (data) => {
       console.log("message received");
       this.subscribers.forEach((subscriber) => {
-        if (subscriber.name === "messages") {
+        console.log(subscriber.name);
+        if (subscriber.name == "messages") {
           try {
             subscriber.function(data);
           } catch (err) {

@@ -86,7 +86,7 @@ const Notifications = () => {
   };
 
   const handleSocketNotification = (notification) => {
-    console.log("New notification:", notification);
+    // console.log("New notification:", notification);
     dispatch({ type: "newNotification", payload: notification });
   };
 
