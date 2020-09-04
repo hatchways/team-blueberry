@@ -1,9 +1,6 @@
 const aws = require("aws-sdk/");
 const S3_BUCKET = process.env.S3_BUCKET;
 
-const S3_URI = (fileName) =>
-  `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`;
-
 aws.config.update({
   region: process.env.REGION,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -22,19 +19,18 @@ const persistAvatar = async (req, res) => {
     ACL: "public-read",
   };
 
-  const { url, ...data } = await s3.putObject(s3Params, (err, data) => {
-    if (err) {
-      console.log(err);
-      throw new Error({ status: 424, message: err });
-    }
-    return data;
-  });
-  return S3_URI(fileName);
+  try {
+    const { Location } = await s3.upload(s3Params).promise();
+    return Location;
+  } catch (err) {
+    console.log(err);
+    throw new Error({ status: 424, message: err });
+  }
 };
 
 const persistProjectImg = async (req) => {
   if (Buffer.byteLength(req.body) === 0) return "";
-  const fileName = `${req.user.id}-${Date.now()}`;
+  const fileName = `${req.user.id}${new Date().getTime()}`;
   const s3 = new aws.S3();
   const s3Params = {
     Body: req.body,
@@ -45,14 +41,13 @@ const persistProjectImg = async (req) => {
     ACL: "public-read",
   };
 
-  const { url, ...data } = await s3.putObject(s3Params, (err, data) => {
-    if (err) {
-      console.log(err);
-      throw new Error({ status: 424, message: err });
-    }
-    return data;
-  });
-  return S3_URI(fileName);
+  try {
+    const { Location } = await s3.upload(s3Params).promise();
+    return Location;
+  } catch (err) {
+    console.log(err);
+    throw new Error({ status: 424, message: err });
+  }
 };
 
 module.exports = { persistAvatar, persistProjectImg };
