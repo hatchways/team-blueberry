@@ -177,7 +177,6 @@ const Request = () => {
 
   const handleSocketMessage = (message) => {
     const { newMessage, reviewOwner, selectedReviewer } = message;
-
     if (newMessage.embeddedReview._id == reviewId) {
       dispatch({
         type: "NEW_MESSAGE",
@@ -192,7 +191,7 @@ const Request = () => {
   useEffect(() => {
     socket.subscribe("messages", handleSocketMessage);
     return () => socket.unsubscribe("messages");
-  }, []);
+  }, [reviewId]);
 
   // set initial state at first render
   const handleInitState = async () => {

@@ -1,4 +1,9 @@
 const socketIo = require("socket.io");
+const options = {
+  pingInterval: 10000,
+  pingTimeout: 50000,
+  cookie: false,
+};
 
 class SocketConfig {
   constructor() {
@@ -6,7 +11,7 @@ class SocketConfig {
   }
 
   bindServer(server) {
-    this.io = new socketIo(server);
+    this.io = new socketIo(server, options);
   }
 
   start() {
