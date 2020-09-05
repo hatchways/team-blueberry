@@ -165,7 +165,7 @@ const BalancePage = ({ state, dispatch }) => {
             <SubmitButton
               variant="contained"
               color="primary"
-              disabled={state.loading}
+              disabled={state.loading || topUp === 0}
               onClick={handleCheckout}
             >
               Checkout

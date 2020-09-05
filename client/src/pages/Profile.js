@@ -206,16 +206,21 @@ const Profile = ({ state, dispatch }) => {
                   <ProfileSkills
                     skills={userId === user.id ? user.languages : languages}
                   />
-                  <Divider className={classes.divider} light />
-                  <ProfileProjects
-                    projects={projects}
-                    dispatch={dispatch}
-                    showEdit={userId !== user.id}
-                  />
-                  <Divider className={classes.divider} light />
+
+                  {userId !== user.id && projects.length === 0 ? null : (
+                    <React.Fragment>
+                      <Divider className={classes.divider} light />
+                      <ProfileProjects
+                        projects={projects}
+                        dispatch={dispatch}
+                        showEdit={userId !== user.id}
+                      />
+                    </React.Fragment>
+                  )}
 
                   {comments.length ? (
                     <React.Fragment>
+                      <Divider className={classes.divider} light />
                       <ProfileComments comments={comments} />
                     </React.Fragment>
                   ) : null}

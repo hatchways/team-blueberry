@@ -217,14 +217,14 @@ export default function ProfileProjects({ projects, dispatch, showEdit }) {
                   </Box>
                 </Grid>
                 <Grid item>
-                  {inHover && (
+                  {inHover && !showEdit ? (
                     <IconButton
                       onClick={() => delProject(item._id)}
                       className={classes.deleteButton}
                     >
                       <DeleteIcon />
                     </IconButton>
-                  )}
+                  ) : null}
                 </Grid>
               </Grid>
             </Grid>
