@@ -24,6 +24,7 @@ class SocketManager {
         if (item.name === component) {
           return index;
         }
+        return null;
       }),
       1
     );

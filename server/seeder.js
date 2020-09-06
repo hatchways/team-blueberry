@@ -16,7 +16,6 @@ module.exports = (mongoUri) =>
     console.log(`seeding to ${mongoUri || dbString}`);
     seeder.loadModels([
       "./models/user.js",
-      "./models/payment.js",
       "./models/review-request.js",
       // ? can this be done programmatically?
     ]);

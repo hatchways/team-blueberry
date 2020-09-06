@@ -2,19 +2,20 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import Divider from "@material-ui/core/Divider";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
 import AvatarImage from "./img/avatar.png";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Rating from "@material-ui/icons/FiberManualRecord";
 import RatingOutlined from "@material-ui/icons/FiberManualRecordOutlined";
 import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackward from "@material-ui/icons/ArrowBackIosOutlined";
 import ArrowForward from "@material-ui/icons/ArrowForwardIosOutlined";
+import PageHeader from "../../elements/PageHeader";
+import FormatQuoteRoundedIcon from "@material-ui/icons/FormatQuoteRounded";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
   },
   cardHeader: {
     minWidth: "260px",
+  },
+  comment: {
+    fontStyle: "italic",
   },
 }));
 
@@ -177,7 +181,8 @@ const ProfileComments = ({ comments }) => {
   };
 
   return (
-    <Paper elevation={1} className={classes.paper}>
+    <>
+      <PageHeader>Comments</PageHeader>
       <List className={classes.root}>
         {currentComments.map((comment, index) => (
           <React.Fragment key={index}>
@@ -198,12 +203,22 @@ const ProfileComments = ({ comments }) => {
               />
               <CardContent>
                 <CommentsRatings rating={comment.embeddedReview.rating} />
-                <Typography className={classes.comment}>
-                  {comment.comment ? comment.comment : "Not Specified"}
-                </Typography>
+                {comment.comment && (
+                  <Typography className={classes.comment} variant="subtitle1">
+                    <Box fontSize={16} ml={1}>
+                      <Grid item container direction="row" xs={12} spacing={2}>
+                        <Grid item xs={1}>
+                          <FormatQuoteRoundedIcon color="disabled" />
+                        </Grid>
+                        <Grid item xs={11}>
+                          {comment.comment}
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Typography>
+                )}
               </CardContent>
             </ListItem>
-            <Divider />
           </React.Fragment>
         ))}
         {comments.length ? (
@@ -225,7 +240,7 @@ const ProfileComments = ({ comments }) => {
           </Box>
         ) : null}
       </List>
-    </Paper>
+    </>
   );
 };
 

@@ -25,7 +25,6 @@ const updateBalanceBe = async (userId, credits) => {
 };
 
 module.exports = {
-  // for logged in user
   async getMe(req, res, next) {
     try {
       const user = await User.findById(req.user.id)
@@ -33,13 +32,10 @@ module.exports = {
         .then((user) => user.toObject());
       return res.status(200).send({ ...user });
     } catch (e) {
-      // TODO maybe handle exception if user is logged in but db does not return
-      // consider security implications
       console.log(e);
       return res.status(500).send("Error fetching user profile");
     }
   },
-  // for other user
   async getUser(req, res, next) {
     try {
       const user = await User.getUser(req.params.userId);
@@ -67,10 +63,8 @@ module.exports = {
       return res.status(500).send("Error updating user profile");
     }
   },
-  // TODO need to recheck once set up s3
   async createUserAvatar(req, res) {
     try {
-      // TODO add loading state to let image upload
       const signedURL = await persistAvatar(req);
       const user = await User.findByIdAndUpdate(
         req.user.id,
@@ -102,16 +96,6 @@ module.exports = {
     }
   },
 
-  // async updateBalanceBe(userId, credits) {
-  //   const user = await User.findById(userId);
-  //   const newUser = await User.findOneAndUpdate(
-  //     { _id: userId },
-  //     { balance: user.balance + credits },
-  //     { new: true }
-  //   );
-  //   return newUser;
-  // },
-
   async updateBalance(req, res) {
     try {
       const userId = req.body.userId,
@@ -129,7 +113,6 @@ module.exports = {
   },
 
   async createReview(userId, data, cb) {
-    // create const variables from data
     const language = data.language,
       title = data.title,
       message = data.message;

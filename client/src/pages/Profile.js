@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import userContext from "../userContext";
 import AvatarImage from "./Profile/img/avatar.png";
@@ -85,32 +85,42 @@ const Profile = ({ state, dispatch }) => {
     setEdit(!edit);
   };
 
+  const handleInitState = useCallback(
+    async (userId) => {
+      if (userId !== user.id) {
+        const userProfile = await fetchProfile(userId);
+        setName(userProfile.name);
+        setPosition(userProfile.position);
+        setCompany(userProfile.company);
+        setAvatar(userProfile.avatar);
+        setLanguage(userProfile.languages);
+        setProjects(userProfile.projects);
+        setRating(userProfile.rating);
+        setReviewsNum(await fetchReviewsCount(userId));
+        setComments(await fetchProfileComments(userId));
+      } else {
+        setName(user.name);
+        setPosition(user.position);
+        setCompany(user.company);
+        setRating(user.rating);
+        setComments(await fetchProfileComments(user.id));
+        setProjects(user.projects);
+        setReviewsNum(await fetchReviewsCount(user.id));
+      }
+    },
+    [
+      user.company,
+      user.id,
+      user.name,
+      user.position,
+      user.projects,
+      user.rating,
+    ]
+  );
+
   useEffect(() => {
     handleInitState(userId);
-  }, [userId]);
-
-  const handleInitState = async (userId) => {
-    if (userId !== user.id) {
-      const userProfile = await fetchProfile(userId);
-      setName(userProfile.name);
-      setPosition(userProfile.position);
-      setCompany(userProfile.company);
-      setAvatar(userProfile.avatar);
-      setLanguage(userProfile.languages);
-      setProjects(userProfile.projects);
-      setRating(userProfile.rating);
-      setReviewsNum(await fetchReviewsCount(userId));
-      setComments(await fetchProfileComments(userId));
-    } else {
-      setName(user.name);
-      setPosition(user.position);
-      setCompany(user.company);
-      setRating(user.rating);
-      setComments(await fetchProfileComments(user.id));
-      setProjects(user.projects);
-      setReviewsNum(await fetchReviewsCount(user.id));
-    }
-  };
+  }, [userId, handleInitState]);
 
   const submit = (event) => {
     event.preventDefault();
@@ -206,16 +216,21 @@ const Profile = ({ state, dispatch }) => {
                   <ProfileSkills
                     skills={userId === user.id ? user.languages : languages}
                   />
-                  <Divider className={classes.divider} light />
-                  <ProfileProjects
-                    projects={projects}
-                    dispatch={dispatch}
-                    showEdit={userId !== user.id}
-                  />
-                  <Divider className={classes.divider} light />
+
+                  {userId !== user.id && projects.length === 0 ? null : (
+                    <React.Fragment>
+                      <Divider className={classes.divider} light />
+                      <ProfileProjects
+                        projects={projects}
+                        dispatch={dispatch}
+                        showEdit={userId !== user.id}
+                      />
+                    </React.Fragment>
+                  )}
 
                   {comments.length ? (
                     <React.Fragment>
+                      <Divider className={classes.divider} light />
                       <ProfileComments comments={comments} />
                     </React.Fragment>
                   ) : null}
