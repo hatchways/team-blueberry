@@ -5,7 +5,6 @@ import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
 import AvatarImage from "./img/avatar.png";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
@@ -17,7 +16,6 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowBackward from "@material-ui/icons/ArrowBackIosOutlined";
 import ArrowForward from "@material-ui/icons/ArrowForwardIosOutlined";
 import PageHeader from "../../elements/PageHeader";
-import FormatQuoteIcon from "@material-ui/icons/FormatQuote";
 import FormatQuoteRoundedIcon from "@material-ui/icons/FormatQuoteRounded";
 
 const useStyles = makeStyles((theme) => ({
@@ -214,7 +212,7 @@ const ProfileComments = ({ comments }) => {
                 {comment.comment && (
                   <Typography className={classes.comment} variant="subtitle1">
                     <Box fontSize={16} ml={1}>
-                      <Grid container direction="row" xs={12} spacing={1}>
+                      <Grid item container direction="row" xs={12} spacing={2}>
                         <Grid item xs={1}>
                           <FormatQuoteRoundedIcon color="disabled" />
                         </Grid>

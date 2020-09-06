@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useReducer } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useReducer,
+  useCallback,
+} from "react";
 import socket from "../services/sockets";
 import axios from "axios";
 import userContext from "../userContext";
@@ -68,16 +74,16 @@ const Notifications = () => {
   const user = useContext(userContext);
   const [anchorNotificaton, setAnchorNotificaton] = useState(null);
 
-  const getNotifications = async () => {
+  const getNotifications = useCallback(async () => {
     const { data } = await axios.get(`/api/notifications/${user.id}`);
     dispatch({ type: "getNotifications", payload: data.reverse() });
-  };
+  }, [user.id]);
 
   useEffect(() => {
     getNotifications();
     socket.subscribe("notifications", handleSocketNotification);
     return () => socket.unsubscribe("notifications");
-  }, []);
+  }, [getNotifications]);
 
   const deleteNotification = (notificationId) => {
     axios.delete(`/api/notifications/${notificationId}`);
