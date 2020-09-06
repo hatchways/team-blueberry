@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import Divider from "@material-ui/core/Divider";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import AvatarImage from "./img/avatar.png";
@@ -34,11 +33,6 @@ const useStyles = makeStyles((theme) => ({
   },
   cardHeader: {
     minWidth: "260px",
-  },
-  divider: {
-    marginRight: "-5vh",
-    marginLeft: "-5vh",
-    alignSelf: "stretch",
   },
   comment: {
     fontStyle: "italic",
@@ -225,7 +219,6 @@ const ProfileComments = ({ comments }) => {
                 )}
               </CardContent>
             </ListItem>
-            <Divider light className={classes.divider} />
           </React.Fragment>
         ))}
         {comments.length ? (
