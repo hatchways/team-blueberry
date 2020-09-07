@@ -224,13 +224,13 @@ export default function ResponsiveDrawer(props) {
   ) : (
     <React.Fragment>
       <Box mt={8}>
-        <Paper className={classes.root}>
+        <Paper>
           <Tabs
             value={value}
             onChange={handleChange}
             indicatorColor="primary"
             textColor="primary"
-            centered
+            variant="fullWidth"
           >
             <Tab
               label={`Reviews(${state.reviews ? state.reviews.length : 0})`}
