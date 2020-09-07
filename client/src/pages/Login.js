@@ -44,11 +44,8 @@ export default function Login({ state, dispatch }) {
   };
 
   const guestLogin = () => {
-    const guestEmail = "guest@guest.guest";
-    const guestPassword = "guest2020";
-    userLogin(guestEmail, guestPassword, dispatch).catch((error) => {
-      setLoginError(error.message);
-    });
+    setLoginEmail("guest@guest.guest");
+    setLoginPassword("guest2020");
   };
 
   return (
@@ -66,6 +63,7 @@ export default function Login({ state, dispatch }) {
                   id="email"
                   label="E-mail Address"
                   name="email"
+                  value={loginEmail}
                   autoComplete="email"
                   error={submitClicked && !loginEmail ? true : false}
                   helperText={
@@ -81,6 +79,7 @@ export default function Login({ state, dispatch }) {
                   variant="outlined"
                   fullWidth
                   name="password"
+                  value={loginPassword}
                   label="Password"
                   type="password"
                   id="password"
@@ -125,6 +124,7 @@ export default function Login({ state, dispatch }) {
               <Grid item>
                 <Link
                   component={RouterLink}
+                  to="#"
                   onClick={guestLogin}
                   variant="subtitle1"
                 >

@@ -15,7 +15,6 @@ import { Link } from "react-router-dom";
 import AddCodeDialog from "./UploadCode";
 import Notifications from "./Notifications";
 import userContext from "../userContext";
-// import logout api
 import logout from "../services/logout";
 import SwipableDrawer from "../elements/Drawer";
 
@@ -24,7 +23,10 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     position: "sticky",
     top: 0,
-    zIndex: 1200,
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  toolbar: {
+    minHeight: theme.spacing(8),
   },
   title: {
     flex: 1,
@@ -114,7 +116,7 @@ const Navbar = ({ state, dispatch }) => {
         handleClose={handleClose}
       />
       <AppBar position="static" color="secondary">
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <div className={classes.title}>
             <CodeIcon fontSize="large" />
           </div>
