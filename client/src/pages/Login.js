@@ -4,7 +4,6 @@ import { Link as RouterLink } from "react-router-dom";
 //Material-ui imports
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -44,6 +43,11 @@ export default function Login({ state, dispatch }) {
     }
   };
 
+  const guestLogin = () => {
+    setLoginEmail("guest@guest.guest");
+    setLoginPassword("guest2020");
+  };
+
   return (
     <Background gradient>
       <Container component="main" maxWidth="xs">
@@ -59,6 +63,7 @@ export default function Login({ state, dispatch }) {
                   id="email"
                   label="E-mail Address"
                   name="email"
+                  value={loginEmail}
                   autoComplete="email"
                   error={submitClicked && !loginEmail ? true : false}
                   helperText={
@@ -74,15 +79,11 @@ export default function Login({ state, dispatch }) {
                   variant="outlined"
                   fullWidth
                   name="password"
+                  value={loginPassword}
                   label="Password"
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">Forgot?</InputAdornment>
-                    ),
-                  }}
                   error={submitClicked && !loginPassword ? true : false}
                   helperText={
                     submitClicked && !loginPassword
@@ -103,7 +104,7 @@ export default function Login({ state, dispatch }) {
             </Grid>
             <SubmitButton onClick={loginHandler}>Login</SubmitButton>
           </form>
-          <Box mt={5}>
+          <Box mt={3}>
             <Grid container direction="row" justify="center" spacing={1}>
               <Grid item>
                 <Typography component="h1" variant="h6">
@@ -113,6 +114,21 @@ export default function Login({ state, dispatch }) {
               <Grid item>
                 <Link component={RouterLink} to="/signup" variant="h6">
                   {"Create"}
+                </Link>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justify="center" spacing={1}>
+              <Grid item>
+                <Typography variant="subtitle1">or just log in as a</Typography>
+              </Grid>
+              <Grid item>
+                <Link
+                  component={RouterLink}
+                  to="#"
+                  onClick={guestLogin}
+                  variant="subtitle1"
+                >
+                  {"Guest"}
                 </Link>
               </Grid>
             </Grid>

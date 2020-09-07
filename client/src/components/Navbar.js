@@ -15,15 +15,18 @@ import { Link } from "react-router-dom";
 import AddCodeDialog from "./UploadCode";
 import Notifications from "./Notifications";
 import userContext from "../userContext";
-// import logout api
 import logout from "../services/logout";
+import SwipableDrawer from "../elements/Drawer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     position: "sticky",
     top: 0,
-    zIndex: 1200,
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  toolbar: {
+    minHeight: theme.spacing(8),
   },
   title: {
     flex: 1,
@@ -59,6 +62,12 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "none",
     color: theme.palette.primary.white,
   },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: "auto",
+  },
 }));
 
 const Navbar = ({ state, dispatch }) => {
@@ -69,25 +78,14 @@ const Navbar = ({ state, dispatch }) => {
   const [open, setOpen] = useState(false);
 
   // navbar logic
-  // const [anchorNotificaton, setAnchorNotificaton] = useState(null);
   const [anchorMenu, setAnchorMenu] = useState(null);
+
+  const [drawerState, setDrawerState] = useState(false);
 
   // handle UploadCode open/close
   const handleClose = () => {
     setOpen(false);
   };
-
-  // // notification
-  // const handleNotificaton = (event) => {
-  //   setAnchorNotificaton(event.currentTarget);
-  // };
-
-  // // close notification
-  // const handleCloseNotificaton = () => {
-  //   setAnchorNotificaton(null);
-  // };
-
-  // add review logic --> populating notifications
 
   // open menu
   const handleClickMenu = (event) => {
@@ -118,16 +116,37 @@ const Navbar = ({ state, dispatch }) => {
         handleClose={handleClose}
       />
       <AppBar position="static" color="secondary">
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <div className={classes.title}>
-            {/* brand icon placeholder */}
             <CodeIcon fontSize="large" />
           </div>
           {isMobile ? (
-            // need to decide styling on mobile
-            <IconButton edge="start" color="inherit">
-              <MenuIcon fontSize="large" />
-            </IconButton>
+            <React.Fragment>
+              <Notifications />
+              <Button
+                color="primary"
+                variant="outlined"
+                className={classes.upload}
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                Upload Code
+              </Button>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={() => setDrawerState(true)}
+              >
+                <MenuIcon fontSize="large" />
+              </IconButton>
+              <SwipableDrawer
+                open={drawerState}
+                setOpen={setDrawerState}
+                userId={state.user.id}
+                logout={() => handleLogout()}
+              />
+            </React.Fragment>
           ) : (
             <>
               <Link to="/reviews" className={classes.navLink}>
@@ -149,9 +168,7 @@ const Navbar = ({ state, dispatch }) => {
                 Upload Code
               </Button>
               <div className={classes.avatar}>
-                {/* input user's image */}
                 <Avatar src={user.avatar}>
-                  {/* here is the user initial */}
                   {user.name
                     .split(/\s|-/)
                     .map((str) => str[0])

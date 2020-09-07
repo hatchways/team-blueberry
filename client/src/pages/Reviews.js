@@ -1,45 +1,72 @@
-import React, { useEffect, useState, useReducer } from "react";
-import { Link } from "react-router-dom";
-// Import reviews service
-import { getReviews } from "../services/reviews";
-
-//import utilities
-import dateToYMD from "../utils/dateUtil";
-
-//Material-ui imports
+import React, { useState, useEffect, useReducer } from "react";
+import Drawer from "@material-ui/core/Drawer";
+import Fab from "@material-ui/core/Fab";
+import Hidden from "@material-ui/core/Hidden";
+import Box from "@material-ui/core/Box";
+import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
-// component imports
 import Request from "../components/Request";
-
-// element imports
 import Loading from "../elements/Loading";
+import Paper from "@material-ui/core/Paper";
+import { getReviews } from "../services/reviews";
+import { Link } from "react-router-dom";
+import dateToYMD from "../utils/dateUtil";
+
+const drawerWidth = 320;
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    display: "flex",
     flexGrow: 1,
   },
-  // do we need this?
+  margin: {
+    margin: theme.spacing(1),
+  },
+  fabClose: {
+    position: "absolute",
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+  fabOpen: {
+    position: "absolute",
+    bottom: theme.spacing(2),
+    left: theme.spacing(2),
+  },
+  drawer: {
+    [theme.breakpoints.up("sm")]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+    background: theme.palette.background.solid,
+  },
+  menuButton: {
+    marginLeft: theme.spacing(1),
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
+  drawerPaper: {
+    width: drawerWidth,
+    borderRight: "1px #D3D3D3 solid",
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    background: theme.palette.background.solid,
+    height: "100vh",
+    overflowY: "auto",
+  },
   card: {
     minWidth: "100%",
   },
-  reviewsHeight: {
-    minHeight: "100vh",
-  },
-  reviewTitles: {
-    margin: theme.spacing(4),
-  },
-  reviewMainTitle: {
-    marginRight: theme.spacing(1),
-  },
   reviews: {
-    margin: theme.spacing(4),
-    padding: theme.spacing(4),
+    margin: theme.spacing(2),
+    padding: theme.spacing(2),
     overflow: "auto",
     cursor: "pointer",
   },
@@ -54,13 +81,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
   reviewPanel: {
-    margin: theme.spacing(6),
+    margin: theme.spacing(3),
   },
   link: {
     textDecoration: "none",
-  },
-  background: {
-    backgroundColor: "#ecf0fa",
   },
 }));
 
@@ -95,8 +119,16 @@ const reducer = (state, action) => {
   }
 };
 
-const Reviews = () => {
+export default function ResponsiveDrawer(props) {
+  const { window } = props;
   const classes = useStyles();
+  const theme = useTheme();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   const [state, dispatch] = useReducer(reducer, initState);
   const [selectedIndex, setSelectedIndex] = useState(false);
   const [selectedTab, setSelectedTab] = useState({
@@ -187,46 +219,90 @@ const Reviews = () => {
     );
   };
 
-  return (
-    <Grid container direction="column">
-      <Grid item container>
-        <Grid item xs={4} className={classes.reviewsHeight}>
-          {state.loading ? (
-            <Loading />
-          ) : (
-            <React.Fragment>
-              <Paper className={classes.root}>
-                <Tabs
-                  value={value}
-                  onChange={handleChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  centered
-                >
-                  <Tab
-                    label={`Reviews(${
-                      state.reviews ? state.reviews.length : 0
-                    })`}
-                  />
-                  <Tab
-                    label={`Requests(${
-                      state.requests ? state.requests.length : 0
-                    })`}
-                  />
-                </Tabs>
-              </Paper>
-              {renderItems(selectedTab)}
-            </React.Fragment>
-          )}
-        </Grid>
-        <Grid item xs={8} className={classes.background}>
-          <Paper className={classes.reviewPanel}>
-            <Request />
-          </Paper>
-        </Grid>
-      </Grid>
-    </Grid>
+  const drawer = state.loading ? (
+    <Loading />
+  ) : (
+    <React.Fragment>
+      <Box mt={8}>
+        <Paper>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+          >
+            <Tab
+              label={`Reviews(${state.reviews ? state.reviews.length : 0})`}
+            />
+            <Tab
+              label={`Requests(${state.requests ? state.requests.length : 0})`}
+            />
+          </Tabs>
+        </Paper>
+        {renderItems(selectedTab)}
+      </Box>
+    </React.Fragment>
   );
-};
 
-export default Reviews;
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
+  return (
+    <div className={classes.root}>
+      <nav className={classes.drawer} aria-label="review request tabs">
+        <Hidden smUp implementation="css">
+          <Fab
+            size="medium"
+            color="secondary"
+            aria-label="add"
+            onClick={handleDrawerToggle}
+            className={classes.fabOpen}
+          >
+            <KeyboardArrowRightIcon style={{ fontSize: 30 }} />
+          </Fab>
+          <Drawer
+            container={container}
+            variant="persistent"
+            anchor={theme.direction === "rtl" ? "right" : "left"}
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+          >
+            {drawer}
+            <Fab
+              size="medium"
+              color="secondary"
+              aria-label="add"
+              onClick={handleDrawerToggle}
+              className={classes.fabClose}
+            >
+              <KeyboardArrowLeftIcon />
+            </Fab>
+          </Drawer>
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          <Drawer
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            variant="permanent"
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+      </nav>
+      <main className={classes.content}>
+        <Paper className={classes.reviewPanel}>
+          <Request />
+        </Paper>
+      </main>
+    </div>
+  );
+}
