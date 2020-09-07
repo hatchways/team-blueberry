@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(2),
   },
   fabOpen: {
-    position: "absolute",
+    position: "fixed",
     bottom: theme.spacing(2),
     left: theme.spacing(2),
   },
