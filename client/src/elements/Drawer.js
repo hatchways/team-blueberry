@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import Fab from "@material-ui/core/Fab";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
@@ -10,12 +11,19 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from "@material-ui/icons/Person";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import { useTheme } from "@material-ui/core/styles";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   list: {
     width: 250,
   },
-});
+  fab: {
+    position: "absolute",
+    bottom: theme.spacing(2),
+    left: theme.spacing(2),
+  },
+}));
 
 export default function SwipeableTemporaryDrawer({
   open,
@@ -92,6 +100,15 @@ export default function SwipeableTemporaryDrawer({
           onOpen={() => setOpen(true)}
         >
           {list}
+          <Fab
+            size="medium"
+            color="secondary"
+            aria-label="add"
+            onClick={() => setOpen(!open)}
+            className={classes.fab}
+          >
+            <KeyboardArrowRightIcon />
+          </Fab>
         </SwipeableDrawer>
       </React.Fragment>
     </div>
