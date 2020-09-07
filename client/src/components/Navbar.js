@@ -17,6 +17,7 @@ import Notifications from "./Notifications";
 import userContext from "../userContext";
 // import logout api
 import logout from "../services/logout";
+import SwipableDrawer from "../elements/Drawer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,6 +60,12 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "none",
     color: theme.palette.primary.white,
   },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: "auto",
+  },
 }));
 
 const Navbar = ({ state, dispatch }) => {
@@ -71,6 +78,8 @@ const Navbar = ({ state, dispatch }) => {
   // navbar logic
   // const [anchorNotificaton, setAnchorNotificaton] = useState(null);
   const [anchorMenu, setAnchorMenu] = useState(null);
+
+  const [drawerState, setDrawerState] = useState(false);
 
   // handle UploadCode open/close
   const handleClose = () => {
@@ -125,9 +134,32 @@ const Navbar = ({ state, dispatch }) => {
           </div>
           {isMobile ? (
             // need to decide styling on mobile
-            <IconButton edge="start" color="inherit">
-              <MenuIcon fontSize="large" />
-            </IconButton>
+            <React.Fragment>
+              <Notifications />
+              <Button
+                color="primary"
+                variant="outlined"
+                className={classes.upload}
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                Upload Code
+              </Button>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={() => setDrawerState(true)}
+              >
+                <MenuIcon fontSize="large" />
+              </IconButton>
+              <SwipableDrawer
+                open={drawerState}
+                setOpen={setDrawerState}
+                userId={state.user.id}
+                logout={() => handleLogout()}
+              />
+            </React.Fragment>
           ) : (
             <>
               <Link to="/reviews" className={classes.navLink}>
