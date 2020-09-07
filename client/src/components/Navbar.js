@@ -76,7 +76,6 @@ const Navbar = ({ state, dispatch }) => {
   const [open, setOpen] = useState(false);
 
   // navbar logic
-  // const [anchorNotificaton, setAnchorNotificaton] = useState(null);
   const [anchorMenu, setAnchorMenu] = useState(null);
 
   const [drawerState, setDrawerState] = useState(false);
@@ -85,18 +84,6 @@ const Navbar = ({ state, dispatch }) => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  // // notification
-  // const handleNotificaton = (event) => {
-  //   setAnchorNotificaton(event.currentTarget);
-  // };
-
-  // // close notification
-  // const handleCloseNotificaton = () => {
-  //   setAnchorNotificaton(null);
-  // };
-
-  // add review logic --> populating notifications
 
   // open menu
   const handleClickMenu = (event) => {
@@ -129,11 +116,9 @@ const Navbar = ({ state, dispatch }) => {
       <AppBar position="static" color="secondary">
         <Toolbar>
           <div className={classes.title}>
-            {/* brand icon placeholder */}
             <CodeIcon fontSize="large" />
           </div>
           {isMobile ? (
-            // need to decide styling on mobile
             <React.Fragment>
               <Notifications />
               <Button
@@ -181,9 +166,7 @@ const Navbar = ({ state, dispatch }) => {
                 Upload Code
               </Button>
               <div className={classes.avatar}>
-                {/* input user's image */}
                 <Avatar src={user.avatar}>
-                  {/* here is the user initial */}
                   {user.name
                     .split(/\s|-/)
                     .map((str) => str[0])
