@@ -41,4 +41,4 @@ const deleteProject = async (projectId, dispatch) => {
   }
 };
 
-module.exports = { newProject, deleteProject };
+export { newProject, deleteProject };
