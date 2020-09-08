@@ -1,5 +1,4 @@
 const User = require("../models/user");
-const userModel = require("../mongoose-handlers/user");
 const { Review, Request } = require("../models/review-request");
 const findReviewerQueue = require("../queues/findReviewer");
 const checkStatusQueue = require("../queues/checkStatus");
@@ -25,7 +24,7 @@ const updateBalanceBe = async (userId, credits) => {
 };
 
 module.exports = {
-  async getMe(req, res, next) {
+  async getMe(req, res) {
     try {
       const user = await User.findById(req.user.id)
         .exec()
@@ -36,7 +35,7 @@ module.exports = {
       return res.status(500).send("Error fetching user profile");
     }
   },
-  async getUser(req, res, next) {
+  async getUser(req, res) {
     try {
       const user = await User.getUser(req.params.userId);
       return res.status(200).send(user);
@@ -147,7 +146,6 @@ module.exports = {
       );
     });
   },
-  // gets all relevant reviews
   async getReviews(req, res) {
     try {
       if (req.body.singleTarget) {
@@ -155,7 +153,6 @@ module.exports = {
         const request = await Request.findOne({
           "embeddedReview._id": reviewId,
         });
-        // get userOwner and extract data
         const reviewOwner = await User.findById(request.userOwner).select(
           "_id name position avatar"
         );
@@ -205,7 +202,6 @@ module.exports = {
   // accept or reject request
   async reviewRequest(req, res) {
     const userId = req.user.id;
-    // accept or reject contains requestId
     const { isAccepted, requestId } = req.body;
     try {
       const job = await checkStatusQueue.getJob(requestId.toString());
@@ -284,10 +280,7 @@ module.exports = {
 
   async updateReviewAndUserRating(req, res) {
     const { reviewId, rating, comment } = req.body;
-
-    // Updates Target Review Rating
     try {
-      // need to extract status
       const request = await Request.findOne({ "embeddedReview._id": reviewId });
 
       if (rating >= 1 && rating <= 5) {
@@ -364,7 +357,6 @@ module.exports = {
   async fetchProfileComments(req, res) {
     const { userId } = req.body;
     try {
-      // extract only userOwner, comment and rating and convert to js object
       const foundComments = await Request.find(
         {
           selectedReviewer: userId,
@@ -372,14 +364,11 @@ module.exports = {
         },
         { _id: 0, userOwner: 1, comment: 1, "embeddedReview.rating": 1 }
       ).lean();
-      // extracting only user owner from foundComments
       const userOwnerArr = foundComments.map((comment) => comment.userOwner);
-      // extract name, position, avatar of user owners
       const foundUsers = await User.find(
         { _id: { $in: userOwnerArr } },
         { name: 1, position: 1, avatar: 1 }
       );
-      // creating user dictionary
       const foundUsersDict = Object.assign(
         {},
         ...foundUsers.map((user) => ({
@@ -390,7 +379,6 @@ module.exports = {
           },
         }))
       );
-      // adding property to foundComments
       foundComments.map((comment) => {
         comment.name = foundUsersDict[comment.userOwner].name;
         comment.position = foundUsersDict[comment.userOwner].position;
