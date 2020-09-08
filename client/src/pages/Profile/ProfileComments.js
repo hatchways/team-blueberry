@@ -42,6 +42,8 @@ const useStyles = makeStyles((theme) => ({
 const ProfileComments = ({ comments }) => {
   const classes = useStyles();
   const [currentPage, setCurrentPage] = useState(1);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   // Get current posts
   const commentsPerPage = 3;
@@ -49,10 +51,6 @@ const ProfileComments = ({ comments }) => {
   const indexOfFirstPost = indexOfLastPost - commentsPerPage;
   const currentComments = comments.slice(indexOfFirstPost, indexOfLastPost);
   const totalPages = Math.ceil(comments.length / commentsPerPage);
-
-  // add responsiveness
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   const CommentsRatings = ({ rating }) => {
     if (rating === 1) {
@@ -188,7 +186,6 @@ const ProfileComments = ({ comments }) => {
     <>
       <PageHeader>Comments</PageHeader>
       <List className={classes.root}>
-        {/* TODO add mobile comments */}
         {currentComments.map((comment, index) => (
           <React.Fragment key={index}>
             {isMobile ? (
@@ -247,7 +244,6 @@ const ProfileComments = ({ comments }) => {
               </ListItem>
             )}
           </React.Fragment>
-          // Ends here
         ))}
         {comments.length ? (
           <Box>
