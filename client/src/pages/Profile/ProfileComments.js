@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(7),
     margin: "0 auto",
   },
+  mobileSpacing: {
+    marginTop: theme.spacing(1),
+  },
 }));
 
 const ProfileComments = ({ comments }) => {
@@ -194,7 +197,12 @@ const ProfileComments = ({ comments }) => {
                   src={comment.avatar ? comment.avatar : AvatarImage}
                   className={classes.large}
                 />
-                <Typography variant="subtitle1">{comment.name}</Typography>
+                <Typography
+                  variant="subtitle1"
+                  className={classes.mobileSpacing}
+                >
+                  {comment.name}
+                </Typography>
                 <Typography variant="subtitle2">{comment.position}</Typography>
                 <CommentsRatings rating={comment.embeddedReview.rating} />
                 <Box>
