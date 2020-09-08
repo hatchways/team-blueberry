@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Avatar from "@material-ui/core/Avatar";
@@ -16,17 +16,12 @@ import ArrowBackward from "@material-ui/icons/ArrowBackIosOutlined";
 import ArrowForward from "@material-ui/icons/ArrowForwardIosOutlined";
 import PageHeader from "../../elements/PageHeader";
 import FormatQuoteRoundedIcon from "@material-ui/icons/FormatQuoteRounded";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     backgroundColor: theme.palette.background.paper,
-  },
-  paper: {
-    width: "100%",
-  },
-  inline: {
-    display: "inline",
   },
   ratingColor: {
     fill: theme.palette.primary.main,
@@ -37,11 +32,21 @@ const useStyles = makeStyles((theme) => ({
   comment: {
     fontStyle: "italic",
   },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+    margin: "0 auto",
+  },
+  mobileSpacing: {
+    marginTop: theme.spacing(1),
+  },
 }));
 
 const ProfileComments = ({ comments }) => {
   const classes = useStyles();
   const [currentPage, setCurrentPage] = useState(1);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   // Get current posts
   const commentsPerPage = 3;
@@ -186,39 +191,66 @@ const ProfileComments = ({ comments }) => {
       <List className={classes.root}>
         {currentComments.map((comment, index) => (
           <React.Fragment key={index}>
-            <ListItem alignItems="flex-start">
-              <CardHeader
-                avatar={
-                  comment.avatar ? (
-                    <Avatar src={comment.avatar}></Avatar>
-                  ) : (
-                    <Avatar src={AvatarImage} />
-                  )
-                }
-                title={comment.name}
-                subheader={
-                  comment.position ? comment.position : "Not Specififed"
-                }
-                className={classes.cardHeader}
-              />
-              <CardContent>
+            {isMobile ? (
+              <Box mt={4} mb={4}>
+                <Avatar
+                  src={comment.avatar ? comment.avatar : AvatarImage}
+                  className={classes.large}
+                />
+                <Typography
+                  variant="subtitle1"
+                  className={classes.mobileSpacing}
+                >
+                  {comment.name}
+                </Typography>
+                <Typography variant="subtitle2">{comment.position}</Typography>
                 <CommentsRatings rating={comment.embeddedReview.rating} />
-                {comment.comment && (
-                  <Typography className={classes.comment} variant="subtitle1">
-                    <Box fontSize={16} ml={1}>
-                      <Grid item container direction="row" xs={12} spacing={2}>
-                        <Grid item xs={1}>
-                          <FormatQuoteRoundedIcon color="disabled" />
+                <Box>
+                  <FormatQuoteRoundedIcon color="disabled" />
+                </Box>
+                <Box fontSize={16} className={classes.comment}>
+                  {comment.comment}
+                </Box>
+              </Box>
+            ) : (
+              <ListItem alignItems="flex-start">
+                <CardHeader
+                  avatar={
+                    comment.avatar ? (
+                      <Avatar src={comment.avatar}></Avatar>
+                    ) : (
+                      <Avatar src={AvatarImage} />
+                    )
+                  }
+                  title={comment.name}
+                  subheader={comment.position ? comment.position : null}
+                  className={classes.cardHeader}
+                />
+                <CardContent>
+                  <CommentsRatings rating={comment.embeddedReview.rating} />
+                  {comment.comment && (
+                    <Typography className={classes.comment} variant="subtitle1">
+                      <Box fontSize={16} ml={1}>
+                        <Grid
+                          item
+                          container
+                          direction="row"
+                          xs={12}
+                          spacing={2}
+                        >
+                          <Grid item xs={1}>
+                            <FormatQuoteRoundedIcon color="disabled" />
+                          </Grid>
+                          <Grid item xs={11}>
+                            {comment.comment}
+                          </Grid>
                         </Grid>
-                        <Grid item xs={11}>
-                          {comment.comment}
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  </Typography>
-                )}
-              </CardContent>
-            </ListItem>
+                      </Box>
+                    </Typography>
+                  )}
+                </CardContent>
+              </ListItem>
+            )}
           </React.Fragment>
         ))}
         {comments.length ? (
