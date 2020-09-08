@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import userContext from "../userContext";
 import AvatarImage from "./Profile/img/avatar.png";
 import ProfileStats from "./Profile/ProfileStats";
-// import ProfileProjects from "./Profile/ProfileProjects";
 import Background from "../elements/Background";
 import ProfileSkills from "./Profile/ProfileSkills";
 import ProfileName from "./Profile/ProfileName";

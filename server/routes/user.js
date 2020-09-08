@@ -3,8 +3,6 @@ const router = express.Router();
 const findReviewerQueue = require("../queues/findReviewer");
 const userController = require("../controllers/user");
 const projectsController = require("../controllers/projects");
-
-// import Auth middleware
 const Auth = require("../middleware/auth");
 
 router.get("/me", Auth, userController.getMe);

@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user");
-const Notification = require("../models/notification");
 const {
   createNotification,
   getUsersNotifications,
@@ -42,7 +40,6 @@ router.put("/update-read", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const notification = await createNotification(req.body);
-    console.log(notification);
     res.status(200).send(notification);
   } catch (error) {
     res.status(500).send({ error: err });

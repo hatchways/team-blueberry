@@ -1,14 +1,9 @@
 const jwt = require("jsonwebtoken");
 const { cookieName, cookieExpiry } = require("../constants.js");
 const User = require("../models/user");
-const { Request } = require("../models/review-request");
-
-// store all helper
 const helper = {};
 
-// generate token and save into cookie
 helper.genToken = (req, res, user) => {
-  // proess.env.JWT_KEY to store secret key
   const secretKey = process.env.JWT_KEY || "secret";
   const token = jwt.sign(
     {
@@ -21,7 +16,6 @@ helper.genToken = (req, res, user) => {
   );
   res.cookie(cookieName, token, {
     httpOnly: true,
-    // check env if development
     secure: req.app.get("env") === "development" ? false : true,
     maxAge: cookieExpiry,
   });

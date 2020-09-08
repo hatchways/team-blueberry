@@ -11,7 +11,6 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from "@material-ui/icons/Person";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
-import { useTheme } from "@material-ui/core/styles";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 
 const useStyles = makeStyles((theme) => ({
