@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   fabClose: {
-    position: "fixed",
+    position: "absolute",
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
@@ -36,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     bottom: theme.spacing(2),
     left: theme.spacing(2),
+  },
+  innerContainer: {
+    position: "relative",
+    height: "100%",
   },
   drawer: {
     [theme.breakpoints.up("sm")]: {
@@ -275,15 +279,17 @@ export default function ResponsiveDrawer(props) {
             }}
           >
             {drawer}
-            <Fab
-              size="medium"
-              color="secondary"
-              aria-label="add"
-              onClick={handleDrawerToggle}
-              className={classes.fabClose}
-            >
-              <KeyboardArrowLeftIcon />
-            </Fab>
+            <div className={classes.innerContainer}>
+              <Fab
+                size="medium"
+                color="secondary"
+                aria-label="add"
+                onClick={handleDrawerToggle}
+                className={classes.fabClose}
+              >
+                <KeyboardArrowLeftIcon />
+              </Fab>
+            </div>
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
