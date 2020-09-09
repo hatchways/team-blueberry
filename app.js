@@ -59,7 +59,7 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.raw({ type: "image/jpg", limit: "1mb" }));
-app.use(express.static(join(__dirname, "public")));
+// app.use(express.static(join(__dirname, "public")));
 
 app.use("/api", indexRouter);
 app.use("/api/payment", auth, paymentRouter);
@@ -82,5 +82,14 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.json({ error: err });
 });
+
+if (proces.env.NODE_ENV === "production") {
+  // app.use(express.static("client/build/"));
+  app.use(express.static(path.join(__dirname, "client", "build")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+  });
+}
 
 module.exports = app;
