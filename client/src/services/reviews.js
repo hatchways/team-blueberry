@@ -75,4 +75,4 @@ const completeReview = async (reviewId, rating, comment, dispatch) => {
   }
 };
 
-module.exports = { getReviews, getReview, completeReview };
+export { getReview, getReviews, completeReview };
