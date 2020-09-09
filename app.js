@@ -67,6 +67,21 @@ app.use("/api/payment", auth, paymentRouter);
 app.use("/api/user", auth, userRouter);
 app.use("/api/notifications", notificationsRouter);
 
+app.use(express.static(path.join(__dirname, "client", "build")));
+
+console.log(
+  "app.use(express.static: ",
+  path.join(__dirname, "client", "build")
+);
+console.log(
+  "app.get(`/*`): ",
+  path.join(__dirname, "client", "build", "index.html")
+);
+
+app.get("/*", (req, res) => {
+  console.log("app.get(/*) called!");
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
@@ -86,21 +101,6 @@ app.use(function (err, req, res, next) {
 // if (process.env.NODE_ENV == "production") {
 // app.use(express.static("client/build/"));
 // `${__dirname}/client/build`
-app.use(express.static(path.join(__dirname, "client", "build")));
-
-console.log(
-  "app.use(express.static: ",
-  path.join(__dirname, "client", "build")
-);
-console.log(
-  "app.get(`/*`): ",
-  path.join(__dirname, "client", "build", "index.html")
-);
-
-app.get("/*", (req, res) => {
-  console.log("app.get(/*) called!");
-  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});
 // }
 
 module.exports = app;
