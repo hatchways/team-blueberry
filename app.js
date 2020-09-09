@@ -36,7 +36,11 @@ mongoose.set("useFindAndModify", false);
 
 // redis config
 // production will be put in env file
-const client = redis.createClient();
+const client = redis.createClient({
+  port: process.env.REDIS_PORT,
+  host: process.env.REDIS_HOST,
+  password: process.env.REDIS_PASSWORD,
+});
 
 client.on("connect", function () {
   console.log("Redis client connected");

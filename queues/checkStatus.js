@@ -4,7 +4,13 @@ const { Request } = require("../models/review-request");
 
 // initiate checkStatus queue
 // connect to redis default server for dev
-const checkStatusQueue = new Queue("checkStatus");
+const checkStatusQueue = new Queue("checkStatus", {
+  redis: {
+    port: process.env.REDIS_PORT,
+    host: process.env.REDIS_HOST,
+    password: process.env.REDIS_PASSWORD,
+  },
+});
 
 checkStatusQueue.process("checkStatus", async (job) => {
   const { requestId } = job.data;

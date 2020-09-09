@@ -8,7 +8,13 @@ const { findReviewer } = require("../helper/helper");
 
 // initiate findReviewer queue
 // connect to redis default server for dev
-const findReviewerQueue = new Queue("findReviewer");
+const findReviewerQueue = new Queue("findReviewer", {
+  redis: {
+    port: process.env.REDIS_PORT,
+    host: process.env.REDIS_HOST,
+    password: process.env.REDIS_PASSWORD,
+  },
+});
 
 findReviewerQueue.process("findReviewer", async (job) => {
   const { requestId, isDelayed } = job.data;
