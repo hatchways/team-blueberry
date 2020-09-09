@@ -1,6 +1,6 @@
 const createError = require("http-errors");
 const express = require("express");
-const { join, path } = require("path");
+const path = require("path");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
@@ -85,6 +85,7 @@ app.use(function (err, req, res, next) {
 
 // if (process.env.NODE_ENV == "production") {
 // app.use(express.static("client/build/"));
+// `${__dirname}/client/build`
 app.use(express.static(path.join(__dirname, "client", "build")));
 
 app.get("*", (req, res) => {
