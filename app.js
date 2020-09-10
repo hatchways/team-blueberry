@@ -78,8 +78,8 @@ console.log(
   path.join(__dirname, "client", "build", "index.html")
 );
 
-app.get("/", (req, res) => {
-  console.log("app.get(/) called!");
+app.get("/*", (req, res) => {
+  console.log("app.get(/*) called!");
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 // catch 404 and forward to error handler
