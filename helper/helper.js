@@ -18,6 +18,7 @@ helper.genToken = (req, res, user) => {
     httpOnly: true,
     secure: req.app.get("env") === "development" ? false : true,
     maxAge: cookieExpiry,
+    domain: "peercodereview.herokuapp.com",
   });
   return token;
 };
