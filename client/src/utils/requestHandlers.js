@@ -2,7 +2,7 @@
 const axios = require("axios");
 
 // Handle all requests to API here
-module.exports = {
+export default {
   async getFromAPI(config) {
     try {
       const response = await axios(config);
