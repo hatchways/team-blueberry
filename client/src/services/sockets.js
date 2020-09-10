@@ -2,7 +2,8 @@ import io from "socket.io-client";
 
 class SocketManager {
   constructor() {
-    this.socket = io("localhost:3001"); //constantly getting proxy error
+    // this needs to be fixed, possible wrong port or ip and port
+    this.socket = io("/"); //constantly getting proxy error
     this.subscribers = [];
   }
   //subscribe to notifications
