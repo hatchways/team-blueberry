@@ -178,8 +178,8 @@ You can find app deployed on Heroku.com [peercodereview.herokuapp.com](https://p
 Reach to any of the team members at one of the following places:
 
 - Vitalii Sidorok at <a href="http://github.com/svitaly" target="_blank">`github.com/svitaly`</a>
-- Affeeq Ismail at <a href="https://github.com/Affeeq" target="_blank">`github.com/affeeq`</a>
-- Tyler Poor at <a href="http://github.com/LiveBacteria" target="_blank">`github.com/LiveBacteria`</a>
+- Affeeq Ismail at <a href="https://github.com/Affeeq" target="_blank">`github.com/Affeeq`</a>
+- Tyler Poore at <a href="http://github.com/LiveBacteria" target="_blank">`github.com/LiveBacteria`</a>
 
 ---
 
