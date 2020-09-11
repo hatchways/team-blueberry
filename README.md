@@ -65,7 +65,7 @@ In some time I get a notification that someone has reviewed my code and I can re
 ## Features
 
 - Login/sign up flow with e-mail address
-- Create profile
+- Create profile (SignUp page)
 - Buy credits
 - Rich text editor with real time code highlighting
 - Notifications center
