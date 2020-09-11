@@ -62,10 +62,6 @@ In some time I get a notification that someone has reviewed my code and I can re
 6. Stop redis server by pressing **CONTROL+C**
 7. Stop redis service `brew services stop redis`
 
-### Gif tool to use
-
-We can use <a href="http://recordit.co/" target="_blank">**Recordit**</a> to create quicks screencasts and export them as `GIF`s.
-
 ## Features
 
 - Login/sign up flow with e-mail address
