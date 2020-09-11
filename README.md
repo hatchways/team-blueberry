@@ -2,6 +2,10 @@
 
 > A web app that matches programmers to a mentor to review their code.
 
+## Demo
+
+Try Peer Code Review Applicaiton immediately using your phone or laptop at [peercodereview.herokuapp.com](peercodereview.herokuapp.com)!
+
 ## About
 
 A web app that matches programmers to a mentor to review their code. Programmers earn credits by giving code reviews, and you can spend credits on getting your code reviewed (by someone a level up from you).
@@ -27,6 +31,7 @@ In some time I get a notification that someone has reviewed my code and I can re
 ## Table of Contents
 
 - [Peer Code Review App](#peer-code-review-app)
+  - [Demo](#demo)
   - [About](#about)
     - [Who’s it for?](#whos-it-for)
     - [User Journey](#user-journey)
@@ -46,8 +51,8 @@ In some time I get a notification that someone has reviewed my code and I can re
       - [Receive code review](#receive-code-review)
       - [Send code review](#send-code-review)
       - [Upload projects to show](#upload-projects-to-show)
+      - [Mobile ready](#mobile-ready)
   - [Usage](#usage)
-  - [Documentation](#documentation)
   - [Technologies (STACK)](#technologies-stack)
   - [Team](#team)
   - [FAQ](#faq)
@@ -55,7 +60,7 @@ In some time I get a notification that someone has reviewed my code and I can re
 
 ## Installation
 
-If you want to run Peer Code Review application use the `dev` branch.
+If you want to run Peer Code Review application locally, use the `dev` branch. For deployment use `master` branch.
 
 ### Running MongoDB locally
 
@@ -120,13 +125,13 @@ Help other users to improve their skills with the Peer Code Review project. Acce
 
 User can add any coding projects to their profile page to share them with others and maybe discuss better code solutions to improve them.
 
+#### Mobile ready
+
+Application is fully responsive on any screen sizes and devices such as laptops, phones or tablets. To improve user experience mobile [Material-UI](https://material-ui.com) components were used.
+
 ## Usage
 
-I propose here we walk through the app and add Gifs and Screenshots.
-
-## Documentation
-
-Here may be some documentation
+You can find app deployed on Heroku.com [peercodereview.herokuapp.com](https://peercodereview.herokuapp.com). For a demo run use **_Guest_** login. This will allow to have a virtual tour inside the Peer Code Review Application.
 
 ## Technologies (STACK)
 
