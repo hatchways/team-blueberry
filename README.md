@@ -34,8 +34,18 @@ In some time I get a notification that someone has reviewed my code and I can re
   - [Installation](#installation)
     - [Running MongoDB locally](#running-mongodb-locally)
     - [Running Redis locally](#running-redis-locally)
-    - [Gif tool to use](#gif-tool-to-use)
   - [Features](#features)
+      - [Login/sign up flow with e-mail address](#loginsign-up-flow-with-e-mail-address)
+      - [Create profile (OnBoard page)](#create-profile-onboard-page)
+      - [Buy credits](#buy-credits)
+      - [Rich text editor with real time code highlighting](#rich-text-editor-with-real-time-code-highlighting)
+      - [Notifications center](#notifications-center)
+      - [JWT authentication](#jwt-authentication)
+      - [Instant messages with Sockets.io](#instant-messages-with-socketsio)
+      - [Upload code](#upload-code)
+      - [Receive code review](#receive-code-review)
+      - [Send code review](#send-code-review)
+      - [Upload projects to show](#upload-projects-to-show)
   - [Usage](#usage)
   - [Documentation](#documentation)
   - [Technologies (STACK)](#technologies-stack)
@@ -44,6 +54,8 @@ In some time I get a notification that someone has reviewed my code and I can re
   - [Support](#support)
 
 ## Installation
+
+If you want to run Peer Code Review application use the `dev` branch.
 
 ### Running MongoDB locally
 
@@ -64,16 +76,49 @@ In some time I get a notification that someone has reviewed my code and I can re
 
 ## Features
 
-- Login/sign up flow with e-mail address
-- Create profile (SignUp page)
-- Buy credits
-- Rich text editor with real time code highlighting
-- Notifications center
-- Instant messages with Sockets.io
-- Upload code
-- Receive code review
-- Send code review
-- Upload projects to show
+#### Login/sign up flow with e-mail address
+
+Validation proof on front-end and back-end. Regex used to check validity of password, email and login data.
+
+#### Create profile (OnBoard page)
+
+Specify your skill level at any of the presented programming languages. Page is fully responsive with advanced logic behind the scenes.
+
+#### Buy credits
+
+User can buy credits with built-in [Stripe](https://stripe.com) payment system. For testing purposes use test card number `4242 4242 4242 4242` and any `CVV` code.
+
+#### Rich text editor with real time code highlighting
+
+Rich text editor is build on top of [Draft.js](https://draftjs.org/) project improved with newly developed and implemented real-time code highlighting with [Prism.js](https://prismjs.com/).
+
+#### Notifications center
+
+Every time an event happen in the application user will get a notification on what happened, e.g. 'New message' or 'You have a new review'.
+
+#### JWT authentication
+
+JWT (JSON Web Token) is a compact and self-contained mechanism for transmitting data between front and server in a way that can be verified and trusted because it is digitally signed and passed over HTTP.
+
+#### Instant messages with Sockets.io
+
+When discussing code users are incentivised to use real-time message sharing with [Sockets](http://sockets.io). All messages can contain perfectly highlighted code with our newly built [Rich text editor with real time code highlighting](#rich-text-editor-with-real-time-code-highlighting).
+
+#### Upload code
+
+With a `Code Upload` dialog Upload a code snippet for more advanced programmers to review. This will cost user 1 credit that can be earned later with topping up the balance or giving reviews on the code of other developers.
+
+#### Receive code review
+
+Get valueble advice on how code works or doesn't work, how to improve its time and space complexity, appropriate use of algorithms and etc.
+
+#### Send code review
+
+Help other users to improve their skills with the Peer Code Review project. Accept request and give thoughtfull review on the code, posted by other developers and get rewards. You will get +1 credit for every accepted and finished review.
+
+#### Upload projects to show
+
+User can add any coding projects to their profile page to share them with others and maybe discuss better code solutions to improve them.
 
 ## Usage
 
@@ -86,13 +131,14 @@ Here may be some documentation
 ## Technologies (STACK)
 
 - JavaScript
-- React
+- React with Hooks
 - MongoDB
 - Node.js
 - Express.js
 - Redis
 - Sockets.io
 - Material-UI
+- JWT auth
 
 ## Team
 
