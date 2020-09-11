@@ -85,21 +85,33 @@ If you want to run Peer Code Review application locally, use the `dev` branch. F
 
 Validation proof on front-end and back-end. Regex used to check validity of password, email and login data.
 
+![Login Page](demo/loginPage.gif)
+
+![SignUp Page](demo/signUp.gif)
+
 #### Create profile (OnBoard page)
 
 Specify your skill level at any of the presented programming languages. Page is fully responsive with advanced logic behind the scenes.
+
+![OnBoard Page](demo/onBoard.gif)
 
 #### Buy credits
 
 User can buy credits with built-in [Stripe](https://stripe.com) payment system. For testing purposes use test card number `4242 4242 4242 4242` and any `CVV` code.
 
+![Balance and Checkout](demo/balance.gif)
+
 #### Rich text editor with real time code highlighting
 
 Rich text editor is build on top of [Draft.js](https://draftjs.org/) project improved with newly developed and implemented real-time code highlighting with [Prism.js](https://prismjs.com/).
 
+![Rich text editor](demo/uploadCode.gif)
+
 #### Notifications center
 
 Every time an event happen in the application user will get a notification on what happened, e.g. 'New message' or 'You have a new review'.
+
+![Notifications center](demo/notification.gif)
 
 #### JWT authentication
 
@@ -124,6 +136,8 @@ Help other users to improve their skills with the Peer Code Review project. Acce
 #### Upload projects to show
 
 User can add any coding projects to their profile page to share them with others and maybe discuss better code solutions to improve them.
+
+![Add new project](demo/addProject.gif)
 
 #### Mobile ready
 
