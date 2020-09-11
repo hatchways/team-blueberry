@@ -2,6 +2,8 @@
 
 > A web app that matches programmers to a mentor to review their code.
 
+![Peer Code Review App](client/public/thumbnail.png)
+
 ## Demo
 
 Try Peer Code Review Applicaiton immediately using your phone or laptop at [peercodereview.herokuapp.com](peercodereview.herokuapp.com)!
