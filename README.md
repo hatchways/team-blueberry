@@ -163,9 +163,9 @@ You can find app deployed on Heroku.com [peercodereview.herokuapp.com](https://p
 
 > Team of developers worked on the Peer Code Review App
 
-|               <a href="http://fvcproductions.com" target="_blank">**Vitalii Sidorok**</a>                |               <a href="http://fvcproductions.com" target="_blank">**Affeeq Ismail**</a>                |                  <a href="http://fvcproductions.com" target="_blank">**Tyler Poor**</a>                  |
+|               <a href="http://fvcproductions.com" target="_blank">**Vitalii Sidorok**</a>                |               <a href="http://fvcproductions.com" target="_blank">**Affeeq Ismail**</a>                |                  <a href="http://fvcproductions.com" target="_blank">**Tyler Poore**</a>                  |
 | :------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: |
-| [![Vitalii Sidorok](https://avatars0.githubusercontent.com/u/22850021?s=200)](http://github.com/svitaly) | [![Affeeq Ismail](https://avatars1.githubusercontent.com/u/48659449?s=200)](https://github.com/Affeeq) | [![Tyler Poor](https://avatars1.githubusercontent.com/u/43526510?s=200)](http://github.com/LiveBacteria) |
+| [![Vitalii Sidorok](https://avatars0.githubusercontent.com/u/22850021?s=200)](http://github.com/svitaly) | [![Affeeq Ismail](https://avatars1.githubusercontent.com/u/48659449?s=200)](https://github.com/Affeeq) | [![Tyler Poore](https://avatars1.githubusercontent.com/u/43526510?s=200)](http://github.com/LiveBacteria) |
 |               <a href="http://github.com/svitaly" target="_blank">`github.com/svitaly`</a>               |              <a href="https://github.com/Affeeq" target="_blank">`github.com/affeeq`</a>               |          <a href="http://github.com/LiveBacteria" target="_blank">`github.com/LiveBacteria`</a>          |
 
 ## FAQ
