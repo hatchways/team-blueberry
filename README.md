@@ -37,7 +37,6 @@ In some time I get a notification that someone has reviewed my code and I can re
   - [About](#about)
     - [Who’s it for?](#whos-it-for)
     - [User Journey](#user-journey)
-  - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
     - [Running MongoDB locally](#running-mongodb-locally)
     - [Running Redis locally](#running-redis-locally)
