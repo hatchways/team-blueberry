@@ -20,6 +20,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import CloseIcon from "@material-ui/icons/Close";
+import { guestNotifications } from "../guestData";
 
 const useStyles = makeStyles({
   menu: {
@@ -80,15 +81,25 @@ const Notifications = () => {
   }, [user.id]);
 
   useEffect(() => {
-    getNotifications();
-    socket.subscribe("notifications", handleSocketNotification);
-    return () => socket.unsubscribe("notifications");
-  }, [getNotifications]);
+    if (user.id !== "guest") {
+      getNotifications();
+      socket.subscribe("notifications", handleSocketNotification);
+      return () => socket.unsubscribe("notifications");
+    } else {
+      dispatch({ type: "getNotifications", payload: guestNotifications });
+    }
+  }, [getNotifications, user.id]);
 
   const deleteNotification = (notificationId) => {
-    axios.delete(`/api/notifications/${notificationId}`);
-    getNotifications();
-    state.notifications.length === 1 && setAnchorNotificaton(null);
+    if (notificationId !== "guestnotification") {
+      axios.delete(`/api/notifications/${notificationId}`);
+      getNotifications();
+      state.notifications.length === 1 && setAnchorNotificaton(null);
+    } else {
+      guestNotifications.splice(0, 1);
+      dispatch({ type: "getNotifications", payload: guestNotifications });
+      setAnchorNotificaton(null);
+    }
   };
 
   const handleSocketNotification = (notification) => {

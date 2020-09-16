@@ -59,7 +59,6 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.raw({ type: "image/jpg", limit: "1mb" }));
-// app.use(express.static(join(__dirname, "public")));
 
 if (process.env.NODE_ENV === "production") {
   app.use((req, res, next) => {
@@ -76,15 +75,6 @@ app.use("/api/user", auth, userRouter);
 app.use("/api/notifications", notificationsRouter);
 
 app.use(express.static(path.join(__dirname, "client", "build")));
-
-console.log(
-  "app.use(express.static: ",
-  path.join(__dirname, "client", "build")
-);
-console.log(
-  "app.get(`/*`): ",
-  path.join(__dirname, "client", "build", "index.html")
-);
 
 app.get("/*", (req, res) => {
   console.log("app.get(/*) called!");
@@ -105,10 +95,5 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.json({ error: err });
 });
-
-// if (process.env.NODE_ENV == "production") {
-// app.use(express.static("client/build/"));
-// `${__dirname}/client/build`
-// }
 
 module.exports = app;

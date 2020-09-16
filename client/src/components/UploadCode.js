@@ -19,6 +19,7 @@ export default function AddCodeDialog({ state, dispatch, open, handleClose }) {
   const [makeSubmit, setMakeSubmit] = useState(false);
   const [editorHasContent, setEditorHasContent] = useState(false);
   const [error, setError] = useState({ state: false, message: "" });
+  const [guestAlert, setGuestAlert] = useState(false);
   const languages = [
     "Python",
     "JavaScript",
@@ -30,27 +31,30 @@ export default function AddCodeDialog({ state, dispatch, open, handleClose }) {
     "Ruby",
   ];
   const handleSubmit = async (text) => {
-    //Wrap up data and send to server.
-    const request = {
-      title: title,
-      language: language,
-      content: text,
-    };
-
-    //SEND REQUEST AND close dialog
-    updateBalance(state.user.id, -codeReviewPrice, dispatch);
-    createCode(request)(dispatch);
-    setTitle("");
-    setLanguage("");
+    if (state.user.id !== "guest") {
+      //Wrap up data and send to server.
+      const request = {
+        title: title,
+        language: language,
+        content: text,
+      };
+      //SEND REQUEST AND close dialog
+      updateBalance(state.user.id, -codeReviewPrice, dispatch);
+      createCode(request)(dispatch);
+      setTitle("");
+      setLanguage("");
+      handleClose();
+    } else {
+      setGuestAlert(true);
+    }
     setMakeSubmit(false);
-    handleClose();
   };
 
   const handleHasContent = (value) => {
     setEditorHasContent(value);
   };
 
-  const codeReviewPrice = 1; //Code review price
+  const codeReviewPrice = 1;
 
   const startSubmit = () => {
     if (!language || !title || !editorHasContent) {
@@ -117,6 +121,12 @@ export default function AddCodeDialog({ state, dispatch, open, handleClose }) {
                 onClick={() => setError({ state: false, message: "" })}
               >
                 {error.message}
+              </Alert>
+              <Alert
+                open={guestAlert ? true : false}
+                onClick={() => setGuestAlert(false)}
+              >
+                {`Guest account is not allowed to use this feature`}
               </Alert>
             </Grid>
           </Box>

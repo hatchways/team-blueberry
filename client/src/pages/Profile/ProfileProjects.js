@@ -10,6 +10,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { Typography, TextField, Button, IconButton } from "@material-ui/core";
 import DropZone from "./Dropzone";
 import { newProject, deleteProject } from "../../services/projects";
+import { usersData } from "../../guestData";
+import Alert from "../../elements/SnackBar";
 
 const useStyles = makeStyles((theme) => ({
   project: {
@@ -46,7 +48,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProfileProjects({ projects, dispatch, showEdit }) {
+export default function ProfileProjects({
+  projects,
+  dispatch,
+  showEdit,
+  userId,
+}) {
   const classes = useStyles();
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState("");
@@ -54,24 +61,44 @@ export default function ProfileProjects({ projects, dispatch, showEdit }) {
   const [editMode, setEditMode] = useState(false);
   const [inHover, setHover] = useState(false);
   const [error, setError] = useState(false);
+  const [guestAlert, setGuestAlert] = useState(false);
+  const [num, setNum] = useState(1);
 
   const submit = () => {
     const regex = "^(http|https)://";
     if (!title || !link.match(regex)) {
       setError(true);
     } else {
-      let image = "";
-      if (files.length !== 0) {
-        image = files[0].bin;
-      }
-      newProject(
-        {
-          title,
+      if (userId !== "guest") {
+        let image = "";
+        if (files.length !== 0) {
+          image = files[0].bin;
+        }
+        newProject(
+          {
+            title,
+            link,
+            image,
+          },
+          dispatch
+        );
+      } else {
+        usersData.guest.projects.push({
           link,
-          image,
-        },
-        dispatch
-      );
+          title,
+          _id: `guestproject${num}`,
+        });
+        dispatch({
+          type: "UPDATE_USER_PROJECTS_SUCCESS",
+          user: usersData.guest,
+        });
+        let number = num + 1;
+        setNum(number);
+        if (files.length !== 0) {
+          setGuestAlert(true);
+        }
+        setEditMode(false);
+      }
     }
   };
 
@@ -207,6 +234,7 @@ export default function ProfileProjects({ projects, dispatch, showEdit }) {
                   <Box textAlign="left">
                     <Link
                       href={item.link}
+                      target="_blank"
                       variant="body1"
                       underline="none"
                       color="inherit"
@@ -231,6 +259,12 @@ export default function ProfileProjects({ projects, dispatch, showEdit }) {
           );
         })}
         {!editMode && !showEdit ? addProjectButton : null}
+        <Alert
+          open={guestAlert ? true : false}
+          onClick={() => setGuestAlert(false)}
+        >
+          {`Guest account is not allowed to upload images`}
+        </Alert>
       </Grid>
       {editMode && editProject}
     </React.Fragment>

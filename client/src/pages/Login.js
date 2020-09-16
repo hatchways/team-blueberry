@@ -15,6 +15,7 @@ import PageHeader from "../elements/PageHeader";
 import SubmitButton from "../elements/SubmitButton";
 import StyledPaper from "../elements/StyledPaper";
 import Alert from "../elements/SnackBar";
+import { usersData } from "../guestData";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -37,9 +38,16 @@ export default function Login({ state, dispatch }) {
     if (!loginEmail || !loginPassword) {
       setSubmitClicked(true);
     } else {
-      userLogin(loginEmail, loginPassword, dispatch).catch((error) => {
-        setLoginError(error.message);
-      });
+      if (loginEmail !== "guest@guest.guest" && loginPassword !== "guest2020") {
+        userLogin(loginEmail, loginPassword, dispatch).catch((error) => {
+          setLoginError(error.message);
+        });
+      } else {
+        dispatch({
+          type: "LOGIN",
+          user: usersData.guest,
+        });
+      }
     }
   };
 

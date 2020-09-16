@@ -3,18 +3,37 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import { sendRequest } from "../services/reviewRequest";
 import userContext from "../userContext";
+import { usersData, demoRequest } from "../guestData";
 
 // accept & reject button
 const ActionButtons = ({ status, dispatch, requestId, selectedReviewer }) => {
   // accept logic
   const user = useContext(userContext);
   const handleAccept = async () => {
-    await sendRequest(true, requestId, dispatch);
+    if (user.id !== "guest") {
+      await sendRequest(true, requestId, dispatch);
+    } else {
+      demoRequest.status = "accepted";
+      dispatch({
+        type: "STATUS_ACCEPTED",
+        status: "accepted",
+        selectedReviewer: { ...usersData.guest, _id: usersData.guest.id },
+      });
+    }
   };
 
   // // decline logic
   const handleDecline = async () => {
-    await sendRequest(false, requestId, dispatch);
+    if (user.id !== "guest") {
+      await sendRequest(false, requestId, dispatch);
+    } else {
+      demoRequest.status = "declined";
+      dispatch({
+        type: "STATUS_DECLINED",
+        status: "declined",
+        selectedReviewerId: null,
+      });
+    }
   };
   if (
     status === "pending" &&

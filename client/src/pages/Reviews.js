@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 import Drawer from "@material-ui/core/Drawer";
 import Fab from "@material-ui/core/Fab";
 import Hidden from "@material-ui/core/Hidden";
@@ -9,13 +9,14 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-
+import userContext from "../userContext";
 import Request from "../components/Request";
 import Loading from "../elements/Loading";
 import Paper from "@material-ui/core/Paper";
 import { getReviews } from "../services/reviews";
 import { Link } from "react-router-dom";
 import dateToYMD from "../utils/dateUtil";
+import { guestRequest, demoRequest } from "../guestData";
 
 const drawerWidth = 320;
 
@@ -133,6 +134,7 @@ export default function ResponsiveDrawer(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const user = useContext(userContext);
   const [state, dispatch] = useReducer(reducer, initState);
   const [selectedIndex, setSelectedIndex] = useState(false);
   const [selectedTab, setSelectedTab] = useState({
@@ -140,11 +142,18 @@ export default function ResponsiveDrawer(props) {
     requests: false,
   });
   const [value, setValue] = React.useState(0);
-
   useEffect(() => {
-    fetchData();
+    if (user.id !== "guest") {
+      fetchData();
+    } else {
+      dispatch({
+        type: "FETCH_REVIEWS_SUCCESS",
+        reviews: [guestRequest.embeddedReview],
+        requests: [demoRequest.embeddedReview],
+      });
+    }
     // TODO remove reviews when unmounting
-  }, []);
+  }, [user.id]);
   const fetchData = async () => {
     await getReviews(dispatch);
   };

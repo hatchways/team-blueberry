@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import RatingCircle from "@material-ui/icons/RadioButtonUncheckedOutlined";
 import { Box, makeStyles, Typography } from "@material-ui/core";
 import { completeReview } from "../services/reviews";
+import { guestRequest } from "../guestData";
 
 const useStyles = makeStyles((theme) => ({
   submit: {
@@ -156,8 +157,12 @@ const RatingDialog = ({ open, handleClose, reviewId, dispatch }) => {
   };
 
   const handleSubmit = async () => {
-    await completeReview(reviewId, rating, comment, dispatch);
-    // TODO clear all values when submit
+    if (reviewId !== "guestreview")
+      await completeReview(reviewId, rating, comment, dispatch);
+    else {
+      guestRequest.status = "closed";
+      dispatch({ type: "COMPLETE_REVIEW_SUCCESS", status: "closed" });
+    }
     handleClose();
   };
 
