@@ -11,6 +11,7 @@ import Message from "./Message";
 import socket from "../services/sockets";
 import RatingDialog from "../components/RatingDialog";
 import userContext from "../userContext";
+import { usersData, guestRequest, demoRequest } from "../guestData";
 
 //import utilities
 import dateToYMD from "../utils/dateUtil";
@@ -32,10 +33,6 @@ const useStyles = makeStyles((theme) => ({
   message: {
     overflow: "scroll",
     maxHeight: "15em",
-    // padding: "10px",
-    // margin: "20px",
-    // border: "1px solid gray",
-    // borderRadius: "5px",
   },
   headerDate: {
     paddingTop: 0,
@@ -157,7 +154,6 @@ const reducer = (state, action) => {
   }
 };
 
-// review id will be accessed from url params
 const Request = () => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initState);
@@ -166,33 +162,56 @@ const Request = () => {
   const user = useContext(userContext);
   const [open, setOpen] = useState(false);
   const history = useHistory();
-
   useEffect(() => {
-    if (reviewId) {
+    if (reviewId && reviewId !== "guestreview" && reviewId !== "demoreview") {
       const handleInitState = async () => {
         await getReview(reviewId, dispatch);
       };
       handleInitState();
       socket.messages(reviewId);
+    } else if (reviewId === "guestreview") {
+      dispatch({
+        type: "FETCH_REQUEST_SUCCESS",
+        status: guestRequest.status,
+        review: guestRequest.embeddedReview,
+        requestId: guestRequest._id,
+        selectedReviewer: { ...usersData.demo, _id: usersData.demo.id },
+        selectedReviewerId: guestRequest.selectedReviewer,
+        userOwner: guestRequest.userOwner,
+        reviewOwner: { ...usersData.guest, _id: usersData.guest.id },
+      });
+    } else if (reviewId === "demoreview") {
+      dispatch({
+        type: "FETCH_REQUEST_SUCCESS",
+        status: demoRequest.status,
+        review: demoRequest.embeddedReview,
+        requestId: demoRequest._id,
+        selectedReviewer: { ...usersData.guest, _id: usersData.guest.id },
+        selectedReviewerId: demoRequest.selectedReviewer,
+        userOwner: demoRequest.userOwner,
+        reviewOwner: { ...usersData.demo, _id: usersData.demo.id },
+      });
     }
     // TODO remove request when unmounting
   }, [reviewId]);
 
   useEffect(() => {
-    const handleSocketMessage = (message) => {
-      const { newMessage, reviewOwner, selectedReviewer } = message;
-      if (newMessage.embeddedReview._id === reviewId) {
-        dispatch({
-          type: "NEW_MESSAGE",
-          review: newMessage.embeddedReview,
-          selectedReviewer: selectedReviewer,
-          reviewOwner: reviewOwner,
-          status: newMessage.status,
-        });
-      }
-    };
-    socket.subscribe("messages", handleSocketMessage);
-    return () => socket.unsubscribe("messages");
+    if (reviewId && reviewId !== "guestreview" && reviewId !== "demoreview") {
+      const handleSocketMessage = (message) => {
+        const { newMessage, reviewOwner, selectedReviewer } = message;
+        if (newMessage.embeddedReview._id === reviewId) {
+          dispatch({
+            type: "NEW_MESSAGE",
+            review: newMessage.embeddedReview,
+            selectedReviewer: selectedReviewer,
+            reviewOwner: reviewOwner,
+            status: newMessage.status,
+          });
+        }
+      };
+      socket.subscribe("messages", handleSocketMessage);
+      return () => socket.unsubscribe("messages");
+    }
   }, [reviewId]);
 
   const ReviewerHeader = ({
@@ -257,7 +276,6 @@ const Request = () => {
   const handleClose = (value) => {
     setOpen(false);
   };
-
   return state.loading ? (
     <Loading />
   ) : (

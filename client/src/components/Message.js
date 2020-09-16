@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import PrismEditor from "./Editor/DraftEditor";
 import { sendMessage } from "../services/sendReviewMessage";
 import userContext from "../userContext";
+import { guestRequest, demoRequest } from "../guestData";
 
 const useStyles = makeStyles((theme) => ({
   messageBtn: {
@@ -26,9 +27,40 @@ const Message = ({
   const [makeSubmit, setMakeSubmit] = useState(false);
   const [, setEditorHasContent] = useState(false);
   const user = useContext(userContext);
+  const [num, setNum] = useState(1);
   const handleSubmit = async (text) => {
     setMakeSubmit(false);
-    await sendMessage(reviewId, text.text, dispatch);
+    if (reviewId !== "guestreview" && reviewId !== "demoreview") {
+      await sendMessage(reviewId, text.text, dispatch);
+    } else if (reviewId === "demoreview") {
+      demoRequest.embeddedReview.messages.push({
+        _id: `guestmessage${num}`,
+        message: JSON.stringify(text.text),
+        messagePostedBy: "guest",
+        messagePostDate: new Date(),
+      });
+      dispatch({
+        type: "SEND_MESSAGE_SUCCESS",
+        review: demoRequest.embeddedReview,
+        requestId: demoRequest._id,
+      });
+      let number = num + 1;
+      setNum(number);
+    } else if (reviewId === "guestreview") {
+      guestRequest.embeddedReview.messages.push({
+        _id: `guestmessage${num}`,
+        message: JSON.stringify(text.text),
+        messagePostedBy: "guest",
+        messagePostDate: new Date(),
+      });
+      dispatch({
+        type: "SEND_MESSAGE_SUCCESS",
+        review: guestRequest.embeddedReview,
+        requestId: guestRequest._id,
+      });
+      let number = num + 1;
+      setNum(number);
+    }
   };
 
   const startSubmit = () => {

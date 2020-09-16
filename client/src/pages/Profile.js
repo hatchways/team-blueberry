@@ -25,6 +25,8 @@ import {
   fetchReviewsCount,
   fetchProfileComments,
 } from "../services";
+import { usersData, guestComments, demoComments } from "../guestData";
+import Alert from "../elements/SnackBar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Profile = ({ state, dispatch }) => {
+const Profile = ({ dispatch }) => {
   const { ...user } = useContext(userContext);
   const classes = useStyles();
   // TODO Consider using reducer to simplify this
@@ -79,32 +81,47 @@ const Profile = ({ state, dispatch }) => {
   const [files, setFiles] = useState([]);
   const [reviewsNum, setReviewsNum] = useState(null);
   const [comments, setComments] = useState([]);
+  const [guestAlert, setGuestAlert] = useState(false);
   let { userId } = useParams();
   const handleEdit = () => {
     setEdit(!edit);
   };
-
   const handleInitState = useCallback(
     async (userId) => {
       if (userId !== user.id) {
-        const userProfile = await fetchProfile(userId);
-        setName(userProfile.name);
-        setPosition(userProfile.position);
-        setCompany(userProfile.company);
-        setAvatar(userProfile.avatar);
-        setLanguage(userProfile.languages);
-        setProjects(userProfile.projects);
-        setRating(userProfile.rating);
-        setReviewsNum(await fetchReviewsCount(userId));
-        setComments(await fetchProfileComments(userId));
+        if (userId !== "demo") {
+          const userProfile = await fetchProfile(userId);
+          setName(userProfile.name);
+          setPosition(userProfile.position);
+          setCompany(userProfile.company);
+          setAvatar(userProfile.avatar);
+          setLanguage(userProfile.languages);
+          setProjects(userProfile.projects);
+          setRating(userProfile.rating);
+          setReviewsNum(await fetchReviewsCount(userId));
+          setComments(await fetchProfileComments(userId));
+        } else {
+          setName(usersData.demo.name);
+          setPosition(usersData.demo.position);
+          setCompany(usersData.demo.company);
+          setAvatar(usersData.demo.avatar);
+          setLanguage(usersData.demo.languages);
+          setProjects(usersData.demo.projects);
+          setRating(usersData.demo.rating);
+          setReviewsNum(2);
+          setComments(demoComments);
+        }
       } else {
         setName(user.name);
         setPosition(user.position);
         setCompany(user.company);
         setRating(user.rating);
-        setComments(await fetchProfileComments(user.id));
         setProjects(user.projects);
-        setReviewsNum(await fetchReviewsCount(user.id));
+        if (user.email === "guest@guest.guest") setReviewsNum(4);
+        else setReviewsNum(await fetchReviewsCount(user.id));
+        if (user.id !== "guest")
+          setComments(await fetchProfileComments(user.id));
+        else setComments(guestComments);
       }
     },
     [
@@ -114,6 +131,7 @@ const Profile = ({ state, dispatch }) => {
       user.position,
       user.projects,
       user.rating,
+      user.email,
     ]
   );
 
@@ -123,13 +141,26 @@ const Profile = ({ state, dispatch }) => {
 
   const submit = (event) => {
     event.preventDefault();
-    if (files.length) {
-      createUserAvatar(files[0].bin)(dispatch);
+    if (user.id !== "guest") {
+      if (files.length) {
+        createUserAvatar(files[0].bin)(dispatch);
+      }
+      if (name) {
+        editUser({ name, position, company })(dispatch);
+        handleEdit();
+      }
+    } else {
+      if (files.length) {
+        setGuestAlert(true);
+      }
+      if (name) {
+        usersData.guest.name = name;
+        usersData.guest.position = position;
+        usersData.guest.company = company;
+        dispatch({ type: "EDIT_USER_SUCCESS", user: usersData.guest });
+        handleEdit();
+      }
     }
-    if (name) {
-      editUser({ name, position, company })(dispatch);
-    }
-    handleEdit();
   };
   const editName = (event) => setName(event.target.value);
   const editPosition = (event) => setPosition(event.target.value);
@@ -223,6 +254,7 @@ const Profile = ({ state, dispatch }) => {
                         projects={projects}
                         dispatch={dispatch}
                         showEdit={userId !== user.id}
+                        userId={user.id}
                       />
                     </React.Fragment>
                   )}
@@ -237,6 +269,12 @@ const Profile = ({ state, dispatch }) => {
               </Paper>
             </Container>
           </Grid>
+          <Alert
+            open={guestAlert ? true : false}
+            onClick={() => setGuestAlert(false)}
+          >
+            {`Guest account is not allowed to upload images`}
+          </Alert>
         </Grid>
       </Box>
     </Background>

@@ -12,6 +12,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -21,6 +22,10 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     bottom: theme.spacing(2),
     left: theme.spacing(2),
+  },
+  link: {
+    textDecoration: "none",
+    color: "#000000",
   },
 }));
 
@@ -71,10 +76,12 @@ export default function SwipeableTemporaryDrawer({
     >
       <List>
         {menu.map((item, index) => (
-          <ListItem button component="a" href={item.link} key={index}>
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} />
-          </ListItem>
+          <Link to={item.link} key={index} className={classes.link}>
+            <ListItem button>
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItem>
+          </Link>
         ))}
       </List>
       <Divider light />
