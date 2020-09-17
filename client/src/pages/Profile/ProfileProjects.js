@@ -97,13 +97,26 @@ export default function ProfileProjects({
         if (files.length !== 0) {
           setGuestAlert(true);
         }
+        setError(false);
+        setTitle("");
+        setLink("");
         setEditMode(false);
       }
     }
   };
 
-  const delProject = (projectId) => {
-    deleteProject(projectId, dispatch);
+  const delProject = (projectId, projectIndex) => {
+    if (userId !== "guest") {
+      deleteProject(projectId, dispatch);
+    } else {
+      usersData.guest.projects.splice(projectIndex, 1);
+      dispatch({
+        type: "UPDATE_USER_PROJECTS_SUCCESS",
+        user: usersData.guest,
+      });
+      setTitle("");
+      setLink("");
+    }
   };
 
   const addProjectButton = (
@@ -211,7 +224,7 @@ export default function ProfileProjects({
         </Box>
       </Grid>
       <Grid item container direction="row" spacing={5} justify="center">
-        {projects.map((item) => {
+        {projects.map((item, index) => {
           return (
             <Grid
               item
@@ -247,7 +260,7 @@ export default function ProfileProjects({
                 <Grid item>
                   {inHover && !showEdit ? (
                     <IconButton
-                      onClick={() => delProject(item._id)}
+                      onClick={() => delProject(item._id, index)}
                       className={classes.deleteButton}
                     >
                       <DeleteIcon />
