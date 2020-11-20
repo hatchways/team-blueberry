@@ -6,7 +6,7 @@
 
 ## Demo
 
-Try Peer Code Review Applicaiton immediately using your phone or laptop at [peercodereview.herokuapp.com](peercodereview.herokuapp.com)!
+Try Peer Code Review Applicaiton immediately using your phone or laptop at [peercodereview.herokuapp.com](https://peercodereview.herokuapp.com)!
 
 ## About
 
